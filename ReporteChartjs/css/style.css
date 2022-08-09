@@ -1,0 +1,148 @@
+body {
+    background: #e3e3e3;
+    font-family: 'Poppins', monospace;
+    color: #525252;
+    font-size: .7em;
+    font-weight: 200;
+    letter-spacing: 1px;
+}
+
+html {
+    padding: 20px;
+    font-weight: 300;
+}
+
+main {
+
+    /*padding: 60px;*/
+}
+
+section {
+    background-color: #41485b;
+    margin-bottom: 40px;
+}
+
+h1 {
+    text-transform: uppercase;
+    padding: 8px;
+    font-size: 3em;
+    font-weight: 150;
+    color: #575757;
+}
+
+h1 span {
+
+    font-size: 12px;
+}
+
+h2, h3 {
+    font-size: 1.4em;
+    margin-bottom: 29px;
+    border-bottom: 1px solid rgb(86, 86, 86);
+    padding-bottom: 15px;
+    font-weight: 200;
+}
+
+hr {
+    border-color: #770000;
+    margin-bottom: 10px;
+}
+
+figure {
+    padding: 10px 10px 30px;
+}
+
+figure p {
+    margin-bottom: 7px;
+    font-size: .8em;
+
+}
+
+figure p, h3 {
+    color: #e0e0e0;
+}
+
+canvas {
+    width: 100%;
+}
+
+
+/* grid */
+
+[class*='cols'] {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.cols-3 > * {
+    width: 33.33%;
+    margin: 10px
+}
+
+.cols-2 > * {
+    width: 50%;
+    margin: 10px
+}
+
+.cols-1 > * {
+    width: 100%;
+    margin: 10px
+}
+
+#chart6 {
+    max-height: 300px;
+}
+
+section {
+    opacity: 0;
+    transition: opacity .3s;
+}
+
+.running section {
+    opacity: 1
+}
+
+.loading {
+    position: absolute;
+    border: none;
+}
+
+.running .loading {
+    display: none;
+}
+
+
+.leftPanel {
+    width: 20%;
+    background-color: #cbcbcb;
+    height: 100vh;
+    position: absolute;
+    left: 2%;
+}
+
+.mainPanel {
+    width: 65%;
+    position: absolute;
+    left: 25%;
+}
+
+.listaReportes {
+    margin: 8px;
+    padding: 8px;
+    background-color: #ffffff;
+}
+
+.listaReportes .item-report {
+    height: 100%;
+    width: 100%;
+    margin-bottom: 4px;
+    text-align: left;
+    border-bottom: 1px solid gray;
+}
+
+.listaReportes .item-report:hover {
+    cursor: pointer;
+    background-color: #cbcbcb;
+    color: white;
+}

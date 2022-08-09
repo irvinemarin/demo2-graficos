@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualización de datos con ChartJS</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<main>
+    <div style="display: flex">
+        <img src="assets/icon.png"
+             style="height: 24px" alt="">
+        <h1>Reportes PJ
+            <br><span>Visualización de estadísticas </span>
+        </h1>
+
+    </div>
+
+
+    <hr>
+
+
+    <div class="leftPanel">
+        <div class="listaReportes">
+            <div class="item-report">
+                <p onclick="onCLickListener('1')">REPORTE DE PONENTES </p>
+            </div>
+            <div class="item-report">
+                <p onclick="onCLickListener('2')">REPORTE DE INGRESOS </p>
+            </div>
+<!--            <div class="item-report">-->
+<!--                <p onclick="onCLickListener('3')">INGRESOS EXPEDIENTES SALAS SUPREMAS </p>-->
+<!--            </div>-->
+        </div>
+
+    </div>
+
+    <div class="mainPanel">
+        <h2 class="loading">Esperando respuesta de la API...</h2>
+
+        <section class="cols-1">
+            <figure>
+                <p>Gráfico Grupo Bar</p>
+                <h3>Comparaciones por Salas</h3>
+                <canvas id="chart7"></canvas>
+            </figure>
+        </section>
+
+<!--        <section class="cols-1">-->
+<!--            <figure>-->
+<!--                <p>Gráfico radial</p>-->
+<!--                <h3>Comparativa ponentes</h3>-->
+<!--                <canvas id="chart1"></canvas>-->
+<!--            </figure>-->
+<!--        </section>-->
+<!--        <section class="cols-1">-->
+<!--            <figure>-->
+<!--                <p>Gráfico de área polar</p>-->
+<!--                <h3>Comparativa mes</h3>-->
+<!--                <canvas id="chart2"></canvas>-->
+<!--            </figure>-->
+<!--        </section>-->
+
+    </div>
+
+
+    <!--    <section class="cols-1">-->
+    <!--        <figure>-->
+    <!--            <p>Gráfico lineal</p>-->
+    <!--            <h3>Construcciones por año</h3>-->
+    <!--            <canvas id="chart6"></canvas>-->
+    <!--        </figure>-->
+    <!--    </section>-->
+
+
+    <!--    <section class="cols-3">-->
+    <!--        <figure>-->
+    <!--            <p>Gráfico radial</p>-->
+    <!--            <h3>Altura</h3>-->
+    <!--            <canvas id="chart3"></canvas>-->
+    <!--        </figure>-->
+
+    <!--        <figure>-->
+    <!--            <p>Gráfico de <em>donut</em></p>-->
+    <!--            <h3>Modelos</h3>-->
+    <!--            <canvas id="chart4"></canvas>-->
+    <!--        </figure>-->
+
+    <!--        <figure>-->
+    <!--            <p>Gráfico de barras</p>-->
+    <!--            <h3>Fuerza G</h3>-->
+    <!--            <canvas id="chart5"></canvas>-->
+    <!--        </figure>-->
+    <!--    </section>-->
+
+</main>
+
+<!-- ChartJS -->
+<script src="Chartjs/Chart.min.js"></script>
+
+<!-- Styles for charts -->
+<script src="js/chartStyles.js"></script>
+
+<!-- DCharts development -->
+<script src="js/script.js"></script>
+
+<script>
+
+    function onCLickListener(position) {
+        alert(position)
+        if (position == "1") {
+            fetch('http://localhost:4000/api/getListadoProgramados')
+                .then(response => response.json())
+                .then(data => printCharts(data))
+        }
+        if (position == "2") {
+            fetch('http://localhost:4000/api/getListadoExpIngresado')
+                .then(response => response.json())
+                .then(data => printCharts(data))
+        }
+        // if (position == 3) {
+        //     fetch('https://localhost:3001/')
+        //         .then(response => response.json())
+        //         .then(data => printCharts(data))
+        // }
+    }
+
+
+</script>
+</body>
+
+</html>
