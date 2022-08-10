@@ -6,292 +6,237 @@ Chart.defaults.scale.gridLines.color = '#444'
 Chart.defaults.scale.ticks.display = false
 
 
-fetch('http://localhost:4000/api/getListadoComponenteResumen', {
-    method: 'get', headers: new Headers({
-        'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-        'Content-Type': 'application/json'
+var optionColumns = 1;
+
+ReloadGrupobar(optionColumns);
+
+
+function ReloadGrupobar(option) {
+    fetch('http://localhost:4000/api/getListadoExpIngresos', {
+        method: 'get', headers: new Headers({
+            'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+            'Content-Type': 'application/json'
+        })
     })
-})
-    .then(response => response.json())
-    .then(data => printCharts(data))
+        .then(response => response.json())
+        .then(data => printCharts(data, option))
+}
 
 
-function printCharts(coasters) {
-
+function printCharts(coasters, option) {
     document.body.classList.add('running')
 
-    compareRadialChart(coasters, 'chart2')
-    modelDoughnutChart(coasters, 'chart4')
-    heightRadarChart(coasters, 'chart3')
-    GForceBarsChart(coasters, 'chart5')
-    countriesRadarChart(coasters, 'chart1')
-    yearsBarChart(coasters, 'chart6')
-    grupobar(coasters, 'chart7')
+
+    grupobar(coasters, 'chart7', option)//grafico principal
+
 
 }
 
+function getInfoTabla1(nroTable, nameWS) {
+    // http://localhost:4000/api/getIngresosMensualTipoRecurso'
+    fetch('http://localhost:4000/api/' + nameWS, {
+        method: 'get', headers: new Headers({
+            'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+            'Content-Type': 'application/json'
+        })
+    })
+        .then(response => response.json())
+        .then(data => bindtabla(data, nroTable))
+}
 
-function compareRadialChart(coasters, id) {
-    let dataCount = []
-    let datasetsDynamic = []
-    let labelsDynamic = []
-    coasters.forEach(element => {
-        dataCount[element["recurso"]] = (dataCount[element["recurso"]] || 0) + 1;
+function bindtabla(data, nroTable) {
+
+    var headerTable01 = document.getElementById("headerTable" + nroTable)
+    var bodyTable01 = document.getElementById("bodyTable" + nroTable)
+    var select_Filtro = document.getElementById("selectable" + nroTable)
+
+    headerTable01.innerHTML = ''
+    bodyTable01.innerHTML = ''
+    let htmlHeader = ''
+
+    if (data.length == 0) return
+
+    let templistHeader = []
+
+    templistHeader = Object.keys(data[0]).sort((a, b) => {
+        return a.localeCompare(b)
+    })
+//bind HEAder
+    templistHeader.forEach(key => {
+        htmlHeader += "<th>" + key.substring(3, key.length) + "</th>"
+    })
+    headerTable01.innerHTML = htmlHeader;
+
+//FIN
+    bindTableBody(data, templistHeader, select_Filtro, bodyTable01, false)
+
+
+    function bindTableBody(data, templistHeader, selectable, bodyTable01, optionSelect) {
+        var html = '';
+
+
+        let htmlCombo = ''
+        htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+        data.forEach(dbItem => {
+            html += "<tr>"
+            templistHeader.forEach((keyName, posHeaderOrdered) => {
+                Object.values(dbItem).forEach((value, posheader) => {
+                    if (!optionSelect) {
+                        if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posheader]) {
+                            htmlCombo += "<option value='" + value + "&" + keyName + "'>" + value + " </option>"
+                        }
+                    }
+                    if (keyName == Object.keys(dbItem)[posheader]) html += "<td>" + value + "</td>"
+                })
+            })
+            html += "</tr>"
+        })
+        if (!optionSelect) {
+            selectable.innerHTML = htmlCombo;
+        }
+        bodyTable01.innerHTML = html
+    }
+
+
+    select_Filtro.addEventListener('change', function (e) {
+        // console.log(this.value)
+        let key = this.value.split("&")[1]
+        let valueS = this.value.split("&")[0]
+        var listFilter = data.filter(item => {
+            return item[key] == valueS;
+        })
+
+        if (this.value == -1) {
+            bindTableBody(data, templistHeader, select_Filtro, bodyTable01, true)
+        } else {
+            bindTableBody(listFilter, templistHeader, select_Filtro, bodyTable01, true)
+        }
     });
-    Object.values(dataCount).forEach((value, index) => {
-        datasetsDynamic.push(value)
-        labelsDynamic.push(Object.keys(dataCount)[index])
-    });
-
-
-    const data = {
-        labels: labelsDynamic, datasets: [{
-            data: datasetsDynamic,
-            borderWidth: 2,
-            borderColor: styles.color.solids.map(eachColor => eachColor),
-            backgroundColor: styles.color.alphas.map(eachColor => eachColor)
-        }]
-    }
-
-    const options = {
-        legend: {
-            position: 'right'
-        }
-    }
-
-    new Chart(id, {type: 'polarArea', data, options})
-}
-
-
-function modelDoughnutChart(coasters, id) {
-
-    const data = {
-        labels: ['Propulsada', 'Hiper montaña', 'Giga montaña', 'Inversión', 'Sentado'], datasets: [{
-            data: [coasters.filter(eachCoaster => eachCoaster.model === 'Accelerator Coaster').length, coasters.filter(eachCoaster => eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.model === 'Giga Coaster').length, coasters.filter(eachCoaster => eachCoaster.model === 'Multi Inversion Coaster').length, coasters.filter(eachCoaster => eachCoaster.model === 'Sitting Coaster').length],
-            borderColor: styles.color.solids.map(eachColor => eachColor),
-            backgroundColor: styles.color.alphas.map(eachColor => eachColor),
-            borderWidth: 1
-        }]
-    }
-
-    const options = {
-        legend: {
-            position: 'right'
-        }
-    }
-
-    new Chart(id, {type: 'doughnut', data, options})
-}
-
-
-function heightRadarChart(coasters, id) {
-
-    const selectedCoasters = coasters.filter(eachCoaster => eachCoaster.height > 80)
-
-    const data = {
-        labels: selectedCoasters.map(eachCoaster => eachCoaster.name), datasets: [{
-            label: 'Altura',
-            data: selectedCoasters.map(eachCoaster => eachCoaster.height),
-            borderColor: styles.color.solids[0],
-            borderWidth: 1
-        }]
-    }
-
-    const options = {
-        legend: {
-            display: false
-        }
-    }
-
-    new Chart(id, {type: 'radar', data, options})
-}
-
-
-function GForceBarsChart(coasters, id) {
-
-    const selectedCoasters = coasters.filter(eachCoaster => eachCoaster.gForce)
-
-    const data = {
-        labels: selectedCoasters.map(eachCoaster => eachCoaster.name), datasets: [{
-            data: selectedCoasters.map(eachCoaster => eachCoaster.gForce),
-            backgroundColor: styles.color.alphas,
-            borderColor: styles.color.solids
-        }]
-    }
-
-    const options = {
-        legend: {
-            display: false
-        }, scales: {
-            yAxes: [{
-                gridLines: {
-                    display: false
-                }, ticks: {
-                    display: true
-                }
-            }]
-        }
-    }
-
-    new Chart(id, {type: 'bar', data, options})
 
 }
 
 
-function countriesRadarChart(dataDB, id) {
-
-    const selectedDataDB = dataDB.filter(eachCoaster => eachCoaster.ponente)
+function grupobar(dataDB, id, option) {
 
     let dataCount = []
     let datasetsDynamic = []
     let labelsDynamic = []
-
-
-    dataDB.forEach(element => {
-        dataCount[element["mes"]] = (dataCount[element["mes"]] || 0) + 1;
-    });
-
-    // console.table(dataCount)
-
-
-    Object.values(dataCount).forEach((valueNumber, index) => {
-
-        labelsDynamic.push(Object.keys(dataCount)[index])
-        let item = {
-            label: getNombreMes(Object.keys(dataCount)[index]),
-            data: valueNumber,
-            borderColor: styles.color.solids[index],
-            backgroundColor: styles.color.alphas[index]
-        }
-
-        datasetsDynamic.push(item)
-    });
-
-    function getNombreMes(elementElement) {
-        let nombreMes = ""
-        switch (elementElement) {
-            case "1":
-                nombreMes = "Enero"
-                break;
-            case "2":
-                nombreMes = "Febrero"
-                break;
-            case "3":
-                nombreMes = "Marzo"
-                break;
-            case "4":
-                nombreMes = "Abril"
-                break;
-            case "5":
-                nombreMes = "Mayo"
-                break;
-            case "6":
-                nombreMes = "Junio"
-                break;
-            case "7":
-                nombreMes = "Julio"
-                break;
-            case "8":
-                nombreMes = "Agosto"
-                break;
-            case "9":
-                nombreMes = "Setiembre"
-                break;
-            case "10":
-                nombreMes = "Octubre"
-                break;
-            case "11":
-                nombreMes = "Noviembre"
-                break;
-            case "12":
-                nombreMes = "Diciembre"
-                break;
-        }
-        return nombreMes;
-    }
-
-    // console.table(datasetsDynamic)
-
-
-    const data = {
-        labels: labelsDynamic, datasets: datasetsDynamic
-    }
-
-    const options = {
-        legend: {
-            position: 'left'
-        }
-    }
-
-    new Chart(id, {type: 'radar', data, options})
-}
-
-
-function yearsBarChart(coasters, id) {
-
-
-    const data = {
-        labels: ['1995-1997', '1998-2000', '2001-2003', '2004-2006', '2007-2009', '2013-2015', '2016-2018', '2019-2021'],
-        datasets: [{
-            label: 'Montañas creadas',
-            borderColor: styles.color.solids[5],
-            data: [coasters.filter(eachCoaster => eachCoaster.year >= 1995 && eachCoaster.year <= 1997).length, coasters.filter(eachCoaster => eachCoaster.year >= 1998 && eachCoaster.year <= 2000).length, coasters.filter(eachCoaster => eachCoaster.year >= 2001 && eachCoaster.year <= 2003).length, coasters.filter(eachCoaster => eachCoaster.year >= 2004 && eachCoaster.year <= 2006).length, coasters.filter(eachCoaster => eachCoaster.year >= 2007 && eachCoaster.year <= 2009).length, coasters.filter(eachCoaster => eachCoaster.year >= 2010 && eachCoaster.year <= 2012).length, coasters.filter(eachCoaster => eachCoaster.year >= 2013 && eachCoaster.year <= 2015).length, coasters.filter(eachCoaster => eachCoaster.year >= 2016 && eachCoaster.year <= 2018).length, coasters.filter(eachCoaster => eachCoaster.year >= 2019 && eachCoaster.year <= 2021).length]
-        }, {
-            type: 'bar',
-            label: 'Aceleración',
-            borderColor: styles.color.solids[3],
-            backgroundColor: styles.color.solids[3],
-            data: [coasters.filter(eachCoaster => eachCoaster.year >= 1995 && eachCoaster.year <= 1997 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 1998 && eachCoaster.year <= 2000 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2001 && eachCoaster.year <= 2003 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2004 && eachCoaster.year <= 2006 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2007 && eachCoaster.year <= 2009 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2010 && eachCoaster.year <= 2012 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2013 && eachCoaster.year <= 2015 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2016 && eachCoaster.year <= 2018 && eachCoaster.model === 'Hyper Coaster').length, coasters.filter(eachCoaster => eachCoaster.year >= 2019 && eachCoaster.year <= 2021 && eachCoaster.model === 'Hyper Coaster').length]
-        }]
-    }
-
-    const options = {
-        maintainAspectRatio: false, scaleFontColor: '#fff', scales: {
-            yAxes: [{
-                ticks: {
-                    display: true
-                }
-            }], xAxes: [{
-                barPercentage: 0.4, ticks: {
-                    display: true
-                }
-            }]
-        }
-    }
-
-    new Chart(id, {type: 'line', data, options})
-
-}
-
-
-function grupobar(coasters, id) {
-
-    let dataCount = []
-    let datasetsDynamic = []
-    let labelsDynamic = []
+    let labelsCombo = []
     let item;
+    let nombreFiltro = "anno"
+    if (true) {
+        // listaHorizontal
 
-    coasters.forEach(element => {
-        dataCount[element["anno"]] = (dataCount[element["anno"]] || 0) + 1;
-    });
-
-
-    Object.values(dataCount).forEach((value, index) => {
-        labelsDynamic.push(Object.keys(dataCount)[index])
-    });
-
-    coasters.forEach((element, index) => {
-        item = {
-            label: element["x_sala_suprema"],
-            data: [element["cant"]],
-            borderColor: styles.color.solids[index],
-            backgroundColor: styles.color.alphas[index]
-        };
-        datasetsDynamic.push(item)
-    });
+        dataDB.forEach((element, index) => {
+            let DataTemp = []
+            Object.keys(dataDB[index]).forEach((key, pos) => {
+                // console.log(key)
+                if (key !== nombreFiltro) {
+                    let value = Object.values(dataDB[index])[pos]
+                    DataTemp.push(value)
+                    if (index == 0) {
+                        labelsDynamic.push(key.substring(4, key.length))
+                        labelsCombo.push(key)
+                    }
 
 
-    console.table(dataCount)
+                }
+            });
+            item = {
+                label: nombreFiltro + " " + element[nombreFiltro],
+                data: DataTemp,
+                borderColor: styles.color.solids[index],
+                backgroundColor: styles.color.alphas[index]
+            };
+            datasetsDynamic.push(item)
+        });
+        optionColumns = 2
+    }
+    populateComboAnios()
+    populateComboSalas(labelsCombo)
+
+
+    function populateComboAnios() {
+        var SELECT_ANIO = document.getElementById("selectableAnio")
+        let htmlCombo = "";
+        htmlCombo += "<option value='2017'>2017 </option>"
+        htmlCombo += "<option value='2018'>2018 </option>"
+        htmlCombo += "<option value='2019'>2019 </option>"
+        htmlCombo += "<option value='2020'>2020 </option>"
+        htmlCombo += "<option value='2020'>2021 </option>"
+        htmlCombo += "<option selected value='2020'>2022 </option>"
+
+        SELECT_ANIO.innerHTML = htmlCombo
+
+
+        aniooSeleccionado = "2022"
+
+        SELECT_ANIO.addEventListener('change', function (e) {
+            aniooSeleccionado = this.value
+            lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+        });
+    }
+
+
+    function populateComboSalas(listaCombo) {
+        var selectFiltroSalas = document.getElementById("selectable03")
+        let htmlCombo = ''
+        // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+        listaCombo.forEach(value => {
+            let valueSplited = value.split("_")[1]
+            let c_instancia = value.split("_")[0]
+            htmlCombo += "<option value='" + c_instancia + "'>" + valueSplited + " </option>"
+        })
+        selectFiltroSalas.innerHTML = htmlCombo;
+
+        selectFiltroSalas.addEventListener('change', function (e) {
+            // console.log(this.value, this.text)
+            lisarTablas(this.value, this.options[this.selectedIndex].text)
+        });
+        lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
+    }
+
+    function lisarTablas(c_instacia, nombreSala) {
+        nombreSalaSeleccionada = nombreSala
+        cInsatnciaSelected = c_instacia
+        var h3_titulos = document.getElementById("tituloSalaFiltro")
+        h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
+        getInfoTabla1("01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
+        getInfoTabla1("02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+    }
+
+
+    // if (option == 2) {
+    //     // listaVertical
+    //     //recorre header Primera fila
+    //     Object.keys(dataDB[0]).forEach((key, pos) => {
+    //         let DataTemp = []
+    //         //recore filas BD
+    //         dataDB.forEach((element, inDB) => {
+    //             let value = Object.values(element)[pos]
+    //             if (key != nombreFiltro) {
+    //                 DataTemp.push(value)
+    //             }
+    //             if (key == nombreFiltro) {
+    //                 // console.log(value)
+    //                 labelsDynamic.push(value)
+    //             }
+    //
+    //         })
+    //         item = {
+    //             label: key,
+    //             data: DataTemp,
+    //             borderColor: styles.color.solids[pos],
+    //             backgroundColor: styles.color.alphas[pos]
+    //         };
+    //         if (key != nombreFiltro) {
+    //             datasetsDynamic.push(item)
+    //         }
+    //
+    //
+    //     });
+    //     optionColumns = 1
+    // }
 
 
     const data = {
@@ -299,16 +244,15 @@ function grupobar(coasters, id) {
     }
 
 
-    console.table(data)
     const options = {
         legend: {
             display: true
         }, title: {
-            display: true, text: 'Comparacion'
+            display: true, text: 'Comparacion Salas por anio'
         }, scales: {
             yAxes: [{
                 gridLines: {
-                    display: false
+                    display: true
                 }, ticks: {
                     display: true
                 }
@@ -318,6 +262,10 @@ function grupobar(coasters, id) {
 
     new Chart(id, {type: 'bar', data, options})
 }
+
+var nombreSalaSeleccionada = ""
+var cInsatnciaSelected = ""
+var aniooSeleccionado = ""
 
 function datajson() {
     var arrayNombres = new Array();
@@ -352,5 +300,6 @@ function datajson() {
 
     json = JSON.stringify(list); // aqui tienes la lista de objetos en Json
     var obj = JSON.parse(json);
+
 
 }
