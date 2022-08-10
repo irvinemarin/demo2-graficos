@@ -8,26 +8,37 @@ Chart.defaults.scale.ticks.display = false
 
 var optionColumns = 1;
 
-ReloadGrupobar(optionColumns);
+loadGraficoDetalle("00");
 
 
-function ReloadGrupobar(option) {
-    fetch('http://localhost:4000/api/getListadoExpIngresos', {
-        method: 'get', headers: new Headers({
-            'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-            'Content-Type': 'application/json'
+function loadGraficoDetalle(option) {
+
+
+    if (option == "00") {
+        fetch('http://localhost:4000/api/getListadoExpIngresos', {
+            method: 'get', headers: new Headers({
+                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+                'Content-Type': 'application/json'
+            })
         })
-    })
-        .then(response => response.json())
-        .then(data => printCharts(data, option))
+            .then(response => response.json())
+            .then(data => printCharts(data, option))
+
+
+    }
+
+
+    if (option == "01") grupobar(data001, 'chart7_2', option, "00_Recurso")//grafico principal
+    if (option == "02") grupobar(data002, 'chart7_2', option, "00_CorteProcedencia")//grafico principal
+
 }
 
+var data001 = []
+var data002 = []
 
 function printCharts(coasters, option) {
     document.body.classList.add('running')
-
-
-    grupobar(coasters, 'chart7', option)//grafico principal
+    grupobar(coasters, 'chart7', option, "anno")//grafico principal
 
 
 }
@@ -45,7 +56,8 @@ function getInfoTabla1(nroTable, nameWS) {
 }
 
 function bindtabla(data, nroTable) {
-
+    if (nroTable == "01") data001 = data
+    if (nroTable == "02") data002 = data
     var headerTable01 = document.getElementById("headerTable" + nroTable)
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var select_Filtro = document.getElementById("selectable" + nroTable)
@@ -116,67 +128,63 @@ function bindtabla(data, nroTable) {
 }
 
 
-function grupobar(dataDB, id, option) {
+function grupobar(dataDB, id, option, nombreFiltro) {
 
     let dataCount = []
     let datasetsDynamic = []
     let labelsDynamic = []
     let labelsCombo = []
     let item;
-    let nombreFiltro = "anno"
+    var SELECT_ANIO = document.getElementById("selectableAnio")
+    let htmlCombo = ''
     if (true) {
         // listaHorizontal
 
         dataDB.forEach((element, index) => {
             let DataTemp = []
             Object.keys(dataDB[index]).forEach((key, pos) => {
-                // console.log(key)
+                let value = Object.values(dataDB[index])[pos]
                 if (key !== nombreFiltro) {
-                    let value = Object.values(dataDB[index])[pos]
+
                     DataTemp.push(value)
                     if (index == 0) {
                         labelsDynamic.push(key.substring(4, key.length))
                         labelsCombo.push(key)
                     }
-
+                }
+                if (nombreFiltro == key) {
+                    htmlCombo += `<option value='${element[nombreFiltro]}'>${element[nombreFiltro]} </option>`
+                    aniooSeleccionado = element[nombreFiltro]
 
                 }
             });
+
+            let AliasText = ''
+            if (nombreFiltro == "anno") {
+                AliasText = "AÑO"
+            } else {
+                AliasText = nombreFiltro
+            }
+
             item = {
-                label: nombreFiltro + " " + element[nombreFiltro],
+                label: AliasText + " " + element[nombreFiltro],
                 data: DataTemp,
-                borderColor: styles.color.solids[index],
+                borderColor: "#fff",
                 backgroundColor: styles.color.alphas[index]
             };
             datasetsDynamic.push(item)
         });
         optionColumns = 2
     }
-    populateComboAnios()
     populateComboSalas(labelsCombo)
 
-
-    function populateComboAnios() {
-        var SELECT_ANIO = document.getElementById("selectableAnio")
-        let htmlCombo = "";
-        htmlCombo += "<option value='2017'>2017 </option>"
-        htmlCombo += "<option value='2018'>2018 </option>"
-        htmlCombo += "<option value='2019'>2019 </option>"
-        htmlCombo += "<option value='2020'>2020 </option>"
-        htmlCombo += "<option value='2020'>2021 </option>"
-        htmlCombo += "<option selected value='2020'>2022 </option>"
-
-        SELECT_ANIO.innerHTML = htmlCombo
+    SELECT_ANIO.innerHTML = htmlCombo
 
 
-        aniooSeleccionado = "2022"
-
-        SELECT_ANIO.addEventListener('change', function (e) {
-            aniooSeleccionado = this.value
-            lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
-        });
-    }
-
+    SELECT_ANIO.addEventListener('change', function (e) {
+        aniooSeleccionado = this.value
+        lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+    });
 
     function populateComboSalas(listaCombo) {
         var selectFiltroSalas = document.getElementById("selectable03")

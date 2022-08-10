@@ -30,7 +30,7 @@
     <div class="leftPanel">
         <div class="listaReportes">
             <div class="item-report">
-                <p onclick="onCLickListener('1')">REPORTE DE PONENTES </p>
+                <p onclick="onCLickListener('1')">REPORTE DE INGRESOS </p>
             </div>
             <!--            <div class="item-report">-->
             <!--                <p onclick="onCLickListener('2')">REPORTE DE INGRESOS </p>-->
@@ -48,7 +48,7 @@
         <h2 class="loading">Esperando respuesta de la API...</h2>
         <br>
         <br>
-        <div>
+        <div style="display: block">
             <label for="selectable03">FILTRO SALAS</label>
             <select name="selectable03" id="selectable03">
                 <option value=""></option>
@@ -60,9 +60,9 @@
 
 
             <figure>
+
                 <p>Gráfico Grupo Bar</p>
                 <h3>Comparaciones por Salas</h3>
-                <button onclick="ReloadGrupobar(optionColumns)">CAMBIAR FILAS POR COLUMNAS</button>
                 <canvas id="chart7"></canvas>
             </figure>
         </section>
@@ -71,7 +71,8 @@
 
             <h3 style="color: #333333!important;" id="tituloSalaFiltro"></h3>
 
-            <div style="margin-left: 40px">
+            <div style="margin-left: 40px ;display: block">>
+
                 <label for="selectableAnio">FILTRO AÑO</label>
                 <select name="selectableAnio" id="selectableAnio">
                     <option value=""></option>
@@ -79,9 +80,8 @@
             </div>
 
             <figure class="col-12 ">
-                <div class="row">
-
-
+                <div style="display: block">
+                    <!--                    <button onclick="loadGraficoDetalle('01')">GRAFICAR TABLA</button>-->
                     <label for="selectable01">Filtro Recurso</label>
 
                     <select name="selectable01" id="selectable01">
@@ -103,7 +103,8 @@
             <br>
             <figure class="col-12 ">
 
-                <div class="row">
+                <div style="display: block">
+                    <!--                    <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
                     <label for="selectable02">Filtro Corte Procedencia</label>
                     <select name="selectable02" id="selectable02">
                         <option value=""></option>
@@ -141,6 +142,17 @@
         <!--                <canvas id="chart2"></canvas>-->
         <!--            </figure>-->
         <!--        </section>-->
+
+
+        <!--        <section class="cols-1">-->
+        <!--            <figure>-->
+        <!--                <p>Gráfico Grupo Bar</p>-->
+        <!--                <h3>Comparaciones por Salas</h3>-->
+        <!--                &lt;!&ndash;                <button onclick="ReloadGrupobar(optionColumns)">CAMBIAR FILAS POR COLUMNAS</button>&ndash;&gt;-->
+        <!--                <canvas id="chart7_2"></canvas>-->
+        <!--            </figure>-->
+        <!--        </section>-->
+
 
     </div>
 
