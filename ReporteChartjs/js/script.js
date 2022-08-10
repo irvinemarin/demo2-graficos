@@ -86,19 +86,26 @@ function bindtabla(data, nroTable) {
     function bindTableBody(data, templistHeader, selectable, bodyTable01, optionSelect) {
         var html = '';
 
-
+        let arrayTotales = []
         let htmlCombo = ''
         htmlCombo += "<option  value='-1'> -- Todos -- </option>"
         data.forEach(dbItem => {
             html += "<tr>"
             templistHeader.forEach((keyName, posHeaderOrdered) => {
-                Object.values(dbItem).forEach((value, posheader) => {
+                Object.values(dbItem).forEach((value, posValue) => {
                     if (!optionSelect) {
-                        if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posheader]) {
+                        if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
                             htmlCombo += "<option value='" + value + "&" + keyName + "'>" + value + " </option>"
                         }
                     }
-                    if (keyName == Object.keys(dbItem)[posheader]) html += "<td>" + value + "</td>"
+                    if (keyName == Object.keys(dbItem)[posValue]) {
+
+                        html += "<td>" + value + "</td>"
+                    }
+
+                    if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
+                        arrayTotales[keyName] = (arrayTotales[keyName] || 0) + value
+                    }
                 })
             })
             html += "</tr>"
@@ -106,6 +113,15 @@ function bindtabla(data, nroTable) {
         if (!optionSelect) {
             selectable.innerHTML = htmlCombo;
         }
+
+        // console.table(arrayTotales)
+        html += "<tr class='tableTotales' >"
+        html += "<td>Totales</td>"
+        Object.values(arrayTotales).forEach(item => {
+            html += "<td>" + item + "</td>"
+        })
+        html += "</tr>"
+
         bodyTable01.innerHTML = html
     }
 
@@ -176,11 +192,11 @@ function grupobar(dataDB, id, option, nombreFiltro) {
         });
         optionColumns = 2
     }
+
+
     populateComboSalas(labelsCombo)
 
     SELECT_ANIO.innerHTML = htmlCombo
-
-
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)

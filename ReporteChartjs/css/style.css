@@ -197,3 +197,7 @@ select {
     height: 30px;
     width: 200px;
 }
+
+.tableTotales {
+    border-top: 3px solid black;
+}
