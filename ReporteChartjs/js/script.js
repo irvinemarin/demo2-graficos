@@ -115,7 +115,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     })
     //bind HEAder
     templistHeader.forEach((key, index) => {
-        console.log(key)
+        // console.log(key)
         if (key == "03_anno") return
 
         let keySubstring = key
