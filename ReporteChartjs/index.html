@@ -27,7 +27,7 @@
     <hr>
 
 
-    <div class="leftPanel">
+    <div class="leftPanel no-print">
         <div class="contentBackground">
             <div class="listaReportes">
                 <div class="item-report activate" onclick="onCLickListener('1','REPORTE DE INGRESOS',this)">
@@ -47,14 +47,14 @@
 
     <div class="mainPanel">
         <div style="right: 0;position: absolute">
-            <button type="button" class="btn btn-success" onclick="print()">IMPRIMIR</button>
+            <button type="button" class="btn btn-primary no-print" onclick="print()">IMPRIMIR</button>
         </div>
 
         <h2 class="loading">Esperando respuesta de la API...</h2>
         <div style="position: fixed; top: 50%;left: 50% "
              id="spinnerGrafico" class="justify-content-center">
             <div class="spinner-border text-primary " style="width: 5rem; height: 5rem;" role="status">
-                Loading
+                <!--                Loading-->
                 <!--                <span class="sr-only">Loading...</span>-->
             </div>
         </div>
@@ -182,7 +182,7 @@
 </main>
 
 <footer>
-    <div class="footer-custom">
+    <div class="footer-custom no-print">
         <br>
         <img
                 height="25"

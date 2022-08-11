@@ -151,7 +151,7 @@ section {
 }
 
 .leftPanel {
-    width: 15%;
+    width: 17%;
     background-color: #838383;
     height: 139vh;
     position: absolute;
@@ -161,7 +161,7 @@ section {
 .mainPanel {
     width: 75%;
     position: absolute;
-    left: 20%;
+    left: 21%;
 }
 
 .listaReportes {
@@ -179,10 +179,11 @@ section {
 
 .listaReportes .item-report {
     height: 100%;
+    color: black;
     width: 100%;
     margin-bottom: 4px;
     text-align: left;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid #000000;
 }
 
 .listaReportes .item-report:hover {
@@ -256,4 +257,14 @@ select {
     width: 100% !important;
     background-color: #770000 !important;
 
+}
+
+@media print {
+    .no-print, .no-print * {
+        display: none !important;
+    }
+
+    .mainPanel {
+        margin-left: -10% !important;
+    }
 }
