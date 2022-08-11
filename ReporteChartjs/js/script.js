@@ -20,14 +20,26 @@ function loadGraficoDetalle(option) {
         ittulo.innerText = "REPORTE DE INGRESOS";
 
         fetch(gethostApi() + 'getListadoExpIngresos', {
-            method: 'get',
-            headers: new Headers({
+            method: 'get', headers: new Headers({
                 'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
                 'Content-Type': 'application/json'
             })
         })
             .then(response => response.json())
-            .then(data => printCharts(data, 1))
+            .then((data) => {
+                alert("getListadoExpIngresos")
+
+                if (data.length > 0) {
+                    printCharts(data, 1)
+                } else {
+                    alert("No se encontraron Resultados")
+                    spinnerGrafico.style.display = 'none'
+                }
+            }, onerror => {
+                spinnerGrafico.style.display = 'none'
+                alert("Servicio no Disponible")
+            })
+
 
     }
     // if (option == "01") grupobar(data001, 'chart7_2', option, "00_Recurso", true)//grafico principal
@@ -83,16 +95,23 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     // console.log(spinner)
     spinner.style = "display : block !important";
 
-    // http://172.22.3.65:4000/api/getIngresosMensualTipoRecurso'
     fetch(gethostApi() + nameWS, {
-        method: 'get',
-        headers: new Headers({
+        method: 'get', headers: new Headers({
             'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
             'Content-Type': 'application/json'
         })
     })
         .then(response => response.json())
-        .then(data => bindtabla(data, nroTable, idChartjs, spinner, positionParentReport))
+        .then((data) => {
+            if (data.length > 0) {
+                bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
+            } else {
+                alert("No se encontraron Resultados")
+            }
+        }, onerror => {
+            alert("Servicio no Disponible")
+        })
+
 }
 
 function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
@@ -288,7 +307,7 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
 
         let htmlComboAnio = ''
 
-        console.table(TempComboList)
+        // console.table(TempComboList)
 
         Object.keys(TempComboList).forEach(it => {
             // console.log(it)
@@ -330,19 +349,52 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
             h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
 
             if (positionParentReport == 1) {
-                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+                setTimeout(() => {
+                    getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                    var spinner = document.getElementById("spinner01")
+                    spinner.style.display = 'none'
+
+                }, 3000)
+
+                setTimeout(() => {
+                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                    var spinner = document.getElementById("spinner02")
+                    spinner.style.display = 'none'
+
+                }, 6000)
             }
             if (positionParentReport == 2) {
-                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
 
-                // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                setTimeout(() => {
+                    getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                    var spinner = document.getElementById("spinner01")
+                    spinner.style.display = 'none'
+
+                }, 3000)
+
+                setTimeout(() => {
+                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                    var spinner = document.getElementById("spinner02")
+                    spinner.style.display = 'none'
+
+                }, 6000)
 
             }
             if (positionParentReport == 3) {
-                getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
+                setTimeout(() => {
+                    getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                    var spinner = document.getElementById("spinner01")
+                    spinner.style.display = 'none'
+                }, 3000)
+
+                setTimeout(() => {
+                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
+                    var spinner = document.getElementById("spinner02")
+                    spinner.style.display = 'none'
+                }, 6000)
+
 
                 // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
 
@@ -396,8 +448,7 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
     })
 
     const data = {
-        labels: arraySubtring,
-        datasets: datasetsDynamic
+        labels: arraySubtring, datasets: datasetsDynamic
     }
 
 
@@ -406,29 +457,20 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
             labels: {
                 fontColor: '#000000',
             }
-        },
-        title: {
-            display: true,
-            text: 'COMPARACION SALAS POR AÑO',
-            fontColor: '#000000',
-        },
-        scales: {
+        }, title: {
+            display: true, text: 'COMPARACION SALAS POR AÑO', fontColor: '#000000',
+        }, scales: {
             yAxes: [{
                 gridLines: {
                     display: false
-                },
-                ticks: {
-                    fontColor: '#000000',
-                    display: true
+                }, ticks: {
+                    fontColor: '#000000', display: true
                 }
-            }],
-            xAxes: [{
+            }], xAxes: [{
                 gridLines: {
                     display: true
-                },
-                ticks: {
-                    fontColor: '#000000',
-                    display: true
+                }, ticks: {
+                    fontColor: '#000000', display: true
                 }
             }]
         }
@@ -475,9 +517,7 @@ function datajson() {
     for (var i = 0; i < arrayNombres.length; i++) {
 
         list.datos.push({
-            "nombre": arrayNombres[i],
-            "apellido": arrayApellido[i],
-            "ciudad": arrayCiudad[i]
+            "nombre": arrayNombres[i], "apellido": arrayApellido[i], "ciudad": arrayCiudad[i]
         });
     }
     ;

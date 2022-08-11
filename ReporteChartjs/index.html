@@ -217,7 +217,7 @@
         var listaItems = document.getElementsByClassName("item-report")
 
         for (var i = 0; i < listaItems.length; i++) {
-            console.log(listaItems[i])
+            // console.log(listaItems[i])
             listaItems[i].classList.remove("activate");
         }
         e.classList.add("activate");
@@ -232,7 +232,18 @@
                 })
             })
                 .then(response => response.json())
-                .then(data => printCharts(data, position, titulo))
+                .then(
+                    (data) => {
+                        if (data.length > 0)
+                            printCharts(data, position, titulo)
+                        else {
+                            alert("No se encontraron Resultados")
+                        }
+                    },
+                    onerror => {
+                        alert("Servicio no Disponible")
+                    })
+
         }
         if (position == 2) {
             fetch(gethostApi() + 'getListadoProgramaciones', {
@@ -243,7 +254,17 @@
                 })
             })
                 .then(response => response.json())
-                .then(data => printCharts(data, position, titulo))
+                .then(
+                    (data) => {
+                        if (data.length > 0)
+                            printCharts(data, position, titulo)
+                        else {
+                            alert("No se encontraron Resultados")
+                        }
+                    },
+                    onerror => {
+                        alert("Servicio no Disponible")
+                    })
         }
         if (position == 3) {
             fetch(gethostApi() + 'getListadoEscritosAnual/2022', {
@@ -254,7 +275,17 @@
                 })
             })
                 .then(response => response.json())
-                .then(data => printCharts(data, position, titulo))
+                .then(
+                    (data) => {
+                        if (data.length > 0)
+                            printCharts(data, position, titulo)
+                        else {
+                            alert("No se encontraron Resultados")
+                        }
+                    },
+                    onerror => {
+                        alert("Servicio no Disponible")
+                    })
         }
     }
 </script>
