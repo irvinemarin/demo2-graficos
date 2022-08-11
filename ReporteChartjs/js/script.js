@@ -1,9 +1,9 @@
 // Defaults
-Chart.defaults.global.defaultFontColor = '#fff'
-Chart.defaults.global.elements.line.borderWidth = 1
-Chart.defaults.global.elements.rectangle.borderWidth = 1
-Chart.defaults.scale.gridLines.color = '#444'
-Chart.defaults.scale.ticks.display = false
+// Chart.defaults.global.defaultFontColor = '#ffffff'
+// Chart.defaults.global.elements.line.borderWidth = 1
+// Chart.defaults.global.elements.rectangle.borderWidth = 1
+// Chart.defaults.scale.gridLines.color = '#444444'
+// Chart.defaults.scale.ticks.display = false
 
 
 var optionColumns = 1;
@@ -13,49 +13,86 @@ loadGraficoDetalle("00");
 
 function loadGraficoDetalle(option) {
 
-
     if (option == "00") {
-        fetch('http://localhost:4000/api/getListadoExpIngresos', {
-            method: 'get', headers: new Headers({
-                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                'Content-Type': 'application/json'
+        fetch('http://172.22.3.65:4000/api/getListadoExpIngresos', {
+                method: 'get',
+                headers: new Headers({
+                    'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+                    'Content-Type': 'application/json'
+                })
             })
-        })
             .then(response => response.json())
-            .then(data => printCharts(data, option))
-
-
+            .then(data => printCharts(data, 1))
     }
-
-
-    if (option == "01") grupobar(data001, 'chart7_2', option, "00_Recurso")//grafico principal
-    if (option == "02") grupobar(data002, 'chart7_2', option, "00_CorteProcedencia")//grafico principal
+    // if (option == "01") grupobar(data001, 'chart7_2', option, "00_Recurso", true)//grafico principal
+    // if (option == "02") grupobar(data002, 'chart7_2', option, "00_CorteProcedencia", true)//grafico principal
 
 }
 
 var data001 = []
 var data002 = []
 
-function printCharts(coasters, option) {
+var dataReport1 = []
+var dataReport2 = []
+
+function printCharts(dataDB, positionParentReportHTML) {
+    positionParentReport = positionParentReportHTML
+        // console.table(coasters)
     document.body.classList.add('running')
-    grupobar(coasters, 'chart7', option, "anno")//grafico principal
+    var chart7 = document.getElementById("content01")
+    var chart72 = document.getElementById("content02")
+    var chart73 = document.getElementById("content03")
+    if (positionParentReportHTML == 1) {
+        chart7.style.display = 'block'
+        chart73.style.display = 'none'
+        chart72.style.display = 'none'
+        grupobar(dataDB, 'chart7', positionParentReportHTML, "00_anno") //grafico principal
+    }
+    if (positionParentReportHTML == 2) {
+        chart7.style.display = 'none'
+        chart73.style.display = 'none'
+        chart72.style.display = 'block'
+        grupobar(dataDB, 'chart72', positionParentReportHTML, "00_anno") //grafico principal
 
+    }
+    if (positionParentReportHTML == 3) {
+        chart7.style.display = 'none'
+        chart72.style.display = 'none'
+        chart73.style.display = 'block'
+        grupobar(dataDB, 'chart73', positionParentReportHTML, "00_anno") //grafico principal
+    }
 
 }
 
-function getInfoTabla1(nroTable, nameWS) {
-    // http://localhost:4000/api/getIngresosMensualTipoRecurso'
-    fetch('http://localhost:4000/api/' + nameWS, {
-        method: 'get', headers: new Headers({
-            'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-            'Content-Type': 'application/json'
+function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
+
+
+    var spinner = document.getElementById("spinner" + nroTable)
+    var tablaContent01 = document.getElementById("tablaContent01")
+    var tablaContent02 = document.getElementById("tablaContent02")
+    tablaContent01.style.display = 'none'
+    tablaContent02.style.display = 'none'
+
+    // console.log(spinner)
+    spinner.style = "display : block !important";
+
+    // http://172.22.3.65:4000/api/getIngresosMensualTipoRecurso'
+    fetch('http://172.22.3.65:4000/api/' + nameWS, {
+            method: 'get',
+            headers: new Headers({
+                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+                'Content-Type': 'application/json'
+            })
         })
-    })
         .then(response => response.json())
-        .then(data => bindtabla(data, nroTable))
+        .then(data => bindtabla(data, nroTable, idChartjs, spinner, positionParentReport))
 }
 
-function bindtabla(data, nroTable) {
+function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
+
+
+    // console.table(data)
+
     if (nroTable == "01") data001 = data
     if (nroTable == "02") data002 = data
     var headerTable01 = document.getElementById("headerTable" + nroTable)
@@ -71,23 +108,28 @@ function bindtabla(data, nroTable) {
     let templistHeader = []
 
     templistHeader = Object.keys(data[0]).sort((a, b) => {
-        return a.localeCompare(b)
-    })
-//bind HEAder
-    templistHeader.forEach(key => {
-        htmlHeader += "<th>" + key.substring(3, key.length) + "</th>"
+            return a.localeCompare(b)
+        })
+        //bind HEAder
+    templistHeader.forEach((key, index) => {
+        let keySubstring = key
+        if (true) keySubstring = key.substring(3, 6)
+        htmlHeader += "<th>" + keySubstring + ".</th>"
     })
     headerTable01.innerHTML = htmlHeader;
 
-//FIN
+    //FIN
     bindTableBody(data, templistHeader, select_Filtro, bodyTable01, false)
 
 
-    function bindTableBody(data, templistHeader, selectable, bodyTable01, optionSelect) {
+    function bindTableBody(data, templistHeader, selectFiltro, bodyTable01, optionSelect) {
         var html = '';
 
         let arrayTotales = []
         let htmlCombo = ''
+
+        let listComboFiltro = []
+
         htmlCombo += "<option  value='-1'> -- Todos -- </option>"
         data.forEach(dbItem => {
             html += "<tr>"
@@ -95,11 +137,10 @@ function bindtabla(data, nroTable) {
                 Object.values(dbItem).forEach((value, posValue) => {
                     if (!optionSelect) {
                         if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
-                            htmlCombo += "<option value='" + value + "&" + keyName + "'>" + value + " </option>"
+                            listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
                         }
                     }
                     if (keyName == Object.keys(dbItem)[posValue]) {
-
                         html += "<td>" + value + "</td>"
                     }
 
@@ -110,23 +151,38 @@ function bindtabla(data, nroTable) {
             })
             html += "</tr>"
         })
+
+        Object.keys(listComboFiltro).forEach(it => {
+            console.log(it)
+
+            let key = it.split("&")[1]
+            let valueS = it.split("&")[0]
+            htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
+        })
+
         if (!optionSelect) {
-            selectable.innerHTML = htmlCombo;
+            selectFiltro.innerHTML = htmlCombo;
         }
 
         // console.table(arrayTotales)
-        html += "<tr class='tableTotales' >"
-        html += "<td>Totales</td>"
-        Object.values(arrayTotales).forEach(item => {
-            html += "<td>" + item + "</td>"
-        })
-        html += "</tr>"
+        // html += "<tr class='tableTotales' >"
+        // html += "<td>Totales</td>"
+        // Object.values(arrayTotales).forEach(item => {
+        //     html += "<td>" + item + "</td>"
+        // })
+        // html += "</tr>"
 
         bodyTable01.innerHTML = html
+
+
+        var tablaContent01 = document.getElementById("tablaContent01")
+        var tablaContent02 = document.getElementById("tablaContent02")
+        tablaContent01.style.display = 'block'
+        tablaContent02.style.display = 'block'
     }
 
-
-    select_Filtro.addEventListener('change', function (e) {
+    spinner.style.display = "none"
+    select_Filtro.addEventListener('change', function(e) {
         // console.log(this.value)
         let key = this.value.split("&")[1]
         let valueS = this.value.split("&")[0]
@@ -136,23 +192,33 @@ function bindtabla(data, nroTable) {
 
         if (this.value == -1) {
             bindTableBody(data, templistHeader, select_Filtro, bodyTable01, true)
+            spinner.style.display = 'none !important'; //ocultaSpiner
         } else {
             bindTableBody(listFilter, templistHeader, select_Filtro, bodyTable01, true)
+            spinner.style.display = 'none !important'; //ocultaSpiner
         }
     });
 
 }
 
+var positionParentReport = 0
 
-function grupobar(dataDB, id, option, nombreFiltro) {
+function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
+    var canvas = document.getElementById(idChartjs)
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
 
     let dataCount = []
     let datasetsDynamic = []
     let labelsDynamic = []
-    let labelsCombo = []
+    let labelsComboSala = []
     let item;
     var SELECT_ANIO = document.getElementById("selectableAnio")
-    let htmlCombo = ''
+
+
+    let TempComboList = []
+
     if (true) {
         // listaHorizontal
 
@@ -164,19 +230,26 @@ function grupobar(dataDB, id, option, nombreFiltro) {
 
                     DataTemp.push(value)
                     if (index == 0) {
+
+                        // if (idChartjs != "charts7_2") {
                         labelsDynamic.push(key.substring(4, key.length))
-                        labelsCombo.push(key)
+                            // // } else {
+                            //     labelsDynamic.push(key)
+                            // // }
+
+
+                        labelsComboSala.push(key)
                     }
                 }
                 if (nombreFiltro == key) {
-                    htmlCombo += `<option value='${element[nombreFiltro]}'>${element[nombreFiltro]} </option>`
-                    aniooSeleccionado = element[nombreFiltro]
+                    TempComboList[element[nombreFiltro]] = (TempComboList[element[nombreFiltro]] || 0) + 1;
+
 
                 }
             });
 
             let AliasText = ''
-            if (nombreFiltro == "anno") {
+            if (nombreFiltro == "00_anno") {
                 AliasText = "AÑO"
             } else {
                 AliasText = nombreFiltro
@@ -185,7 +258,7 @@ function grupobar(dataDB, id, option, nombreFiltro) {
             item = {
                 label: AliasText + " " + element[nombreFiltro],
                 data: DataTemp,
-                borderColor: "#fff",
+                borderColor: styles.color.solids[index],
                 backgroundColor: styles.color.alphas[index]
             };
             datasetsDynamic.push(item)
@@ -193,40 +266,71 @@ function grupobar(dataDB, id, option, nombreFiltro) {
         optionColumns = 2
     }
 
+    if (!isChild) {
 
-    populateComboSalas(labelsCombo)
+        let htmlComboAnio = ''
 
-    SELECT_ANIO.innerHTML = htmlCombo
-    SELECT_ANIO.addEventListener('change', function (e) {
-        aniooSeleccionado = this.value
-        lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
-    });
+        console.table(TempComboList)
 
-    function populateComboSalas(listaCombo) {
-        var selectFiltroSalas = document.getElementById("selectable03")
-        let htmlCombo = ''
-        // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
-        listaCombo.forEach(value => {
-            let valueSplited = value.split("_")[1]
-            let c_instancia = value.split("_")[0]
-            htmlCombo += "<option value='" + c_instancia + "'>" + valueSplited + " </option>"
+        Object.keys(TempComboList).forEach(it => {
+            // console.log(it)
+            htmlComboAnio += `<option  value='${it}'>${it} </option>`
+            aniooSeleccionado = it
+            console.log("aniooSeleccionado :" + aniooSeleccionado)
         })
-        selectFiltroSalas.innerHTML = htmlCombo;
+        SELECT_ANIO.innerHTML = htmlComboAnio
+        SELECT_ANIO.value = aniooSeleccionado
 
-        selectFiltroSalas.addEventListener('change', function (e) {
-            // console.log(this.value, this.text)
-            lisarTablas(this.value, this.options[this.selectedIndex].text)
+        SELECT_ANIO.addEventListener('change', function(e) {
+            aniooSeleccionado = this.value
+            lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
         });
-        lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
-    }
+        populateComboSalas(labelsComboSala)
 
-    function lisarTablas(c_instacia, nombreSala) {
-        nombreSalaSeleccionada = nombreSala
-        cInsatnciaSelected = c_instacia
-        var h3_titulos = document.getElementById("tituloSalaFiltro")
-        h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
-        getInfoTabla1("01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
-        getInfoTabla1("02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+        function populateComboSalas(listaCombo) {
+            var selectFiltroSalas = document.getElementById("selectableFiltroSala")
+            let htmlCombo = ''
+                // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+            listaCombo.forEach(value => {
+                let valueSplited = value.split("_")[1]
+                let c_instancia = value.split("_")[0]
+                htmlCombo += "<option value='" + c_instancia + "'>" + valueSplited + " </option>"
+            })
+            selectFiltroSalas.innerHTML = htmlCombo;
+
+            selectFiltroSalas.addEventListener('change', function(e) {
+                // console.log(this.value, this.text)
+                lisarTablas(this.value, this.options[this.selectedIndex].text)
+            });
+            lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
+        }
+
+        function lisarTablas(c_instacia, nombreSala) {
+            nombreSalaSeleccionada = nombreSala
+            cInsatnciaSelected = c_instacia
+            var h3_titulos = document.getElementById("tituloSalaFiltro")
+            h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
+
+            if (positionParentReport == 1) {
+                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+            }
+            if (positionParentReport == 2) {
+                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+                // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+            }
+            if (positionParentReport == 3) {
+                getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
+                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
+
+                // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+            }
+
+        }
     }
 
 
@@ -264,27 +368,52 @@ function grupobar(dataDB, id, option, nombreFiltro) {
 
 
     const data = {
-        labels: labelsDynamic, datasets: datasetsDynamic
+        labels: labelsDynamic,
+        datasets: datasetsDynamic
     }
 
 
     const options = {
         legend: {
-            display: true
-        }, title: {
-            display: true, text: 'Comparacion Salas por anio'
-        }, scales: {
+            labels: {
+                fontColor: '#000000',
+            }
+        },
+        title: {
+            display: true,
+            text: 'COMPARACION SALAS POR AÑO',
+            fontColor: '#000000',
+        },
+        scales: {
             yAxes: [{
                 gridLines: {
+                    display: false
+                },
+                ticks: {
+                    fontColor: '#000000',
                     display: true
-                }, ticks: {
+                }
+            }],
+            xAxes: [{
+                gridLines: {
+                    display: true
+                },
+                ticks: {
+                    fontColor: '#000000',
                     display: true
                 }
             }]
         }
     }
 
-    new Chart(id, {type: 'bar', data, options})
+    // let chart = document.getElementById(idChartjs)
+    // if (chart == null) {
+    new Chart(idChartjs, { type: 'bar', data, options })
+        // } else {
+        //     chart.data = data
+        //     // chart.update()
+        // }
+
 }
 
 var nombreSalaSeleccionada = ""
@@ -317,10 +446,11 @@ function datajson() {
     for (var i = 0; i < arrayNombres.length; i++) {
 
         list.datos.push({
-            "nombre": arrayNombres[i], "apellido": arrayApellido[i], "ciudad": arrayCiudad[i]
+            "nombre": arrayNombres[i],
+            "apellido": arrayApellido[i],
+            "ciudad": arrayCiudad[i]
         });
-    }
-    ;
+    };
 
     json = JSON.stringify(list); // aqui tienes la lista de objetos en Json
     var obj = JSON.parse(json);

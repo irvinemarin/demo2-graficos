@@ -1,5 +1,5 @@
 body {
-    background: #e3e3e3;
+    background: #ffffff;
     font-family: 'Kanit', sans-serif;
     color: #525252;
     font-size: .7em;
@@ -12,13 +12,22 @@ html {
     font-weight: 300;
 }
 
+#fondoPJ {
+    width: 100% !important;
+    height: 28px !important;;
+    /*background-color: black;*/
+
+    background-repeat: repeat-x;
+    background-image: url("/ReporteChartjs/assets/icon_canvas.png") !important;
+}
+
 main {
 
     /*padding: 60px;*/
 }
 
 section {
-    background-color: #41485b;
+    /*background-color: #41485b;*/
     margin-bottom: 40px;
 }
 
@@ -36,20 +45,31 @@ h1 span {
 }
 
 h2, h3 {
-    font-size: 1.4em;
+
+    font-size: 2em;
     margin-bottom: 29px;
-    border-bottom: 1px solid rgb(86, 86, 86);
+    border-bottom: 5px solid rgb(86, 86, 86);
     padding-bottom: 15px;
-    font-weight: 200;
+    font-weight: 900 !important;
 }
 
 hr {
+    margin-top: 0px;
     border-color: #770000;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
+/*.container-subreport {*/
+/*    display: flex;*/
+/*    width: 100%;*/
+/*    !*justify-content: space-between;*!*/
+/*}*/
+
 figure {
+
     padding: 10px 10px 30px;
+    border-bottom: 2px solid darkred;
+    /*background: red;*/
 }
 
 figure p {
@@ -59,7 +79,9 @@ figure p {
 }
 
 figure p, h3 {
-    color: #e0e0e0;
+    color: #000000;
+    font-size: 15px;
+    text-transform: uppercase;
 }
 
 canvas {
@@ -114,17 +136,17 @@ section {
 
 
 .leftPanel {
-    width: 20%;
-    background-color: #cbcbcb;
+    width: 15%;
+    background-color: #dadada;
     height: 100vh;
     position: absolute;
     left: 2%;
 }
 
 .mainPanel {
-    width: 65%;
+    width: 75%;
     position: absolute;
-    left: 25%;
+    left: 20%;
 }
 
 .listaReportes {
@@ -156,11 +178,11 @@ table.greyGridTable {
 
 table.greyGridTable td, table.greyGridTable th {
     border: 1px solid #FFFFFF;
-    padding: 3px 4px;
+    padding: 1px 2px;
 }
 
 table.greyGridTable tbody td {
-    font-size: 12px;
+    font-size: 10px;
 }
 
 table.greyGridTable td:nth-child(even) {
@@ -173,7 +195,7 @@ table.greyGridTable thead {
 }
 
 table.greyGridTable thead th {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bold;
     color: #333333;
     text-align: center;
@@ -185,7 +207,7 @@ table.greyGridTable thead th:first-child {
 }
 
 table.greyGridTable tfoot td {
-    font-size: 12px;
+    font-size: 9px;
 }
 
 label {
