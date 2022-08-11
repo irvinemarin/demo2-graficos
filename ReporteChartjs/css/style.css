@@ -5,6 +5,7 @@ body {
     font-size: .7em;
     font-weight: 200;
     letter-spacing: 1px;
+
 }
 
 html {
@@ -14,8 +15,7 @@ html {
 
 #fondoPJ {
     width: 100% !important;
-    height: 28px !important;
-    ;
+    height: 28px !important;;
     /*background-color: black;*/
     background-repeat: repeat-x;
     background-image: url("../assets/icon_canvas.png") !important;
@@ -113,17 +113,17 @@ canvas {
     flex-wrap: nowrap;
 }
 
-.cols-3>* {
+.cols-3 > * {
     width: 33.33%;
     margin: 10px
 }
 
-.cols-2>* {
+.cols-2 > * {
     width: 50%;
     margin: 10px
 }
 
-.cols-1>* {
+.cols-1 > * {
     width: 100%;
     margin: 10px
 }
@@ -152,8 +152,8 @@ section {
 
 .leftPanel {
     width: 15%;
-    background-color: #dadada;
-    height: 100vh;
+    background-color: #838383;
+    height: 139vh;
     position: absolute;
     left: 2%;
 }
@@ -168,6 +168,13 @@ section {
     margin: 8px;
     padding: 8px;
     background-color: #ffffff;
+}
+
+.contentBackground {
+    margin-left: 10px;
+    width: 88% !important;
+    height: 98.75% !important;
+    background: #ffffff !important;
 }
 
 .listaReportes .item-report {
@@ -238,4 +245,15 @@ select {
 
 .tableTotales {
     border-top: 3px solid black;
+}
+
+.footer-custom {
+    font-size: 15px;
+    text-align: center;
+    margin-top: 140vh;
+    height: 100px !important;
+    color: #ffffff !important;
+    width: 100% !important;
+    background-color: #770000 !important;
+
 }
