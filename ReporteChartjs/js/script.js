@@ -433,20 +433,15 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
             }]
         }
     }
-
-
     var canvas = document.getElementById(idChartjs)
     canvas.remove()
-
     var Contentchart7 = document.getElementById("Contentchart7")
     var Contentchart72 = document.getElementById("Contentchart72")
     var Contentchart73 = document.getElementById("Contentchart73")
     Contentchart7.innerHTML = ' <canvas id="chart7"></canvas>'
     Contentchart72.innerHTML = ' <canvas id="chart72"></canvas>'
     Contentchart73.innerHTML = ' <canvas id="chart73"></canvas>'
-
     new Chart(idChartjs, {type: 'bar', data, options})
-
     spinnerGrafico.style.display = 'none'
 }
 
