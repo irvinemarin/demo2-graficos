@@ -14,21 +14,30 @@ html {
 
 #fondoPJ {
     width: 100% !important;
-    height: 28px !important;;
+    height: 28px !important;
+    ;
     /*background-color: black;*/
-
     background-repeat: repeat-x;
-    background-image: url("/ReporteChartjs/assets/icon_canvas.png") !important;
+    background-image: url("../assets/icon_canvas.png") !important;
 }
 
 main {
-
     /*padding: 60px;*/
 }
 
 section {
     /*background-color: #41485b;*/
     margin-bottom: 40px;
+}
+
+.container-title h3 {
+    text-align: center;
+    font-size: 25px;
+}
+
+.activate {
+    background-color: #cbcbcb;
+    color: white;
 }
 
 h1 {
@@ -40,12 +49,11 @@ h1 {
 }
 
 h1 span {
-
     font-size: 12px;
 }
 
-h2, h3 {
-
+h2,
+h3 {
     font-size: 2em;
     margin-bottom: 29px;
     border-bottom: 5px solid rgb(86, 86, 86);
@@ -59,14 +67,22 @@ hr {
     margin-bottom: 5px;
 }
 
+
 /*.container-subreport {*/
+
+
 /*    display: flex;*/
+
+
 /*    width: 100%;*/
+
+
 /*    !*justify-content: space-between;*!*/
+
+
 /*}*/
 
 figure {
-
     padding: 10px 10px 30px;
     border-bottom: 2px solid darkred;
     /*background: red;*/
@@ -75,10 +91,10 @@ figure {
 figure p {
     margin-bottom: 7px;
     font-size: .8em;
-
 }
 
-figure p, h3 {
+figure p,
+h3 {
     color: #000000;
     font-size: 15px;
     text-transform: uppercase;
@@ -97,17 +113,17 @@ canvas {
     flex-wrap: nowrap;
 }
 
-.cols-3 > * {
+.cols-3>* {
     width: 33.33%;
     margin: 10px
 }
 
-.cols-2 > * {
+.cols-2>* {
     width: 50%;
     margin: 10px
 }
 
-.cols-1 > * {
+.cols-1>* {
     width: 100%;
     margin: 10px
 }
@@ -133,7 +149,6 @@ section {
 .running .loading {
     display: none;
 }
-
 
 .leftPanel {
     width: 15%;
@@ -176,7 +191,8 @@ table.greyGridTable {
     border-collapse: collapse;
 }
 
-table.greyGridTable td, table.greyGridTable th {
+table.greyGridTable td,
+table.greyGridTable th {
     border: 1px solid #FFFFFF;
     padding: 1px 2px;
 }

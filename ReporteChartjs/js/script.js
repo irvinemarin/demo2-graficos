@@ -10,19 +10,25 @@ var optionColumns = 1;
 
 loadGraficoDetalle("00");
 
+var spinnerGrafico;
 
 function loadGraficoDetalle(option) {
 
+
     if (option == "00") {
-        fetch('http://172.22.3.65:4000/api/getListadoExpIngresos', {
-                method: 'get',
-                headers: new Headers({
-                    'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                    'Content-Type': 'application/json'
-                })
+        var ittulo = document.getElementById("tituloReporte1")
+        ittulo.innerText = "REPORTE DE INGRESOS";
+
+        fetch(gethostApi() + 'getListadoExpIngresos', {
+            method: 'get',
+            headers: new Headers({
+                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+                'Content-Type': 'application/json'
             })
+        })
             .then(response => response.json())
             .then(data => printCharts(data, 1))
+
     }
     // if (option == "01") grupobar(data001, 'chart7_2', option, "00_Recurso", true)//grafico principal
     // if (option == "02") grupobar(data002, 'chart7_2', option, "00_CorteProcedencia", true)//grafico principal
@@ -36,8 +42,11 @@ var dataReport1 = []
 var dataReport2 = []
 
 function printCharts(dataDB, positionParentReportHTML) {
+    spinnerGrafico = document.getElementById("spinnerGrafico");
+
+    spinnerGrafico.style.display = 'block'
     positionParentReport = positionParentReportHTML
-        // console.table(coasters)
+    // console.table(coasters)
     document.body.classList.add('running')
     var chart7 = document.getElementById("content01")
     var chart72 = document.getElementById("content02")
@@ -65,8 +74,6 @@ function printCharts(dataDB, positionParentReportHTML) {
 }
 
 function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
-
-
     var spinner = document.getElementById("spinner" + nroTable)
     var tablaContent01 = document.getElementById("tablaContent01")
     var tablaContent02 = document.getElementById("tablaContent02")
@@ -77,22 +84,18 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     spinner.style = "display : block !important";
 
     // http://172.22.3.65:4000/api/getIngresosMensualTipoRecurso'
-    fetch('http://172.22.3.65:4000/api/' + nameWS, {
-            method: 'get',
-            headers: new Headers({
-                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                'Content-Type': 'application/json'
-            })
+    fetch(gethostApi() + nameWS, {
+        method: 'get',
+        headers: new Headers({
+            'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+            'Content-Type': 'application/json'
         })
+    })
         .then(response => response.json())
         .then(data => bindtabla(data, nroTable, idChartjs, spinner, positionParentReport))
 }
 
 function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
-
-
-    // console.table(data)
-
     if (nroTable == "01") data001 = data
     if (nroTable == "02") data002 = data
     var headerTable01 = document.getElementById("headerTable" + nroTable)
@@ -108,10 +111,13 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     let templistHeader = []
 
     templistHeader = Object.keys(data[0]).sort((a, b) => {
-            return a.localeCompare(b)
-        })
-        //bind HEAder
+        return a.localeCompare(b)
+    })
+    //bind HEAder
     templistHeader.forEach((key, index) => {
+        console.log(key)
+        if (key == "03_anno") return
+
         let keySubstring = key
         if (true) keySubstring = key.substring(3, 6)
         htmlHeader += "<th>" + keySubstring + ".</th>"
@@ -134,7 +140,10 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         data.forEach(dbItem => {
             html += "<tr>"
             templistHeader.forEach((keyName, posHeaderOrdered) => {
+                if (keyName == "03_anno") return
                 Object.values(dbItem).forEach((value, posValue) => {
+
+
                     if (!optionSelect) {
                         if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
                             listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
@@ -145,7 +154,14 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
                     }
 
                     if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
-                        arrayTotales[keyName] = (arrayTotales[keyName] || 0) + value
+
+                        if (parseInt(value) >= 0) {
+                            arrayTotales[keyName] = (arrayTotales[keyName] || 0) + value
+                        } else {
+                            arrayTotales[keyName] = ""
+                        }
+
+
                     }
                 })
             })
@@ -153,7 +169,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         })
 
         Object.keys(listComboFiltro).forEach(it => {
-            console.log(it)
+            // console.log(it)
 
             let key = it.split("&")[1]
             let valueS = it.split("&")[0]
@@ -165,12 +181,14 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         }
 
         // console.table(arrayTotales)
-        // html += "<tr class='tableTotales' >"
-        // html += "<td>Totales</td>"
-        // Object.values(arrayTotales).forEach(item => {
-        //     html += "<td>" + item + "</td>"
-        // })
-        // html += "</tr>"
+        html += "<tr class='tableTotales' >"
+        html += "<td>Totales</td>"
+        Object.values(arrayTotales).forEach(item => {
+
+
+            html += "<td>" + item + "</td>"
+        })
+        html += "</tr>"
 
         bodyTable01.innerHTML = html
 
@@ -182,7 +200,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     }
 
     spinner.style.display = "none"
-    select_Filtro.addEventListener('change', function(e) {
+    select_Filtro.addEventListener('change', function (e) {
         // console.log(this.value)
         let key = this.value.split("&")[1]
         let valueS = this.value.split("&")[0]
@@ -204,9 +222,6 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 var positionParentReport = 0
 
 function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
-    var canvas = document.getElementById(idChartjs)
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
 
 
     let dataCount = []
@@ -232,10 +247,13 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
                     if (index == 0) {
 
                         // if (idChartjs != "charts7_2") {
-                        labelsDynamic.push(key.substring(4, key.length))
-                            // // } else {
-                            //     labelsDynamic.push(key)
-                            // // }
+
+                        labelsDynamic.push(key/*.substring(4, key.length)*/)
+
+
+                        // // } else {
+                        //     labelsDynamic.push(key)
+                        // // }
 
 
                         labelsComboSala.push(key)
@@ -276,12 +294,12 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
             // console.log(it)
             htmlComboAnio += `<option  value='${it}'>${it} </option>`
             aniooSeleccionado = it
-            console.log("aniooSeleccionado :" + aniooSeleccionado)
+            // console.log("aniooSeleccionado :" + aniooSeleccionado)
         })
         SELECT_ANIO.innerHTML = htmlComboAnio
         SELECT_ANIO.value = aniooSeleccionado
 
-        SELECT_ANIO.addEventListener('change', function(e) {
+        SELECT_ANIO.addEventListener('change', function (e) {
             aniooSeleccionado = this.value
             lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
         });
@@ -290,7 +308,7 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
         function populateComboSalas(listaCombo) {
             var selectFiltroSalas = document.getElementById("selectableFiltroSala")
             let htmlCombo = ''
-                // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+            // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
             listaCombo.forEach(value => {
                 let valueSplited = value.split("_")[1]
                 let c_instancia = value.split("_")[0]
@@ -298,7 +316,7 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
             })
             selectFiltroSalas.innerHTML = htmlCombo;
 
-            selectFiltroSalas.addEventListener('change', function(e) {
+            selectFiltroSalas.addEventListener('change', function (e) {
                 // console.log(this.value, this.text)
                 lisarTablas(this.value, this.options[this.selectedIndex].text)
             });
@@ -367,8 +385,18 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
     // }
 
 
+    labelsDynamic.sort((a, b) => {
+        return a.localeCompare(b)
+    })
+
+    let arraySubtring = []
+
+    labelsDynamic.forEach((a, pos) => {
+        arraySubtring[pos] = a.substring(4, a.length)
+    })
+
     const data = {
-        labels: labelsDynamic,
+        labels: arraySubtring,
         datasets: datasetsDynamic
     }
 
@@ -406,14 +434,20 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
         }
     }
 
-    // let chart = document.getElementById(idChartjs)
-    // if (chart == null) {
-    new Chart(idChartjs, { type: 'bar', data, options })
-        // } else {
-        //     chart.data = data
-        //     // chart.update()
-        // }
 
+    var canvas = document.getElementById(idChartjs)
+    canvas.remove()
+
+    var Contentchart7 = document.getElementById("Contentchart7")
+    var Contentchart72 = document.getElementById("Contentchart72")
+    var Contentchart73 = document.getElementById("Contentchart73")
+    Contentchart7.innerHTML = ' <canvas id="chart7"></canvas>'
+    Contentchart72.innerHTML = ' <canvas id="chart72"></canvas>'
+    Contentchart73.innerHTML = ' <canvas id="chart73"></canvas>'
+
+    new Chart(idChartjs, {type: 'bar', data, options})
+
+    spinnerGrafico.style.display = 'none'
 }
 
 var nombreSalaSeleccionada = ""
@@ -450,7 +484,8 @@ function datajson() {
             "apellido": arrayApellido[i],
             "ciudad": arrayCiudad[i]
         });
-    };
+    }
+    ;
 
     json = JSON.stringify(list); // aqui tienes la lista de objetos en Json
     var obj = JSON.parse(json);
