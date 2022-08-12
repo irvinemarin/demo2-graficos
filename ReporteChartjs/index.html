@@ -42,20 +42,20 @@
             </div>
         </div>
     </div>
-
-    <div class="mainPanel">
+    <div style="position: fixed; top: 50%;left: 50% "
+         id="spinnerGrafico" class="justify-content-center">
+        <div class="spinner-border text-primary " style="width: 5rem; height: 5rem;" role="status">
+            <!--                Loading-->
+            <!--                <span class="sr-only">Loading...</span>-->
+        </div>
+    </div>
+    <div class="mainPanel" id="mainPanelDiv">
         <div style="right: 0;position: absolute">
             <button type="button" class="btn btn-primary no-print" onclick="print()">IMPRIMIR</button>
         </div>
 
         <h2 class="loading">Espere un momento ...</h2>
-        <div style="position: fixed; top: 50%;left: 50% "
-             id="spinnerGrafico" class="justify-content-center">
-            <div class="spinner-border text-primary " style="width: 5rem; height: 5rem;" role="status">
-                <!--                Loading-->
-                <!--                <span class="sr-only">Loading...</span>-->
-            </div>
-        </div>
+
         <section id="content01" class="cols-1">
             <figure>
                 <p>Gráfico Grupo Bar</p>
@@ -120,7 +120,8 @@
 
             <div class="cols-2" style="width: 100%">
                 <div>
-                    <figure>
+
+                    <figure id="figureContent01">
                         <div>
                             <!--                        <button onclick="loadGraficoDetalle('01')">GRAFICAR TABLA</button>-->
 
@@ -145,9 +146,12 @@
                             </tbody>
                         </table>
                     </figure>
+                    <p id="txtResultado01" style="display: none">Sin resultados.</p>
                 </div>
                 <div>
-                    <figure class="col-12">
+                    <figure
+                            id="figureContent02"
+                            class="col-12">
                         <div>
                             <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
 
@@ -172,6 +176,8 @@
                             </tbody>
                         </table>
                     </figure>
+                    <p id="txtResultado02" style="display: none">Sin resultados.</p>
+
                 </div>
 
             </div>
@@ -221,9 +227,16 @@
             listaItems[i].classList.remove("activate");
         }
         e.classList.add("activate");
+        var figure = document.getElementById("figureContent0" + position)
 
         // alert(position)
         if (position == 1) {
+
+            figure.style.display = "none"
+
+            alert("Ejecutando servicio getListadoExpIngresos")
+
+
             fetch(gethostApi() + 'getListadoExpIngresos', {
                 method: 'get',
                 headers: new Headers({
@@ -234,9 +247,11 @@
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        if (data.length > 0)
+                        if (data.length > 0) {
                             printCharts(data, position, titulo)
-                        else {
+                            figure.style.display = "block"
+
+                        } else {
                             alert("No se encontraron Resultados")
                         }
                     },
@@ -246,6 +261,8 @@
 
         }
         if (position == 2) {
+            alert("Ejecutando servicio getListadoProgramaciones")
+
             fetch(gethostApi() + 'getListadoProgramaciones', {
                 method: 'get',
                 headers: new Headers({
@@ -256,9 +273,11 @@
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        if (data.length > 0)
+                        if (data.length > 0) {
                             printCharts(data, position, titulo)
-                        else {
+                            figure.style.display = "block"
+
+                        } else {
                             alert("No se encontraron Resultados")
                         }
                     },
@@ -267,6 +286,9 @@
                     })
         }
         if (position == 3) {
+            alert("Ejecutando servicio getListadoEscritosAnual")
+
+
             fetch(gethostApi() + 'getListadoEscritosAnual/2022', {
                 method: 'get',
                 headers: new Headers({
@@ -277,9 +299,11 @@
                 .then(response => response.json())
                 .then(
                     (data) => {
-                        if (data.length > 0)
+                        if (data.length > 0) {
                             printCharts(data, position, titulo)
-                        else {
+                            figure.style.display = "block"
+
+                        } else {
                             alert("No se encontraron Resultados")
                         }
                     },

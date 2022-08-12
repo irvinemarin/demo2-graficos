@@ -10,35 +10,44 @@ var optionColumns = 1;
 
 loadGraficoDetalle("00");
 
-var spinnerGrafico;
+spinnerGrafico;
 
 function loadGraficoDetalle(option) {
 
+    let controller = new AbortController();
+    let signal = controller.signal;
 
     if (option == "00") {
+        // //alert("Ejecutando servicio getListadoExpIngresos")
         var ittulo = document.getElementById("tituloReporte1")
         ittulo.innerText = "REPORTE DE INGRESOS";
 
+
+        // setTimeout(() => {
+
         fetch(gethostApi() + 'getListadoExpIngresos', {
-            method: 'get', headers: new Headers({
+            signal: signal, method: 'get', headers: new Headers({
                 'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
                 'Content-Type': 'application/json'
             })
         })
             .then(response => response.json())
             .then((data) => {
-                alert("getListadoExpIngresos")
+                //alert("getListadoExpIngresos")
 
                 if (data.length > 0) {
                     printCharts(data, 1)
                 } else {
-                    alert("No se encontraron Resultados")
+                    //alert("No se encontraron Resultados")
                     spinnerGrafico.style.display = 'none'
                 }
             }, onerror => {
                 spinnerGrafico.style.display = 'none'
-                alert("Servicio no Disponible")
+                //alert("Servicio no Disponible")
             })
+        // controller.abort(); // abort!
+
+        // }, 5000)
 
 
     }
@@ -91,9 +100,22 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var tablaContent02 = document.getElementById("tablaContent02")
     tablaContent01.style.display = 'none'
     tablaContent02.style.display = 'none'
+    var txtResultado = document.getElementById("txtResultado" + nroTable)
+    txtResultado.style.display = "none"
+
 
     // console.log(spinner)
     spinner.style = "display : block !important";
+    var tabla = document.getElementById("table" + nroTable)
+    tabla.style.display = "none"
+
+    // var tableRows = tabla.getElementsByTagName('tr');
+    // var rowCount = tableRows.length;
+    //
+    // for (var x=rowCount-1; x>0; x--) {
+    //     tabla.removeChild(tableRows[x]);
+    // }
+
 
     fetch(gethostApi() + nameWS, {
         method: 'get', headers: new Headers({
@@ -106,10 +128,14 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
             if (data.length > 0) {
                 bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
             } else {
-                alert("No se encontraron Resultados")
+                //alert("No se encontraron Resultados")
+                spinner.style.display = 'none'
+                txtResultado.style.display = 'block'
+
             }
         }, onerror => {
-            alert("Servicio no Disponible")
+            spinner.style.display = 'none'
+            //alert("Servicio no Disponible")
         })
 
 }
@@ -118,15 +144,27 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     if (nroTable == "01") data001 = data
     if (nroTable == "02") data002 = data
     var headerTable01 = document.getElementById("headerTable" + nroTable)
+
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var select_Filtro = document.getElementById("selectable" + nroTable)
+    var txtResultado = document.getElementById("txtResultado" + nroTable)
 
     headerTable01.innerHTML = ''
     bodyTable01.innerHTML = ''
     let htmlHeader = ''
 
-    if (data.length == 0) return
 
+    if (data.length == 0) {
+        txtResultado.style.display = "block"
+        return;
+    }
+
+    var tabla = document.getElementById("table" + nroTable)
+    tabla.style.display = "block"
+    // bodyTable01.style.display = "block"
+
+
+    txtResultado.style.display = "none"
     let templistHeader = []
 
     templistHeader = Object.keys(data[0]).sort((a, b) => {
@@ -349,51 +387,57 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
             h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
 
             if (positionParentReport == 1) {
-
+                var table01 = document.getElementById("table01")
+                var bodyTable01 = document.getElementById("bodyTable01")
+                var table02 = document.getElementById("table02")
+                var bodyTable02 = document.getElementById("bodyTable02")
+                table01.style.display = 'none'
+                table02.style.display = 'none'
 
                 setTimeout(() => {
+
                     getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                    var spinner = document.getElementById("spinner01")
-                    spinner.style.display = 'none'
 
-                }, 3000)
+
+                }, 500)
+
 
                 setTimeout(() => {
-                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                    var spinner = document.getElementById("spinner02")
-                    spinner.style.display = 'none'
 
-                }, 6000)
+                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+                }, 2000)
             }
             if (positionParentReport == 2) {
 
                 setTimeout(() => {
-                    getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                    var spinner = document.getElementById("spinner01")
-                    spinner.style.display = 'none'
 
-                }, 3000)
+                    getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+                }, 500)
 
                 setTimeout(() => {
-                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                    var spinner = document.getElementById("spinner02")
-                    spinner.style.display = 'none'
 
-                }, 6000)
+                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+                }, 2000)
 
             }
             if (positionParentReport == 3) {
                 setTimeout(() => {
+
                     getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
-                    var spinner = document.getElementById("spinner01")
-                    spinner.style.display = 'none'
-                }, 3000)
+
+                }, 500)
 
                 setTimeout(() => {
+
                     getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
-                    var spinner = document.getElementById("spinner02")
-                    spinner.style.display = 'none'
-                }, 6000)
+
+                }, 2000)
 
 
                 // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
