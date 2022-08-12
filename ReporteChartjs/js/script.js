@@ -11,18 +11,10 @@ loadGraficoDetalle("-1");
 
 
 function loadGraficoDetalle(option) {
-
-
     if (option == "-1") return;
-
     if (option == "00") {
-        // //alert("Ejecutando servicio getListadoExpIngresos")
         var ittulo = document.getElementById("tituloReporte1")
         ittulo.innerText = "REPORTE DE INGRESOS";
-
-
-        // setTimeout(() => {
-
         fetch(gethostApi() + 'getListadoExpIngresos', {
             signal: signal, method: 'get', headers: new Headers({
                 'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
@@ -31,21 +23,14 @@ function loadGraficoDetalle(option) {
         })
             .then(response => response.json())
             .then((data) => {
-                //alert("getListadoExpIngresos")
-
                 if (data.length > 0) {
                     printCharts(data, 1)
                 } else {
-                    //alert("No se encontraron Resultados")
                     spinnerGrafico.style.display = 'none'
                 }
             }, onerror => {
                 spinnerGrafico.style.display = 'none'
-                //alert("Servicio no Disponible")
             })
-        // controller.abort(); // abort!
-
-        // }, 5000)
 
 
     }
@@ -284,31 +269,43 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     let item;
     var SELECT_ANIO = document.getElementById("selectableAnio")
     let TempComboList = []
-
+    let labelsTemp = [];
 
     if (true) {
         // listaHorizontal
+
+
+        Object.keys(dataDB[0]).forEach((keyDB, pos) => {
+            if (keyDB !== nombreFiltro) {
+                labelsTemp.push(keyDB)
+                labelsComboSala.push(keyDB)
+            }
+        })
+
+
+        labelsDynamic = labelsTemp.sort((a, b) => {
+            return a.localeCompare(b)
+        })
+
         dataDB.forEach((element, index) => {
             let DataTemp = []
-            Object.keys(dataDB[index]).forEach((key, pos) => {
-                let value = Object.values(dataDB[index])[pos]
-                if (key !== nombreFiltro) {
-
-
-                    DataTemp.push({valueTemp: value, keyTemp: key})
-                    if (index == 0) {
-                        labelsDynamic.push(key)
-                        labelsComboSala.push(key)
-                    }
-                }
-                if (nombreFiltro == key) {
+            Object.keys(dataDB[index]).forEach((keyDB, pos) => {
+                if (nombreFiltro == keyDB) {
                     TempComboList[element[nombreFiltro]] = (TempComboList[element[nombreFiltro]] || 0) + 1;
                 }
-            });
 
-            labelsDynamic.sort((a, b) => {
-                return a.localeCompare(b)
             })
+
+            labelsTemp.forEach(keyTemp => {
+                Object.keys(dataDB[index]).forEach((keyDB, pos) => {
+                    if (keyTemp == keyDB) {
+                        let value = Object.values(dataDB[index])[pos]
+                        if (keyDB !== nombreFiltro) {
+                            DataTemp.push({valueTemp: value, keyTemp: keyDB})
+                        }
+                    }
+                })
+            });
 
 
             let DataOrdered = []
@@ -321,7 +318,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
                 })
             })
 
-            DataOrdered.reverse()
+
             console.log(JSON.stringify(DataOrdered))
 
             let AliasText = ''
