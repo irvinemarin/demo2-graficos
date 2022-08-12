@@ -35,10 +35,6 @@ section {
     font-size: 25px;
 }
 
-.activate {
-    background-color: #cbcbcb;
-    color: white;
-}
 
 h1 {
     text-transform: uppercase;
@@ -159,7 +155,9 @@ section {
 }
 
 .mainPanel {
-    width: 75%;
+    max-width: 21cm;
+    min-width: 21cm;
+    width: 21cm;
     position: absolute;
     left: 21%;
 }
@@ -181,15 +179,32 @@ section {
     height: 100%;
     color: black;
     width: 100%;
+    padding-top: 5px;
+    padding-bottom: 3px;
     margin-bottom: 4px;
-    text-align: left;
-    border-bottom: 1px solid #000000;
+    font-size: 14px;
+    text-align: center !important;
+    border-bottom: 4px solid #919191;
+
+
 }
 
 .listaReportes .item-report:hover {
     cursor: pointer;
+    vertical-align: center;
+    text-align: center !important;
     background-color: #cbcbcb;
     color: white;
+    border-radius: 10px;
+}
+
+.activate {
+    cursor: pointer;
+    vertical-align: center;
+    text-align: center !important;
+    background-color: #cbcbcb;
+    color: white;
+    border-radius: 10px;
 }
 
 table.greyGridTable {

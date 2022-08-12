@@ -16,8 +16,6 @@
 <main>
     <div style="display: flex">
         <img src="assets/logo-pj.png" style="height: 50px" alt="">
-        <!--        <img src="assets/icon.png"-->
-        <!--             style="height: 36px" alt="">-->
         <h1 style="text-align: center; width: 65%"> Reportes PJ
             <br><span>Visualización de estadísticas </span>
         </h1>
@@ -29,8 +27,8 @@
 
     <div class="leftPanel no-print">
         <div class="contentBackground">
-            <div class="listaReportes">
-                <div class="item-report activate" onclick="onCLickListener('1','REPORTE DE INGRESOS',this)">
+            <div class="listaReportes" id="listaReportesDIV">
+                <div class="item-report " onclick="onCLickListener('1','REPORTE DE INGRESOS',this)">
                     <p>REPORTE DE INGRESOS </p>
                 </div>
                 <div class="item-report item2" onclick="onCLickListener('2','REPORTE PROGRAMADOS',this)">
@@ -42,14 +40,17 @@
             </div>
         </div>
     </div>
-    <div style="position: fixed; top: 50%;left: 50% "
+    <div style="position: fixed; top: 50%;left: 50%;text-align: center;display: none "
+
          id="spinnerGrafico" class="justify-content-center">
+        <p>Espere un momento esto puede tardar...</p>
+
         <div class="spinner-border text-primary " style="width: 5rem; height: 5rem;" role="status">
             <!--                Loading-->
             <!--                <span class="sr-only">Loading...</span>-->
         </div>
     </div>
-    <div class="mainPanel" id="mainPanelDiv">
+    <div class="mainPanel" style="display: none" id="mainPanelDiv">
         <div style="right: 0;position: absolute">
             <button type="button" class="btn btn-primary no-print" onclick="print()">IMPRIMIR</button>
         </div>
@@ -132,6 +133,7 @@
                             </select>
                         </div>
                         <div id="spinner01" class="justify-content-center">
+                            <p>Espere... cargando Informacion</p>
                             <div class="spinner-border text-primary" role="status">
                                 <span class="sr-only">...</span> <!-- Loading -->
                             </div>
@@ -162,6 +164,8 @@
                             </select>
                         </div>
                         <div id="spinner02" class=" justify-content-center">
+                            <p>Espere... cargando Informacion</p>
+
                             <div class="spinner-border text-primary" role="status">
                                 <span class="sr-only">...</span>  <!-- Loading -->
                             </div>
@@ -184,7 +188,7 @@
         </div>
     </div>
 </main>
-<!--
+
 <footer>
     <div class="footer-custom no-print">
         <br>
@@ -196,7 +200,6 @@
         Todos los derechos Reservados
     </div>
 </footer>
--->
 
 <!-- ChartJS -->
 <script src="Chartjs/Chart.min.js"></script>
@@ -210,6 +213,11 @@
 
 <script>
     function onCLickListener(position, titulo, e) {
+        spinnerGrafico = document.getElementById("spinnerGrafico");
+        mainPanelDiv = document.getElementById("mainPanelDiv");
+        spinnerGrafico.style.display = "block"
+        mainPanelDiv.style.display = "none"
+
         var ittulo = document.getElementById("tituloReporte1")
         var ittulo2 = document.getElementById("tituloReporte2")
         var ittulo3 = document.getElementById("tituloReporte3")
@@ -217,11 +225,9 @@
         ittulo2.innerText = titulo;
         ittulo3.innerText = titulo;
 
-
-        //console.log(event)
-
         var listaItems = document.getElementsByClassName("item-report")
-
+        var listaReportes = document.getElementById("listaReportesDIV")
+        listaReportes.style.display = "none"
         for (var i = 0; i < listaItems.length; i++) {
             // console.log(listaItems[i])
             listaItems[i].classList.remove("activate");
@@ -229,67 +235,21 @@
         e.classList.add("activate");
         var figure = document.getElementById("figureContent0" + position)
 
-        // alert(position)
+        let nommbreServicio = "";
+        // figure.style.display = "none"
         if (position == 1) {
-
-            figure.style.display = "none"
-
-            alert("Ejecutando servicio getListadoExpIngresos")
-
-
-            fetch(gethostApi() + 'getListadoExpIngresos', {
-                method: 'get',
-                headers: new Headers({
-                    'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                    'Content-Type': 'application/json'
-                })
-            })
-                .then(response => response.json())
-                .then(
-                    (data) => {
-                        if (data.length > 0) {
-                            printCharts(data, position, titulo)
-                            figure.style.display = "block"
-
-                        } else {
-                            alert("No se encontraron Resultados")
-                        }
-                    },
-                    onerror => {
-                        alert("Servicio no Disponible")
-                    })
-
+            nommbreServicio = "getListadoExpIngresos";
         }
         if (position == 2) {
-            alert("Ejecutando servicio getListadoProgramaciones")
-
-            fetch(gethostApi() + 'getListadoProgramaciones', {
-                method: 'get',
-                headers: new Headers({
-                    'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                    'Content-Type': 'application/json'
-                })
-            })
-                .then(response => response.json())
-                .then(
-                    (data) => {
-                        if (data.length > 0) {
-                            printCharts(data, position, titulo)
-                            figure.style.display = "block"
-
-                        } else {
-                            alert("No se encontraron Resultados")
-                        }
-                    },
-                    onerror => {
-                        alert("Servicio no Disponible")
-                    })
+            nommbreServicio = "getListadoProgramaciones";
         }
         if (position == 3) {
-            alert("Ejecutando servicio getListadoEscritosAnual")
+            nommbreServicio = "getListadoEscritosAnual/2022";
+        }
 
 
-            fetch(gethostApi() + 'getListadoEscritosAnual/2022', {
+        setTimeout(() => {
+            fetch(gethostApi() + nommbreServicio, {
                 method: 'get',
                 headers: new Headers({
                     'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
@@ -300,8 +260,12 @@
                 .then(
                     (data) => {
                         if (data.length > 0) {
+
+
                             printCharts(data, position, titulo)
-                            figure.style.display = "block"
+                            listaReportes.style.display = "block"
+                            mainPanelDiv.style.display = "block"
+
 
                         } else {
                             alert("No se encontraron Resultados")
@@ -310,7 +274,9 @@
                     onerror => {
                         alert("Servicio no Disponible")
                     })
-        }
+            // listaReportes.style.display = "none"
+        }, 2000)
+
     }
 </script>
 </body>

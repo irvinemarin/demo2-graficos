@@ -4,18 +4,16 @@
 // Chart.defaults.global.elements.rectangle.borderWidth = 1
 // Chart.defaults.scale.gridLines.color = '#444444'
 // Chart.defaults.scale.ticks.display = false
-
-
+var spinnerGrafico;
 var optionColumns = 1;
 
-loadGraficoDetalle("00");
+loadGraficoDetalle("-1");
 
-spinnerGrafico;
 
 function loadGraficoDetalle(option) {
 
-    let controller = new AbortController();
-    let signal = controller.signal;
+
+    if (option == "-1") return;
 
     if (option == "00") {
         // //alert("Ejecutando servicio getListadoExpIngresos")
@@ -51,8 +49,6 @@ function loadGraficoDetalle(option) {
 
 
     }
-    // if (option == "01") grupobar(data001, 'chart7_2', option, "00_Recurso", true)//grafico principal
-    // if (option == "02") grupobar(data002, 'chart7_2', option, "00_CorteProcedencia", true)//grafico principal
 
 }
 
@@ -62,8 +58,10 @@ var data002 = []
 var dataReport1 = []
 var dataReport2 = []
 
+var mainPanelDiv;
+
 function printCharts(dataDB, positionParentReportHTML) {
-    spinnerGrafico = document.getElementById("spinnerGrafico");
+
 
     spinnerGrafico.style.display = 'block'
     positionParentReport = positionParentReportHTML
@@ -76,20 +74,20 @@ function printCharts(dataDB, positionParentReportHTML) {
         chart7.style.display = 'block'
         chart73.style.display = 'none'
         chart72.style.display = 'none'
-        grupobar(dataDB, 'chart7', positionParentReportHTML, "00_anno") //grafico principal
+        bindGraficoBarras(dataDB, 'chart7', positionParentReportHTML, "00_anno") //grafico principal
     }
     if (positionParentReportHTML == 2) {
         chart7.style.display = 'none'
         chart73.style.display = 'none'
         chart72.style.display = 'block'
-        grupobar(dataDB, 'chart72', positionParentReportHTML, "00_anno") //grafico principal
+        bindGraficoBarras(dataDB, 'chart72', positionParentReportHTML, "00_anno") //grafico principal
 
     }
     if (positionParentReportHTML == 3) {
         chart7.style.display = 'none'
         chart72.style.display = 'none'
         chart73.style.display = 'block'
-        grupobar(dataDB, 'chart73', positionParentReportHTML, "00_anno") //grafico principal
+        bindGraficoBarras(dataDB, 'chart73', positionParentReportHTML, "00_anno") //grafico principal
     }
 
 }
@@ -278,7 +276,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
 var positionParentReport = 0
 
-function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
+function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
 
 
     let dataCount = []
@@ -287,13 +285,10 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
     let labelsComboSala = []
     let item;
     var SELECT_ANIO = document.getElementById("selectableAnio")
-
-
     let TempComboList = []
 
     if (true) {
         // listaHorizontal
-
         dataDB.forEach((element, index) => {
             let DataTemp = []
             Object.keys(dataDB[index]).forEach((key, pos) => {
@@ -302,24 +297,12 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
 
                     DataTemp.push(value)
                     if (index == 0) {
-
-                        // if (idChartjs != "charts7_2") {
-
                         labelsDynamic.push(key/*.substring(4, key.length)*/)
-
-
-                        // // } else {
-                        //     labelsDynamic.push(key)
-                        // // }
-
-
                         labelsComboSala.push(key)
                     }
                 }
                 if (nombreFiltro == key) {
                     TempComboList[element[nombreFiltro]] = (TempComboList[element[nombreFiltro]] || 0) + 1;
-
-
                 }
             });
 
@@ -341,145 +324,108 @@ function grupobar(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isC
         optionColumns = 2
     }
 
-    if (!isChild) {
+    let htmlComboAnio = ''
 
-        let htmlComboAnio = ''
+    // console.table(TempComboList)
 
-        // console.table(TempComboList)
+    Object.keys(TempComboList).forEach(it => {
+        // console.log(it)
+        htmlComboAnio += `<option  value='${it}'>${it} </option>`
+        aniooSeleccionado = it
+        // console.log("aniooSeleccionado :" + aniooSeleccionado)
+    })
+    SELECT_ANIO.innerHTML = htmlComboAnio
+    SELECT_ANIO.value = aniooSeleccionado
 
-        Object.keys(TempComboList).forEach(it => {
-            // console.log(it)
-            htmlComboAnio += `<option  value='${it}'>${it} </option>`
-            aniooSeleccionado = it
-            // console.log("aniooSeleccionado :" + aniooSeleccionado)
+    SELECT_ANIO.addEventListener('change', function (e) {
+        aniooSeleccionado = this.value
+        lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+    });
+    populateComboSalas(labelsComboSala)
+
+    function populateComboSalas(listaCombo) {
+        var selectFiltroSalas = document.getElementById("selectableFiltroSala")
+        let htmlCombo = ''
+        // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+        listaCombo.forEach(value => {
+            let valueSplited = value.split("_")[1]
+            let c_instancia = value.split("_")[0]
+            htmlCombo += "<option value='" + c_instancia + "'>" + valueSplited + " </option>"
         })
-        SELECT_ANIO.innerHTML = htmlComboAnio
-        SELECT_ANIO.value = aniooSeleccionado
+        selectFiltroSalas.innerHTML = htmlCombo;
 
-        SELECT_ANIO.addEventListener('change', function (e) {
-            aniooSeleccionado = this.value
-            lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+        selectFiltroSalas.addEventListener('change', function (e) {
+            // console.log(this.value, this.text)
+            lisarTablas(this.value, this.options[this.selectedIndex].text)
         });
-        populateComboSalas(labelsComboSala)
-
-        function populateComboSalas(listaCombo) {
-            var selectFiltroSalas = document.getElementById("selectableFiltroSala")
-            let htmlCombo = ''
-            // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
-            listaCombo.forEach(value => {
-                let valueSplited = value.split("_")[1]
-                let c_instancia = value.split("_")[0]
-                htmlCombo += "<option value='" + c_instancia + "'>" + valueSplited + " </option>"
-            })
-            selectFiltroSalas.innerHTML = htmlCombo;
-
-            selectFiltroSalas.addEventListener('change', function (e) {
-                // console.log(this.value, this.text)
-                lisarTablas(this.value, this.options[this.selectedIndex].text)
-            });
-            lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
-        }
-
-        function lisarTablas(c_instacia, nombreSala) {
-            nombreSalaSeleccionada = nombreSala
-            cInsatnciaSelected = c_instacia
-            var h3_titulos = document.getElementById("tituloSalaFiltro")
-            h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
-
-            if (positionParentReport == 1) {
-                var table01 = document.getElementById("table01")
-                var bodyTable01 = document.getElementById("bodyTable01")
-                var table02 = document.getElementById("table02")
-                var bodyTable02 = document.getElementById("bodyTable02")
-                table01.style.display = 'none'
-                table02.style.display = 'none'
-
-                setTimeout(() => {
-
-                    getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-                }, 500)
-
-
-                setTimeout(() => {
-
-                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-                }, 2000)
-            }
-            if (positionParentReport == 2) {
-
-                setTimeout(() => {
-
-                    getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-                }, 500)
-
-                setTimeout(() => {
-
-                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-                }, 2000)
-
-            }
-            if (positionParentReport == 3) {
-                setTimeout(() => {
-
-                    getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-                }, 500)
-
-                setTimeout(() => {
-
-                    getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
-
-                }, 2000)
-
-
-                // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-            }
-
-        }
+        lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
     }
 
+    function lisarTablas(c_instacia, nombreSala) {
+        nombreSalaSeleccionada = nombreSala
+        cInsatnciaSelected = c_instacia
+        var h3_titulos = document.getElementById("tituloSalaFiltro")
+        h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
 
-    // if (option == 2) {
-    //     // listaVertical
-    //     //recorre header Primera fila
-    //     Object.keys(dataDB[0]).forEach((key, pos) => {
-    //         let DataTemp = []
-    //         //recore filas BD
-    //         dataDB.forEach((element, inDB) => {
-    //             let value = Object.values(element)[pos]
-    //             if (key != nombreFiltro) {
-    //                 DataTemp.push(value)
-    //             }
-    //             if (key == nombreFiltro) {
-    //                 // console.log(value)
-    //                 labelsDynamic.push(value)
-    //             }
-    //
-    //         })
-    //         item = {
-    //             label: key,
-    //             data: DataTemp,
-    //             borderColor: styles.color.solids[pos],
-    //             backgroundColor: styles.color.alphas[pos]
-    //         };
-    //         if (key != nombreFiltro) {
-    //             datasetsDynamic.push(item)
-    //         }
-    //
-    //
-    //     });
-    //     optionColumns = 1
-    // }
+        if (positionParentReport == 1) {
+            var table01 = document.getElementById("table01")
+            var bodyTable01 = document.getElementById("bodyTable01")
+            var table02 = document.getElementById("table02")
+            var bodyTable02 = document.getElementById("bodyTable02")
+            table01.style.display = 'none'
+            table02.style.display = 'none'
 
+            setTimeout(() => {
+
+                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+            }, 500)
+
+
+            setTimeout(() => {
+
+                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+            }, 2000)
+        }
+        if (positionParentReport == 2) {
+
+            setTimeout(() => {
+
+                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+            }, 500)
+
+            setTimeout(() => {
+
+                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+
+            }, 2000)
+
+        }
+        if (positionParentReport == 3) {
+            setTimeout(() => {
+
+                getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+            }, 500)
+
+            setTimeout(() => {
+
+                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
+
+            }, 2000)
+
+
+            // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
+
+        }
+
+    }
 
     labelsDynamic.sort((a, b) => {
         return a.localeCompare(b)
