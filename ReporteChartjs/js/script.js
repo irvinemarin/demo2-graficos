@@ -276,16 +276,15 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
 var positionParentReport = 0
 
+
 function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
-
-
-    let dataCount = []
     let datasetsDynamic = []
     let labelsDynamic = []
     let labelsComboSala = []
     let item;
     var SELECT_ANIO = document.getElementById("selectableAnio")
     let TempComboList = []
+
 
     if (true) {
         // listaHorizontal
@@ -295,9 +294,10 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
                 let value = Object.values(dataDB[index])[pos]
                 if (key !== nombreFiltro) {
 
-                    DataTemp.push(value)
+
+                    DataTemp.push({valueTemp: value, keyTemp: key})
                     if (index == 0) {
-                        labelsDynamic.push(key/*.substring(4, key.length)*/)
+                        labelsDynamic.push(key)
                         labelsComboSala.push(key)
                     }
                 }
@@ -306,28 +306,40 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
                 }
             });
 
-            let AliasText = ''
-            if (nombreFiltro == "00_anno") {
-                AliasText = "AÑO"
-            } else {
-                AliasText = nombreFiltro
-            }
+            labelsDynamic.sort((a, b) => {
+                return a.localeCompare(b)
+            })
 
+
+            let DataOrdered = []
+
+            DataTemp.forEach(it => {
+                labelsDynamic.forEach(key => {
+                    if (it.keyTemp == key) {
+                        DataOrdered.push(it.valueTemp)
+                    }
+                })
+            })
+
+            DataOrdered.reverse()
+            console.log(JSON.stringify(DataOrdered))
+
+            let AliasText = ''
+            AliasText = nombreFiltro == "00_anno" ? "AÑO" : nombreFiltro;
             item = {
                 label: AliasText + " " + element[nombreFiltro],
-                data: DataTemp,
+                data: DataOrdered,
                 borderColor: styles.color.solids[index],
                 backgroundColor: styles.color.alphas[index]
             };
+
+            // console.log(JSON.stringify(item))
             datasetsDynamic.push(item)
         });
         optionColumns = 2
     }
 
     let htmlComboAnio = ''
-
-    // console.table(TempComboList)
-
     Object.keys(TempComboList).forEach(it => {
         // console.log(it)
         htmlComboAnio += `<option  value='${it}'>${it} </option>`
@@ -336,7 +348,6 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     })
     SELECT_ANIO.innerHTML = htmlComboAnio
     SELECT_ANIO.value = aniooSeleccionado
-
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
@@ -366,76 +377,39 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         cInsatnciaSelected = c_instacia
         var h3_titulos = document.getElementById("tituloSalaFiltro")
         h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
-
+        var table01 = document.getElementById("table01")
+        var table02 = document.getElementById("table02")
+        table01.style.display = 'none'
+        table02.style.display = 'none'
         if (positionParentReport == 1) {
-            var table01 = document.getElementById("table01")
-            var bodyTable01 = document.getElementById("bodyTable01")
-            var table02 = document.getElementById("table02")
-            var bodyTable02 = document.getElementById("bodyTable02")
-            table01.style.display = 'none'
-            table02.style.display = 'none'
-
-            setTimeout(() => {
-
-                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoIngresoMensualxTipRecurso/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-            }, 500)
-
-
-            setTimeout(() => {
-
-                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoIngresoMensualxCorteProced/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-            }, 2000)
+            setInformacionTablas("getListadoIngresoMensualxTipRecurso", "getListadoIngresoMensualxCorteProced", false);
         }
         if (positionParentReport == 2) {
-
-            setTimeout(() => {
-
-                getInfoTabla(positionParentReport, idChartjs, "01", `getListadoProgramacionesPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-            }, 500)
-
-            setTimeout(() => {
-
-                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoProgramacionesFirmadoPonente/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-
-            }, 2000)
-
+            setInformacionTablas("getListadoProgramacionesPonente", "getListadoProgramacionesFirmadoPonente", false);
         }
         if (positionParentReport == 3) {
-            setTimeout(() => {
-
-                getInfoTabla(positionParentReport, idChartjs, "01", `getListaTipoEscritos/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
-            }, 500)
-
-            setTimeout(() => {
-
-                getInfoTabla(positionParentReport, idChartjs, "02", `getListadoEscritosPendienteAtendido/${aniooSeleccionado}`);
-
-            }, 2000)
-
-
-            // getInfoTabla(idChartjs, "03", `getListadoIngresoPonentes/${cInsatnciaSelected}/${aniooSeleccionado}`);
-
+            setInformacionTablas("getListaTipoEscritos", "getListadoEscritosPendienteAtendido", true);
         }
-
     }
 
-    labelsDynamic.sort((a, b) => {
-        return a.localeCompare(b)
-    })
+    function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isOnlyAnioParam) {
+        setTimeout(() => {
+            getInfoTabla(positionParentReport, idChartjs, "01", `${nombreServicioTabla01}/${cInsatnciaSelected}/${aniooSeleccionado}`);
+        }, 500)
+        setTimeout(() => {
+            let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}/${aniooSeleccionado}`;
+            if (isOnlyAnioParam) WSParam = `${nombreServicioTabla02}/${aniooSeleccionado}`;
+            getInfoTabla(positionParentReport, idChartjs, "02", WSParam);
+        }, 2000)
+    }
+
 
     let arraySubtring = []
 
     labelsDynamic.forEach((a, pos) => {
         arraySubtring[pos] = a.substring(4, a.length)
     })
+
 
     const data = {
         labels: arraySubtring, datasets: datasetsDynamic
