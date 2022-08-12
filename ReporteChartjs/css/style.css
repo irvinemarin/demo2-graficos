@@ -79,7 +79,7 @@ hr {
 /*}*/
 
 figure {
-    padding: 10px 10px 30px;
+    /*padding: 10px 10px 30px;*/
     border-bottom: 2px solid darkred;
     /*background: red;*/
 }
@@ -158,9 +158,9 @@ section {
 }
 
 .mainPanel {
-    max-width: 21cm;
+    max-width: 70%;
     min-width: 21cm;
-    width: 21cm;
+    width: 75%;
     position: absolute;
     left: 21%;
 }
@@ -178,7 +178,7 @@ section {
     /*background: #ffffff !important;*/
 }
 
-.contentBackground h5{
+.contentBackground h5 {
     border-bottom: 4px solid #6e0000;
 }
 
@@ -213,8 +213,8 @@ section {
 
 table.greyGridTable {
     border: 2px solid #FFFFFF;
-    width: 100%;
-    text-align: center;
+    width: 100% !important;
+    /*text-align: center;*/
     border-collapse: collapse;
 }
 
@@ -284,6 +284,7 @@ select {
     }
 
     .mainPanel {
-        margin-left: -10% !important;
+        margin-left: -14% !important;
+        width: 21cm !important;
     }
 }

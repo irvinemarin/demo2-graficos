@@ -278,10 +278,10 @@ var positionParentReport = 0
 function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
     let datasetsDynamic = []
     let labelsDynamic = []
-    let labelsComboSala = []
+    let listComboSala = []
     let item;
     var SELECT_ANIO = document.getElementById("selectableAnio")
-    let TempComboList = []
+    let TempComboAniosList = []
     let labelsTemp = [];
 
     if (true) {
@@ -291,7 +291,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         Object.keys(dataDB[0]).forEach((keyDB, pos) => {
             if (keyDB !== nombreFiltro) {
                 labelsTemp.push(keyDB)
-                labelsComboSala.push(keyDB)
+                listComboSala.push(keyDB)
             }
         })
 
@@ -304,7 +304,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
             let DataTemp = []
             Object.keys(dataDB[index]).forEach((keyDB, pos) => {
                 if (nombreFiltro == keyDB) {
-                    TempComboList[element[nombreFiltro]] = (TempComboList[element[nombreFiltro]] || 0) + 1;
+                    TempComboAniosList[element[nombreFiltro]] = (TempComboAniosList[element[nombreFiltro]] || 0) + 1;
                 }
             })
 
@@ -349,7 +349,9 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     }
 
     let htmlComboAnio = ''
-    Object.keys(TempComboList).forEach(it => {
+
+
+    Object.keys(TempComboAniosList).forEach(it => {
         // console.log(it)
         htmlComboAnio += `<option  value='${it}'>${it} </option>`
         aniooSeleccionado = it
@@ -361,7 +363,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         aniooSeleccionado = this.value
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
     });
-    populateComboSalas(labelsComboSala)
+    populateComboSalas(listComboSala)
 
     function populateComboSalas(listaCombo) {
         var selectFiltroSalas = document.getElementById("selectableFiltroSala")

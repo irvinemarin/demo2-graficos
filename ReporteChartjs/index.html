@@ -65,7 +65,7 @@
 
         <h2 class="loading">Espere un momento ...</h2>
 
-        <section id="content01" class="cols-1">
+        <section id="content01" class="col-11">
             <figure>
                 <p>Gráfico Grupo Bar</p>
                 <div class="container-title">
@@ -80,7 +80,7 @@
 
         <section
 
-                id="content02" class="cols-1">
+                id="content02" class="col-11">
             <figure>
                 <p>Gráfico Grupo Bar</p>
                 <div class="container-title">
@@ -93,7 +93,7 @@
             </figure>
         </section>
 
-        <section id="content03" class="cols-1">
+        <section id="content03" class="col-11">
             <figure>
                 <p>Gráfico Grupo Bar</p>
                 <div class="container-title">
@@ -105,94 +105,105 @@
             </figure>
         </section>
 
+
+        <div class="row">
+            <h3 id="tituloSalaFiltro" class="col-4" style="height: 60px"></h3>
+            <div class="col-3">
+                <div id="tablaContent01" style="">
+
+                    <label for="selectableAnio">FILTRO AÑO</label>
+                    <BR>
+                    <select name="selectableAnio" id="selectableAnio">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-3">
+                <div id="tablaContent02"
+                     style="display: block;">
+                    <label for="selectableFiltroSala">FILTRO SALAS</label>
+                    <BR>
+                    <select name="selectableFiltroSala" id="selectableFiltroSala">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="row">
 
-            <h3 id="tituloSalaFiltro"></h3>
 
-            <div id="tablaContent01" style="margin-left: 40px ;display: block">
+            <!--*************************************-->
+            <div style="width: 100%!important; ;">
+                <div class="row">
+                    <div class="col-6">
 
-                <label for="selectableAnio">FILTRO AÑO</label>
-                <BR>
-                <select name="selectableAnio" id="selectableAnio">
-                    <option value=""></option>
-                </select>
-            </div>
+                        <figure id="figureContent01">
+                            <div>
+                                <!--                        <button onclick="loadGraficoDetalle('01')">GRAFICAR TABLA</button>-->
 
-
-            <div id="tablaContent02" style="display: block; margin-left: 16px">
-                <label for="selectableFiltroSala">FILTRO SALAS</label>
-                <BR>
-                <select name="selectableFiltroSala" id="selectableFiltroSala">
-                    <option value=""></option>
-                </select>
-            </div>
-
-            <div class="cols-2" style="width: 100%">
-                <div>
-
-                    <figure id="figureContent01">
-                        <div>
-                            <!--                        <button onclick="loadGraficoDetalle('01')">GRAFICAR TABLA</button>-->
-
-                            <label for="selectable01">FILTRO </label>
-                            <BR>
-                            <select name="selectable01" id="selectable01">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div id="spinner01" class="justify-content-center">
-                            <p>Espere... cargando Informacion</p>
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="sr-only">...</span> <!-- Loading -->
+                                <label for="selectable01">FILTRO </label>
+                                <BR>
+                                <select name="selectable01" id="selectable01">
+                                    <option value=""></option>
+                                </select>
                             </div>
-                        </div>
-                        <BR>
-                        <table class="greyGridTable" id="table01" style="background-color: #ffffff; width: 100%;">
-                            <thead>
-                            <tr id="headerTable01">
-                            </tr>
-                            </thead>
-                            <tbody id="bodyTable01">
-                            </tbody>
-                        </table>
-                    </figure>
-                    <p id="txtResultado01" style="display: none">Sin resultados.</p>
-                </div>
-                <div>
-                    <figure
-                            id="figureContent02"
-                            class="col-12">
-                        <div>
-                            <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
-
-                            <label for="selectable02">FILTRO</label>
-                            <BR>
-                            <select name="selectable02" id="selectable02">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div id="spinner02" class=" justify-content-center">
-                            <p>Espere... cargando Informacion</p>
-
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="sr-only">...</span>  <!-- Loading -->
+                            <div id="spinner01" class="justify-content-center">
+                                <p>Espere... cargando Informacion</p>
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">...</span> <!-- Loading -->
+                                </div>
                             </div>
-                        </div>
-                        <BR>
-                        <table class="greyGridTable" id="table02" style=" width: 100%!important;">
-                            <thead>
-                            <tr id="headerTable02">
-                            </tr>
-                            </thead>
-                            <tbody id="bodyTable02">
-                            </tbody>
-                        </table>
-                    </figure>
-                    <p id="txtResultado02" style="display: none">Sin resultados.</p>
+                            <BR>
+                            <table class="greyGridTable" id="table01" style="background-color: #ffffff; width: 100%;">
+                                <thead>
+                                <tr id="headerTable01">
+                                </tr>
+                                </thead>
+                                <tbody id="bodyTable01">
+                                </tbody>
+                            </table>
+                        </figure>
+                        <p id="txtResultado01" style="display: none">Sin resultados.</p>
+                    </div>
+                    <div class="col-6 "
+                         style="background-color: #ffffff; position: absolute !important; right: -80px !important; ">
+                        <figure
+                                id="figureContent02"
+                                class="col-12">
+                            <div>
+                                <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
+
+                                <label for="selectable02">FILTRO</label>
+                                <BR>
+                                <select name="selectable02" id="selectable02">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div id="spinner02" class=" justify-content-center">
+                                <p>Espere... cargando Informacion</p>
+
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">...</span>  <!-- Loading -->
+                                </div>
+                            </div>
+                            <BR>
+                            <table class="greyGridTable" id="table02" style=" width: 100%!important;">
+                                <thead>
+                                <tr id="headerTable02">
+                                </tr>
+                                </thead>
+                                <tbody id="bodyTable02">
+                                </tbody>
+                            </table>
+                        </figure>
+                        <p id="txtResultado02" style="display: none">Sin resultados.</p>
+
+                    </div>
 
                 </div>
-
             </div>
+            <!--*************************************-->
+
         </div>
     </div>
 </main>
