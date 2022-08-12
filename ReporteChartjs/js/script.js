@@ -81,6 +81,7 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var spinner = document.getElementById("spinner" + nroTable)
     var tablaContent01 = document.getElementById("tablaContent01")
     var tablaContent02 = document.getElementById("tablaContent02")
+
     tablaContent01.style.display = 'none'
     tablaContent02.style.display = 'none'
     var txtResultado = document.getElementById("txtResultado" + nroTable)
@@ -237,6 +238,17 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         var tablaContent02 = document.getElementById("tablaContent02")
         tablaContent01.style.display = 'block'
         tablaContent02.style.display = 'block'
+
+
+        var mainPanelDiv = document.getElementById("mainPanelDiv")
+        var leftPanel = document.getElementById("leftPanel")
+
+        setTimeout(() => {
+            leftPanel.style.height = mainPanelDiv.clientHeight + "px"
+            // alert("Cambiando height")
+        }, 0)
+
+
     }
 
     spinner.style.display = "none"
@@ -256,6 +268,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             spinner.style.display = 'none !important'; //ocultaSpiner
         }
     });
+
 
 }
 
@@ -293,7 +306,6 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
                 if (nombreFiltro == keyDB) {
                     TempComboList[element[nombreFiltro]] = (TempComboList[element[nombreFiltro]] || 0) + 1;
                 }
-
             })
 
             labelsTemp.forEach(keyTemp => {
@@ -319,7 +331,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
             })
 
 
-            console.log(JSON.stringify(DataOrdered))
+            // console.log(JSON.stringify(DataOrdered))
 
             let AliasText = ''
             AliasText = nombreFiltro == "00_anno" ? "AÑO" : nombreFiltro;
@@ -452,39 +464,3 @@ var nombreSalaSeleccionada = ""
 var cInsatnciaSelected = ""
 var aniooSeleccionado = ""
 
-function datajson() {
-    var arrayNombres = new Array();
-    var arrayApellido = new Array();
-    var arrayCiudad = new Array();
-
-    arrayNombres[0] = "nombre1";
-    arrayNombres[1] = "nombre2";
-    arrayNombres[2] = "nombre3";
-
-    arrayApellido[0] = "ape1 ";
-    arrayApellido[1] = "ape2";
-    arrayApellido[2] = "ape3";
-
-    arrayCiudad[0] = "ciudad1";
-    arrayCiudad[1] = "ciudad2";
-    arrayCiudad[2] = "ciudad3";
-
-    // esta deberia ser la forma en la cual declaras tu objeto datos para que la pueda parsear a Json
-    var list = {
-        'datos': []
-    };
-
-    //guardas los datos
-    for (var i = 0; i < arrayNombres.length; i++) {
-
-        list.datos.push({
-            "nombre": arrayNombres[i], "apellido": arrayApellido[i], "ciudad": arrayCiudad[i]
-        });
-    }
-    ;
-
-    json = JSON.stringify(list); // aqui tienes la lista de objetos en Json
-    var obj = JSON.parse(json);
-
-
-}
