@@ -268,10 +268,14 @@
 
 
                         } else {
+                            listaReportes.style.display = "block"
+                            spinnerGrafico.style.display = "none"
                             alert("No se encontraron Resultados")
                         }
                     },
                     onerror => {
+                        listaReportes.style.display = "block"
+                        spinnerGrafico.style.display = "none"
                         alert("Servicio no Disponible")
                     })
             // listaReportes.style.display = "none"
