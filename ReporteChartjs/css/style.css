@@ -166,13 +166,13 @@ section {
 }
 
 .listaReportes {
-    margin: 8px;
-    padding: 8px;
+    /*margin: 8px;*/
+    /*padding: 8px;*/
     /*background-color: #ffffff;*/
 }
 
 .contentBackground {
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     width: 88% !important;
     height: 98.75% !important;
     /*background: #ffffff !important;*/
@@ -187,28 +187,35 @@ section {
     color: black;
     width: 100%;
     padding: 5px 10px 3px 8px;
-    margin-bottom: 4px;
-    font-size: 10px;
+    font-size: 14px;
     text-align: center !important;
-    border-bottom: 4px solid #919191;
+
+}
+
+.item-report p {
+    margin: 0 !important;;
 }
 
 .listaReportes .item-report:hover {
+    border-right: 4px solid #6e0000;
     cursor: pointer;
     vertical-align: center;
     text-align: center !important;
-    background-color: #cbcbcb;
-    color: white;
-    border-radius: 10px;
+    background-color: #919191;
+    color: #ffffff;
+    /*border-radius: 4px;*/
 }
 
 .activate {
+    border-right: 4px solid #6e0000;
+    border-right: 4px solid #6e0000;
     cursor: pointer;
     vertical-align: center;
     text-align: center !important;
-    background-color: #cbcbcb;
-    color: white;
-    border-radius: 10px;
+    background-color: #d5d5d5;
+    color: #ffffff;
+    /*border-radius: 4px;*/
+
 }
 
 table.greyGridTable {

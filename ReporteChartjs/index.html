@@ -24,8 +24,8 @@
     <div id="fondoPJ"></div>
     <hr>
 
-
-    <div class="leftPanel no-print " id="leftPanel">
+    <div
+            class="leftPanel no-print " id="leftPanel">
         <div class="contentBackground">
             <h5>Reportes Disponibles</h5>
             <div class="listaReportes" id="listaReportesDIV">
@@ -58,12 +58,15 @@
 
 
     </div>
+
+
     <div class="mainPanel" style="display: none" id="mainPanelDiv">
         <div style="right: 0;position: absolute">
             <button type="button" class="btn btn-primary no-print" onclick="print()">IMPRIMIR</button>
         </div>
 
         <h2 class="loading">Espere un momento ...</h2>
+
 
         <section id="content01" class="col-11">
             <figure>
@@ -105,35 +108,68 @@
             </figure>
         </section>
 
-
+        <h3 id="tituloSalaFiltro" class="col-4"></h3>
         <div class="row">
-            <h3 id="tituloSalaFiltro" class="col-4" style="height: 60px"></h3>
-            <div class="col-3">
+            <div class="col-md-2 col-sm-12">
                 <div id="tablaContent01" style="">
 
                     <label for="selectableAnio">FILTRO AÑO</label>
                     <BR>
-                    <select name="selectableAnio" id="selectableAnio">
+                    <select class="custom-select" name="selectableAnio" id="selectableAnio">
                         <option value=""></option>
                     </select>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-md-2 col-sm-12">
                 <div id="tablaContent02"
                      style="display: block;">
                     <label for="selectableFiltroSala">FILTRO SALAS</label>
                     <BR>
-                    <select name="selectableFiltroSala" id="selectableFiltroSala">
+                    <select
+                            class="custom-select"
+                            name="selectableFiltroSala" id="selectableFiltroSala">
                         <option value=""></option>
                     </select>
                 </div>
             </div>
+            <div class=" form-group col-md-2 col-sm-12">
+                <label for="fInicio">Fecha Inicio</label>
+                <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp"
+                       placeholder="Enter email">
+                <!--                <small id="fInicioHelp" class="form-text text-muted">-->
+                <!--                    We'll never share your email with anyone else.</small>-->
+            </div>
+
+            <div class=" form-group col-md-2 col-sm-12">
+                <label for="fFin">Fecha fin</label>
+                <input type="date" class="form-control" id="fFin" aria-describedby="emailHelp"
+                       placeholder="Enter email">
+                <!--                <small id="fFinHelp" class="form-text text-muted">-->
+                <!--                    We'll never share your email with anyone else.</small>-->
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <label style="color: white">-</label>
+                <a style="color: white !important; "
+                   onclick="
+                   onClickBuscarListener();"
+                   class="shadow1 col-12 btn btn-primary">Buscar
+                </a>
+            </div>
         </div>
+
         <div class="row">
+            <div id="DIV_filtrosFecha" class="col-sm-12  col-md-8 col-xl-4 ml-auto">
+                <div class="row">
 
+                </div>
+            </div>
+        </div>
 
+        <div class="row">
             <!--*************************************-->
             <div style="width: 100%!important; ;">
+
+
                 <div class="row">
                     <div class="col-6">
 
@@ -289,6 +325,27 @@
         }, 2000)
 
     }
+
+    var date1Param;
+    var date2Param;
+
+    function onClickBuscarListener() {
+        date1Param = document.getElementById("fInicio").value;
+        date2Param = document.getElementById("fFin").value
+        var diference = getMonthDifference(new Date(date1Param), new Date(date2Param));
+        if (diference <= 12)
+            lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+        else {
+            alert("Fechas no validas")
+        }
+        function getMonthDifference(startDate, endDate) {
+            return (
+                endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear())
+            );
+        }
+    }
+
+
 </script>
 </body>
 
