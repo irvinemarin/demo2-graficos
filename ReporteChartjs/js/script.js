@@ -93,14 +93,6 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var tabla = document.getElementById("table" + nroTable)
     tabla.style.display = "none"
 
-    // var tableRows = tabla.getElementsByTagName('tr');
-    // var rowCount = tableRows.length;
-    //
-    // for (var x=rowCount-1; x>0; x--) {
-    //     tabla.removeChild(tableRows[x]);
-    // }
-
-
     fetch(gethostApi() + nameWS, {
         method: 'get', headers: new Headers({
             'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
@@ -155,15 +147,28 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         return a.localeCompare(b)
     })
     //bind HEAder
+
+    var label = document.getElementById("label_selectable" + nroTable)
+
+
+    let NombreFiltroTabla = ""
+
     templistHeader.forEach((key, index) => {
         // console.log(key)
         if (key == "03_anno") return
-
         let keySubstring = key
-        if (true) keySubstring = key.substring(3, 6)
-        htmlHeader += "<th>" + keySubstring + ".</th>"
+
+        if (index == 0) {
+            keySubstring = key.substring(3, key.length)
+            NombreFiltroTabla = keySubstring
+        }
+        if (index > 0)
+            if (true) keySubstring = key.substring(3, 6) + "."
+        htmlHeader += "<th>" + keySubstring + "</th>"
     })
     headerTable01.innerHTML = htmlHeader;
+
+    label.innerText = NombreFiltroTabla;
 
     //FIN
     bindTableBody(data, templistHeader, select_Filtro, bodyTable01, false)
@@ -295,6 +300,9 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
             }
         })
 
+        listComboSala.sort((a, b) => {
+            return a.localeCompare(b)
+        })
 
         labelsDynamic = labelsTemp.sort((a, b) => {
             return a.localeCompare(b)
