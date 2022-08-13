@@ -253,10 +253,14 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 }
 
 var positionParentReport = 0
-
+var idGraficoCurrent = ""
+var currentDataGrafico=[]
+var currentLabelsGrafico=[]
+var currentOptionsGrafico;
 
 function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
-    let datasetsDynamic = []
+    idGraficoCurrent = idChartjs;
+    let datasetsGrafico = []
     let labelsDynamic = []
     let listComboSala = []
     let item;
@@ -309,11 +313,12 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
             item = {
                 label: AliasText + " " + element[nombreFiltro],
                 data: DataOrdered,
+                fill: false,
                 borderColor: styles.color.solids[index],
                 backgroundColor: styles.color.alphas[index]
             };
             // console.log(JSON.stringify(item))
-            datasetsDynamic.push(item)
+            datasetsGrafico.push(item)
         });
         optionColumns = 2
     }
@@ -351,25 +356,27 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     }
 
 
-    let arraySubtring = []
+    let labelsGrafico = []
 
     labelsDynamic.forEach((a, pos) => {
-        arraySubtring[pos] = a.substring(4, a.length)
+        labelsGrafico[pos] = a.substring(4, a.length)
     })
 
 
     const data = {
-        labels: arraySubtring, datasets: datasetsDynamic
+
+        labels: labelsGrafico, datasets: datasetsGrafico
     }
 
 
     const options = {
         legend: {
+
             labels: {
                 fontColor: '#000000',
             }
         }, title: {
-            display: true, text: 'COMPARACION SALAS POR AÑO', fontColor: '#000000',
+            display: false, text: 'COMPARACION SALAS POR AÑO', fontColor: '#000000',
         }, scales: {
             yAxes: [{
                 gridLines: {
@@ -386,27 +393,27 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
             }]
         }
     }
-    var canvas = document.getElementById(idChartjs)
+    currentDataGrafico = datasetsGrafico;
+    currentLabelsGrafico = labelsGrafico;
+    currentOptionsGrafico = options;
+
+    var canvas = document.getElementById(idGraficoCurrent)
     canvas.remove()
-    var Contentchart7 = document.getElementById("Contentchart7")
-    var Contentchart72 = document.getElementById("Contentchart72")
-    var Contentchart73 = document.getElementById("Contentchart73")
-    Contentchart7.innerHTML = ' <canvas id="chart7"></canvas>'
-    Contentchart72.innerHTML = ' <canvas id="chart72"></canvas>'
-    Contentchart73.innerHTML = ' <canvas id="chart73"></canvas>'
-    new Chart(idChartjs, {type: 'bar', data, options})
+    var Contentchart7 = document.getElementById("Content" + idGraficoCurrent)
+    Contentchart7.innerHTML = ' <canvas id="' + idGraficoCurrent + '"></canvas>'
+    new Chart(idGraficoCurrent, {type: 'bar', data, options})
     spinnerGrafico.style.display = 'none'
 }
 
 
 function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isOnlyAnioParam) {
     setTimeout(() => {
-        getInfoTabla(positionParentReport, "", "01", `${nombreServicioTabla01}/${cInsatnciaSelected}/${aniooSeleccionado}`);
-    }, 500)
-    setTimeout(() => {
         let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}/${aniooSeleccionado}`/*+ "/" + date1Param + "/" + date2Param*/;
         if (isOnlyAnioParam) WSParam = `${nombreServicioTabla02}/${aniooSeleccionado}`;
-        getInfoTabla(positionParentReport, "idChartjs", "02", WSParam);
+        getInfoTabla(positionParentReport, "", "02", WSParam);
+    }, 0)
+    setTimeout(() => {
+        getInfoTabla(positionParentReport, "", "01", `${nombreServicioTabla01}/${cInsatnciaSelected}/${aniooSeleccionado}`);
     }, 2000)
 }
 

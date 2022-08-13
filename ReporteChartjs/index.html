@@ -67,6 +67,17 @@
 
         <h2 class="loading">Espere un momento ...</h2>
 
+        <div class="col-sm-4 col-md-3 no-print" style="">
+            <label for="selectableAnio">Tipo Grafico </label>
+            <BR>
+            <select class="custom-select"
+                    name="selectableAnio" id="comboGrafico">
+                <option value="bar">Barras</option>
+<!--                <option value="pie">Circular</option>-->
+                <option value="line">Linear</option>
+            </select>
+        </div>
+
 
         <section id="content01" class="col-11">
             <figure>
@@ -82,7 +93,6 @@
         </section>
 
         <section
-
                 id="content02" class="col-11">
             <figure>
                 <p>Gráfico Grupo Bar</p>
@@ -269,8 +279,76 @@
 <script src="js/script.js"></script>
 
 <script>
+
+
+    comboGrafico = document.getElementById("comboGrafico");
+
+    comboGrafico.addEventListener('change', function (e) {
+        // console.log(this.value)
+        var canvas = document.getElementById(idGraficoCurrent)
+        // console.log(idGraficoCurrent)
+        canvas.remove()
+
+        // console.log(idGraficoCurrent)
+        // console.log(currentOptionsGrafico)
+        // console.log(currentLabelsGrafico)
+        // console.log(currentDataGrafico)
+
+
+        // const labels = ["L", "M", "MI", "J", "V", "S", "D"];
+        const data = {
+            labels: currentLabelsGrafico,
+            datasets: currentDataGrafico
+        };
+
+        var Contentchart7 = document.getElementById("Content" + idGraficoCurrent)
+        Contentchart7.innerHTML = ' <canvas id="' + idGraficoCurrent + '"></canvas>'
+
+
+        if (this.value == "pie") {
+            Contentchart7.style.width = "80%"
+            currentDataGrafico.forEach(it => {
+                it.backgroundColor = [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(255, 159, 64,0.8)',
+                    'rgba(255, 205, 86,0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(54, 162, 235,0.8)',
+                    'rgba(153, 102, 255,0.8)',
+                    'rgba(201, 203, 207, 0.8)',
+                ];
+                it.borderColor = [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
+                    'rgb(201, 203, 207)'
+                ]
+                it.borderWidth = 1;
+            })
+        } else {
+            currentDataGrafico.forEach((it, index) => {
+                it.backgroundColor = [
+                    styles.color.alphas[index]
+                ];
+                it.borderColor = [
+                    styles.color.solids[index],
+
+                ]
+                it.borderWidth = 1;
+            })
+
+        }
+
+        let chart = new Chart(idGraficoCurrent,
+            {type: this.value, data, currentOptionsGrafico})
+    });
+
     function onCLickListener(position, titulo, e) {
         spinnerGrafico = document.getElementById("spinnerGrafico");
+
         mainPanelDiv = document.getElementById("mainPanelDiv");
         spinnerGrafico.style.display = "block"
         mainPanelDiv.style.display = "none"
@@ -324,6 +402,7 @@
                     })
         }, 2000)
 
+
     }
 
     var date1Param;
@@ -338,6 +417,7 @@
         else {
             alert("Fechas no validas")
         }
+
         function getMonthDifference(startDate, endDate) {
             return (
                 endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear())
