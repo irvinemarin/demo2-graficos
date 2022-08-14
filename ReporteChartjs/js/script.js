@@ -321,9 +321,16 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
 
-        txtdate1Param = aniooSeleccionado + "-" + "01-01"
-        txtdate2Param = aniooSeleccionado + "-" + "01-31"
+        // console.log(txtdate1Param)
+        // if (aniooSeleccionado == txtdate1Param.split("-")[0]) {
+        //     txtdate1Param = aniooSeleccionado + "-" + "01-01"
+        // }
+        if (aniooSeleccionado > txtdate1Param.split("-")[0]) {
+            txtdate1Param = aniooSeleccionado + "-" + "01-01"
+        }
 
+        // console.log(txtdate1Param)
+        txtdate2Param = aniooSeleccionado + "-" + "12-31"
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
     });
 
