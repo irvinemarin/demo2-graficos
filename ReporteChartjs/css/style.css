@@ -294,4 +294,21 @@ select {
         margin-left: -14% !important;
         width: 21cm !important;
     }
+
+    #Contentchart7, #Contentchart72, #Contentchart73 {
+        /*width: 60% !important;*/
+        /*max-width: 60% !important;*/
+        background-color: blue !important;
+    }
+
+    #chart7, #chart72, #chart73 {
+        width: 20cm !important;
+        height: 7cm !important;
+        /*max-width: 80% !important;*/
+    }
+
+    #selectable01, #selectable02, #selectableFiltroSala, #btnBuscar, #label_selectable02, #label_selectable01 {
+        display: none !important;
+    }
+
 }

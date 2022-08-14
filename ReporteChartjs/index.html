@@ -10,10 +10,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3/dist/chart.min.js"></script>
 </head>
 
 <body>
 <main>
+
+
     <div style="display: flex">
         <img src="assets/logo-pj.png" style="height: 50px" alt="">
         <h1 style="text-align: center; width: 65%"> Reportes PJ
@@ -29,13 +32,15 @@
         <div class="contentBackground">
             <h5>Reportes Disponibles</h5>
             <div class="listaReportes" id="listaReportesDIV">
-                <div class="item-report " onclick="onCLickListener('1','REPORTE DE INGRESOS',this)">
+                <div class="item-report " onclick="onCLickItemReporteListenerListener('1','REPORTE DE INGRESOS',this)">
                     <p>REPORTE DE INGRESOS </p>
                 </div>
-                <div class="item-report item2" onclick="onCLickListener('2','REPORTE PROGRAMADOS',this)">
+                <div class="item-report item2"
+                     onclick="onCLickItemReporteListenerListener('2','REPORTE PROGRAMADOS',this)">
                     <p>REPORTE PROGRAMADOS</p>
                 </div>
-                <div class="item-report item3" onclick="onCLickListener('3','REPORTE ESCRITOS',this)">
+                <div class="item-report item3"
+                     onclick="onCLickItemReporteListenerListener('3','REPORTE ESCRITOS',this)">
                     <p>REPORTE ESCRITOS</p>
                 </div>
             </div>
@@ -58,24 +63,50 @@
 
 
     </div>
-
-
     <div class="mainPanel" style="display: none" id="mainPanelDiv">
         <div style="right: 0;position: absolute">
             <button type="button" class="btn btn-primary no-print" onclick="print()">IMPRIMIR</button>
         </div>
 
         <h2 class="loading">Espere un momento ...</h2>
+        <div class="row">
+            <div class="col-sm-4 col-md-3 no-print" style="">
+                <label for="selectableAnio">Tipo Grafico </label>
+                <BR>
+                <select class="custom-select"
+                        name="selectableAnio" id="comboGrafico">
+                    <option value="bar">Barras</option>
+                    <option value="line">Lineas</option>
+                    <!--                <option value="pie">Circular</option>-->
 
-        <div class="col-sm-4 col-md-3 no-print" style="">
-            <label for="selectableAnio">Tipo Grafico </label>
-            <BR>
-            <select class="custom-select"
-                    name="selectableAnio" id="comboGrafico">
-                <option value="bar">Barras</option>
-<!--                <option value="pie">Circular</option>-->
-                <option value="line">Linear</option>
-            </select>
+                </select>
+            </div>
+            <div class=" form-group col-md-2 col-sm-12">
+                <label for="fInicio">Fecha Inicio</label>
+                <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp"
+                       placeholder="">
+                <!--                <small id="fInicioHelp" class="form-text text-muted">-->
+                <!--                    We'll never share your email with anyone else.</small>-->
+            </div>
+
+            <div class=" form-group col-md-2 col-sm-12">
+                <label for="fFin">Fecha fin</label>
+                <input type="date" class="form-control" id="fFin" aria-describedby="emailHelp"
+                       placeholder="">
+                <!--                <small id="fFinHelp" class="form-text text-muted">-->
+                <!--                    We'll never share your email with anyone else.</small>-->
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <label style="color: white">-</label>
+                <a
+                        id="btnBuscar"
+                        style="color: white !important; "
+                        onclick="
+                               onClickBuscarListener();"
+                        class="shadow1 col-12 btn btn-primary">Buscar
+                </a>
+            </div>
+
         </div>
 
 
@@ -118,9 +149,10 @@
             </figure>
         </section>
 
-        <h3 id="tituloSalaFiltro" class="col-4"></h3>
+
         <div class="row">
-            <div class="col-md-2 col-sm-12">
+            <h3 id="tituloSalaFiltro" class="col-4"></h3>
+            <div class="col-md-2 col-sm-12" style="display: none;">
                 <div id="tablaContent01" style="">
 
                     <label for="selectableAnio">FILTRO AÑO</label>
@@ -142,29 +174,7 @@
                     </select>
                 </div>
             </div>
-            <div class=" form-group col-md-2 col-sm-12">
-                <label for="fInicio">Fecha Inicio</label>
-                <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp"
-                       placeholder="Enter email">
-                <!--                <small id="fInicioHelp" class="form-text text-muted">-->
-                <!--                    We'll never share your email with anyone else.</small>-->
-            </div>
 
-            <div class=" form-group col-md-2 col-sm-12">
-                <label for="fFin">Fecha fin</label>
-                <input type="date" class="form-control" id="fFin" aria-describedby="emailHelp"
-                       placeholder="Enter email">
-                <!--                <small id="fFinHelp" class="form-text text-muted">-->
-                <!--                    We'll never share your email with anyone else.</small>-->
-            </div>
-            <div class="col-md-2 col-sm-12">
-                <label style="color: white">-</label>
-                <a style="color: white !important; "
-                   onclick="
-                   onClickBuscarListener();"
-                   class="shadow1 col-12 btn btn-primary">Buscar
-                </a>
-            </div>
         </div>
 
         <div class="row">
@@ -188,15 +198,15 @@
                                 <!--                        <button onclick="loadGraficoDetalle('01')">GRAFICAR TABLA</button>-->
 
                                 <label
-
-                                        for="selectable01">FILTRO <span id="label_selectable01"></span> </label>
+                                        id="label_selectable01"
+                                        for="selectable01"> </label>
                                 <BR>
                                 <select name="selectable01" id="selectable01">
                                     <option value=""></option>
                                 </select>
                             </div>
                             <div id="spinner01" class="justify-content-center">
-                                <p>Espere... cargando Informacion</p>
+                                <p>Cargando Información...</p>
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="sr-only">...</span> <!-- Loading -->
                                 </div>
@@ -221,14 +231,14 @@
                             <div>
                                 <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
 
-                                <label for="selectable02">FILTRO <span id="label_selectable02"></span></label>
+                                <label id="label_selectable02" for="selectable02"></label>
                                 <BR>
                                 <select name="selectable02" id="selectable02">
                                     <option value=""></option>
                                 </select>
                             </div>
                             <div id="spinner02" class=" justify-content-center">
-                                <p>Espere... cargando Informacion</p>
+                                <p>Cargando Información</p>
 
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="sr-only">...</span>  <!-- Loading -->
@@ -269,7 +279,11 @@
 <!--</footer>-->
 
 <!-- ChartJS -->
-<script src="Chartjs/Chart.min.js"></script>
+<script src="Chartjs/chart.min.js"></script>
+<!--<script src="Chartjs/chart.js"></script>-->
+<!--<script src="Chartjs/chart.mjs"></script>-->
+<!--<script src="Chartjs/chart.umd.js"></script>-->
+<!--<script src="Chartjs/helpers.esm.min.js"></script>-->
 
 <!-- Styles for charts -->
 <script src="js/chartStyles.js"></script>
@@ -284,27 +298,14 @@
     comboGrafico = document.getElementById("comboGrafico");
 
     comboGrafico.addEventListener('change', function (e) {
-        // console.log(this.value)
         var canvas = document.getElementById(idGraficoCurrent)
-        // console.log(idGraficoCurrent)
         canvas.remove()
-
-        // console.log(idGraficoCurrent)
-        // console.log(currentOptionsGrafico)
-        // console.log(currentLabelsGrafico)
-        // console.log(currentDataGrafico)
-
-
-        // const labels = ["L", "M", "MI", "J", "V", "S", "D"];
         const data = {
             labels: currentLabelsGrafico,
             datasets: currentDataGrafico
         };
-
         var Contentchart7 = document.getElementById("Content" + idGraficoCurrent)
         Contentchart7.innerHTML = ' <canvas id="' + idGraficoCurrent + '"></canvas>'
-
-
         if (this.value == "pie") {
             Contentchart7.style.width = "80%"
             currentDataGrafico.forEach(it => {
@@ -335,7 +336,6 @@
                 ];
                 it.borderColor = [
                     styles.color.solids[index],
-
                 ]
                 it.borderWidth = 1;
             })
@@ -346,9 +346,48 @@
             {type: this.value, data, currentOptionsGrafico})
     });
 
-    function onCLickListener(position, titulo, e) {
-        spinnerGrafico = document.getElementById("spinnerGrafico");
 
+    var date1Param = document.getElementById("fInicio");
+    var date2Param = document.getElementById("fFin")
+
+    var txtdate1Param;
+    var txtdate2Param;
+
+
+    setRangoDateDatesInit()
+
+    date1Param.addEventListener("change", function () {
+        txtdate1Param = date1Param.value;
+    })
+    date2Param.addEventListener("change", function () {
+        txtdate2Param = date2Param.value;
+    })
+
+
+    function setRangoDateDatesInit() {
+        let hoy = new Date()
+        let mounth = (hoy.getMonth() + 1) < 10 ? "0" + (hoy.getMonth() + 1) : hoy.getMonth() + 1
+        let day = (hoy.getDate()) < 10 ? "0" + (hoy.getDate()) : hoy.getDate()
+        let ToDate = hoy.getFullYear() + "-" + mounth + "-" + day
+        let ToDate12Ago = (hoy.getFullYear() - 1) + "-" + mounth + "-" + day
+        // alert("toDate : " + ToDate + " 12ago : " + ToDate12Ago)
+        date2Param.value = ToDate
+        date1Param.value = ToDate12Ago
+        txtdate1Param = date1Param.value;
+        txtdate2Param = date2Param.value
+    }
+
+    var datosItemReporte = {
+        position: 0,
+        titulo: "",
+        htmlItem: "",
+    }
+
+    function onCLickItemReporteListenerListener(position, titulo, e) {
+        datosItemReporte.position = position
+        datosItemReporte.titulo = titulo
+        datosItemReporte.htmlItem = e
+        spinnerGrafico = document.getElementById("spinnerGrafico");
         mainPanelDiv = document.getElementById("mainPanelDiv");
         spinnerGrafico.style.display = "block"
         mainPanelDiv.style.display = "none"
@@ -368,17 +407,17 @@
         let nommbreServicio = "";
         // figure.style.display = "none"
         if (position == 1) {
-            nommbreServicio = "getListadoExpIngresos";
+            nommbreServicio = "getListadoExpIngresos/";
         }
         if (position == 2) {
-            nommbreServicio = "getListadoProgramaciones";
+            nommbreServicio = "getListadoProgramaciones/";
         }
         if (position == 3) {
-            nommbreServicio = "getListadoEscritosAnual/2022";
+            nommbreServicio = "getListadoEscritosAnual/";
         }
 
         setTimeout(() => {
-            fetch(gethostApi() + nommbreServicio, {
+            fetch(gethostApi() + nommbreServicio + txtdate1Param + "/" + txtdate2Param, {
                 method: 'get',
                 headers: new Headers({
                     'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
@@ -405,15 +444,12 @@
 
     }
 
-    var date1Param;
-    var date2Param;
-
     function onClickBuscarListener() {
-        date1Param = document.getElementById("fInicio").value;
-        date2Param = document.getElementById("fFin").value
-        var diference = getMonthDifference(new Date(date1Param), new Date(date2Param));
+
+        var diference = getMonthDifference(new Date(txtdate1Param), new Date(txtdate2Param));
+        alert(diference)
         if (diference <= 12)
-            lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+            onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem)
         else {
             alert("Fechas no validas")
         }

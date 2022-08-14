@@ -1,11 +1,6 @@
-// Defaults
-// Chart.defaults.global.defaultFontColor = '#ffffff'
-// Chart.defaults.global.elements.line.borderWidth = 1
-// Chart.defaults.global.elements.rectangle.borderWidth = 1
-// Chart.defaults.scale.gridLines.color = '#444444'
-// Chart.defaults.scale.ticks.display = false
 var spinnerGrafico;
 var optionColumns = 1;
+
 
 loadGraficoDetalle("-1");
 
@@ -15,8 +10,8 @@ function loadGraficoDetalle(option) {
     if (option == "00") {
         var ittulo = document.getElementById("tituloReporte1")
         ittulo.innerText = "REPORTE DE INGRESOS";
-        fetch(gethostApi() + 'getListadoExpIngresos', {
-            signal: signal, method: 'get', headers: new Headers({
+        fetch(`${gethostApi()}getListadoExpIngresos/${txtdate1Param}/${txtdate2Param}`, {
+            method: 'get', headers: new Headers({
                 'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
                 'Content-Type': 'application/json'
             })
@@ -31,8 +26,6 @@ function loadGraficoDetalle(option) {
             }, onerror => {
                 spinnerGrafico.style.display = 'none'
             })
-
-
     }
 
 }
@@ -254,8 +247,8 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
 var positionParentReport = 0
 var idGraficoCurrent = ""
-var currentDataGrafico=[]
-var currentLabelsGrafico=[]
+var currentDataGrafico = []
+var currentLabelsGrafico = []
 var currentOptionsGrafico;
 
 function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
@@ -355,24 +348,17 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
     }
 
-
     let labelsGrafico = []
-
     labelsDynamic.forEach((a, pos) => {
         labelsGrafico[pos] = a.substring(4, a.length)
     })
-
-
     const data = {
-
         labels: labelsGrafico, datasets: datasetsGrafico
     }
-
-
     const options = {
         legend: {
-
             labels: {
+                position: "right",
                 fontColor: '#000000',
             }
         }, title: {
@@ -406,14 +392,15 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
 }
 
 
-function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isOnlyAnioParam) {
+function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNoInstanciaNeed) {
     setTimeout(() => {
-        let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}/${aniooSeleccionado}`/*+ "/" + date1Param + "/" + date2Param*/;
-        if (isOnlyAnioParam) WSParam = `${nombreServicioTabla02}/${aniooSeleccionado}`;
+        let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
+        if (isNoInstanciaNeed) WSParam = `${nombreServicioTabla02}/` + txtdate1Param + "/" + txtdate2Param;
         getInfoTabla(positionParentReport, "", "02", WSParam);
     }, 0)
     setTimeout(() => {
-        getInfoTabla(positionParentReport, "", "01", `${nombreServicioTabla01}/${cInsatnciaSelected}/${aniooSeleccionado}`);
+        let WSParam = `${nombreServicioTabla01}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
+        getInfoTabla(positionParentReport, "", "01", WSParam);
     }, 2000)
 }
 
