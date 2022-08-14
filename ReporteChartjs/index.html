@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3/dist/chart.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -47,13 +48,15 @@
         </div>
     </div>
     <div style="
-    opacity: .2;
+    opacity: .4;
     background-color: #575757;
     width: 100%; height: 100% ;position: fixed; top: 0px; display: none "
 
          id="spinnerGrafico" class="justify-content-center">
-        <div style="position: absolute; left: 45%; top : 45%;">
-            <p>Espere un momento esto puede tardar...</p>
+        <div style="position: absolute; left: 30%; top : 45%;">
+            <p style="
+            border-radius: 10px;
+            font-size: 25px; background-color: #000000">Espere un momento esto puede tardar un poco...</p>
 
             <div class="spinner-border text-primary " style="width: 5rem; height: 5rem;" role="status">
                 <!--                Loading-->
@@ -152,7 +155,7 @@
 
         <div class="row">
             <h3 id="tituloSalaFiltro" class="col-4"></h3>
-            <div class="col-md-2 col-sm-12" style="display: none;">
+            <div class="col-md-2 col-sm-12" style="display: block;">
                 <div id="tablaContent01" style="">
 
                     <label for="selectableAnio">FILTRO AÑO</label>
@@ -279,6 +282,10 @@
 <!--</footer>-->
 
 <!-- ChartJS -->
+
+
+<!--<script src="sweetalert2.all.min.js"></script>-->
+
 <script src="Chartjs/chart.min.js"></script>
 <!--<script src="Chartjs/chart.js"></script>-->
 <!--<script src="Chartjs/chart.mjs"></script>-->
@@ -291,9 +298,28 @@
 <!-- DCharts development -->
 <script src="./config.js"></script>
 <script src="js/script.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.26/dist/sweetalert2.all.min.js"
+        integrity="sha256-fNaNuEZ0nO4493IejXMa65uBamnI/Hm+iRjgFhfjZBQ=" crossorigin="anonymous"></script>
 <script>
 
+
+    function showSuccessAlerMessaje(titulo, mensaje, action) {
+        Swal.fire({
+            icon: 'Información',
+            title: titulo,
+            text: mensaje,
+            footer: ''
+        })
+    }
+
+    function showErrorAlerMessaje(titulo, mensaje, action) {
+        Swal.fire({
+            icon: 'error',
+            title: titulo,
+            text: mensaje,
+            footer: ''
+        })
+    }
 
     comboGrafico = document.getElementById("comboGrafico");
 
@@ -416,30 +442,35 @@
             nommbreServicio = "getListadoEscritosAnual/";
         }
 
-        setTimeout(() => {
-            fetch(gethostApi() + nommbreServicio + txtdate1Param + "/" + txtdate2Param, {
-                method: 'get',
-                headers: new Headers({
-                    'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                    'Content-Type': 'application/json'
-                })
+        // setTimeout(() => {
+        fetch(gethostApi() + nommbreServicio + txtdate1Param + "/" + txtdate2Param, {
+            method: 'get',
+            headers: new Headers({
+                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
+                'Content-Type': 'application/json'
             })
-                .then(response => response.json())
-                .then(
-                    (data) => {
-                        if (data.length > 0) {
-                            printCharts(data, position, titulo)
-                            mainPanelDiv.style.display = "block"
-                        } else {
-                            spinnerGrafico.style.display = "none"
-                            alert("No se encontraron Resultados")
-                        }
-                    },
-                    onerror => {
+        })
+            .then(response => response.json())
+            .then(
+                (data) => {
+                    if (data.length > 0) {
+                        printCharts(data, position, titulo)
+                        mainPanelDiv.style.display = "block"
+                    } else {
+                        setRangoDateDatesInit()
+                        mainPanelDiv.style.display = "block"
                         spinnerGrafico.style.display = "none"
-                        alert("Servicio no Disponible")
-                    })
-        }, 2000)
+                        showErrorAlerMessaje("No se encontraron Resultados", "", "")
+                    }
+                },
+                onerror => {
+                    setRangoDateDatesInit()
+                    mainPanelDiv.style.display = "block"
+                    spinnerGrafico.style.display = "none"
+                    mainPanelDiv.style.display = "none"
+                    showErrorAlerMessaje("Servicio no Disponible", "", "")
+                })
+        // }, 2000)
 
 
     }
@@ -447,11 +478,11 @@
     function onClickBuscarListener() {
 
         var diference = getMonthDifference(new Date(txtdate1Param), new Date(txtdate2Param));
-        alert(diference)
+        // alert(diference)
         if (diference <= 12)
             onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem)
         else {
-            alert("Fechas no validas")
+            showErrorAlerMessaje(diference + " meses de deferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
         }
 
         function getMonthDifference(startDate, endDate) {

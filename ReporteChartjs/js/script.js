@@ -72,11 +72,6 @@ function printCharts(dataDB, positionParentReportHTML) {
 
 function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var spinner = document.getElementById("spinner" + nroTable)
-    var tablaContent01 = document.getElementById("tablaContent01")
-    var tablaContent02 = document.getElementById("tablaContent02")
-
-    tablaContent01.style.display = 'none'
-    tablaContent02.style.display = 'none'
     var txtResultado = document.getElementById("txtResultado" + nroTable)
     txtResultado.style.display = "none"
 
@@ -212,10 +207,10 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         })
         html += "</tr>"
         bodyTable01.innerHTML = html
-        var tablaContent01 = document.getElementById("tablaContent01")
-        var tablaContent02 = document.getElementById("tablaContent02")
-        tablaContent01.style.display = 'block'
-        tablaContent02.style.display = 'block'
+        // var tablaContent01 = document.getElementById("tablaContent01")
+        // var tablaContent02 = document.getElementById("tablaContent02")
+        // tablaContent01.style.display = 'block'
+        // tablaContent02.style.display = 'block'
         var mainPanelDiv = document.getElementById("mainPanelDiv")
         var leftPanel = document.getElementById("leftPanel")
         setTimeout(() => {
@@ -320,17 +315,21 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         // console.log(it)
         htmlComboAnio += `<option  value='${it}'>${it} </option>`
         aniooSeleccionado = it
-        // console.log("aniooSeleccionado :" + aniooSeleccionado)
     })
     SELECT_ANIO.innerHTML = htmlComboAnio
     SELECT_ANIO.value = aniooSeleccionado
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
+
+        txtdate1Param = aniooSeleccionado + "-" + "01-01"
+        txtdate2Param = aniooSeleccionado + "-" + "01-31"
+
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
     });
-    populateComboSalas(listComboSala)
 
-    function populateComboSalas(listaCombo) {
+    populateComboSalas(listComboSala, dataDB)
+
+    function populateComboSalas(listaCombo, dataDB) {
         var selectFiltroSalas = document.getElementById("selectableFiltroSala")
         let htmlCombo = ''
         // htmlCombo += "<option  value='-1'> -- Todos -- </option>"
@@ -343,6 +342,8 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
 
         selectFiltroSalas.addEventListener('change', function (e) {
             // console.log(this.value, this.text)
+
+
             lisarTablas(this.value, this.options[this.selectedIndex].text)
         });
         lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
@@ -358,8 +359,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     const options = {
         legend: {
             labels: {
-                position: "right",
-                fontColor: '#000000',
+                position: "right", fontColor: '#000000',
             }
         }, title: {
             display: false, text: 'COMPARACION SALAS POR AÑO', fontColor: '#000000',
