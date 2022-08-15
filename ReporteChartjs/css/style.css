@@ -157,6 +157,23 @@ section {
     border-right: 4px solid #919191;
 }
 
+.initPanel {
+    opacity: 0.1;
+    width: 80%;
+    height: 100vh;
+    left: 19%;
+    position: absolute;
+}
+
+.overlayInit {
+    background-position: top;
+    max-width: 100%;
+    width: 80vw;
+    background-repeat: repeat-y;
+    height: 100vh;
+    background-image: url("/ReporteChartjs/assets/Palacio_solo.jpg");
+}
+
 .mainPanel {
     max-width: 70%;
     min-width: 21cm;
@@ -314,7 +331,7 @@ select {
     #Contentchart7, #Contentchart72, #Contentchart73 {
         /*width: 60% !important;*/
         /*max-width: 60% !important;*/
-        background-color: blue !important;
+        /*background-color: blue !important;*/
     }
 
     #chart7, #chart72, #chart73 {

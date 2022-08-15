@@ -70,7 +70,7 @@ function printCharts(dataDB, positionParentReportHTML) {
 
 }
 
-var isComboAniooChangeSelected = false;
+var isNoVisibleAllAniosSelected = false;
 
 function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var spinner = document.getElementById("spinner" + nroTable)
@@ -152,7 +152,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
 
-    if (!isComboAniooChangeSelected) {
+    if (!isNoVisibleAllAniosSelected) {
         txtInformacionFiltro.innerHTML = "*Viendo resultado de todos los años*"
     } else {
         txtInformacionFiltro.innerHTML = "*Viendo resultado desde :" + txtdate1Param + " hasta " + txtdate2Param;
@@ -325,30 +325,32 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         optionColumns = 2
     }
     let htmlComboAnio = ''
+
+    htmlComboAnio += `<option  value='-1'>--TODOS--</option>`
     Object.keys(TempComboAniosList).forEach(it => {
         // console.log(it)
         htmlComboAnio += `<option  value='${it}'>${it} </option>`
-        aniooSeleccionado = it
+        aniooSeleccionado = "-1"
     })
     SELECT_ANIO.innerHTML = htmlComboAnio
     SELECT_ANIO.value = aniooSeleccionado
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
-        alert(aniooSeleccionado)
-        // console.log(txtdate1Param)
-        // if (aniooSeleccionado == txtdate1Param.split("-")[0]) {
-        //     txtdate1Param = aniooSeleccionado + "-" + "01-01"
-        // }
-        if (aniooSeleccionado > txtInputdate1Param.value.split("-")[0]) {
-            txtdate1Param = aniooSeleccionado + "-" + "01-01"
-        } else {
-            txtdate1Param = txtInputdate1Param.value
+        if (aniooSeleccionado != "-1") {
+            txtdate2Param = txtInputdate2Param.value
+            if (aniooSeleccionado > txtInputdate1Param.value.split("-")[0]) {
+                txtdate1Param = aniooSeleccionado + "-" + "01-01"
+            } else {
+                txtdate1Param = txtInputdate1Param.value
+                txtdate2Param = aniooSeleccionado + "-" + "12-31"
+            }
         }
-
-        // console.log(txtdate1Param)
-        txtdate2Param = txtInputdate2Param.value
+        if (aniooSeleccionado == "-1") {
+            txtdate1Param = txtInputdate1Param.value
+            isNoVisibleAllAniosSelected = false;
+        }
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
-        isComboAniooChangeSelected = true;
+        isNoVisibleAllAniosSelected = true;
     });
 
     populateComboSalas(listComboSala, dataDB)
