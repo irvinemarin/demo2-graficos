@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Gerencial de la Corte Suprema</title>
+    <title>Reportes Gerencial de la Corte Suprema</title>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300" rel="stylesheet"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -20,7 +20,9 @@
 
     <div style="display: flex">
         <img src="assets/logo-pj.png" style="height: 50px" alt="">
-        <h1 style="text-align: center; width: 65%"> Reportes PJ
+        <h1 style="
+        font-size: 25px;
+        text-align: center; width: 65%"> Reportes Gerencial de la Corte Suprema
             <br><span>Visualización de estadísticas </span>
         </h1>
 
@@ -72,7 +74,10 @@
         </div>
 
         <h2 class="loading">Espere un momento ...</h2>
+        <br>
+        <br>
         <div class="row">
+
             <div class="col-sm-4 col-md-3 no-print" style="">
                 <label for="selectableAnio">Tipo Grafico </label>
                 <BR>
@@ -84,7 +89,7 @@
 
                 </select>
             </div>
-            <div class=" form-group col-md-2 col-sm-12">
+            <div class=" form-group col-md-3 col-sm-12" id="Content_fInicio">
                 <label for="fInicio">Fecha Inicio</label>
                 <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp"
                        placeholder="">
@@ -92,14 +97,14 @@
                 <!--                    We'll never share your email with anyone else.</small>-->
             </div>
 
-            <div class=" form-group col-md-2 col-sm-12">
+            <div class=" form-group col-md-3 col-sm-12" id="Content_fFin">
                 <label for="fFin">Fecha fin</label>
                 <input type="date" class="form-control" id="fFin" aria-describedby="emailHelp"
                        placeholder="">
                 <!--                <small id="fFinHelp" class="form-text text-muted">-->
                 <!--                    We'll never share your email with anyone else.</small>-->
             </div>
-            <div class="col-md-2 col-sm-12">
+            <div class="col-md-3 col-sm-12">
                 <label style="color: white">-</label>
                 <a
                         id="btnBuscar"
@@ -115,7 +120,7 @@
 
         <section id="content01" class="col-11">
             <figure>
-                <p>Gráfico Grupo Bar</p>
+
                 <div class="container-title">
                     <h3 id="tituloReporte1"></h3>
                 </div>
@@ -129,7 +134,7 @@
         <section
                 id="content02" class="col-11">
             <figure>
-                <p>Gráfico Grupo Bar</p>
+
                 <div class="container-title">
                     <h3 id="tituloReporte2"></h3>
                 </div>
@@ -142,7 +147,7 @@
 
         <section id="content03" class="col-11">
             <figure>
-                <p>Gráfico Grupo Bar</p>
+
                 <div class="container-title">
                     <h3 id="tituloReporte3"></h3>
                 </div>
@@ -214,6 +219,11 @@
                                     <span class="sr-only">...</span> <!-- Loading -->
                                 </div>
                             </div>
+                            <div
+                                    class="txtInformacionFiltro"
+
+                                    id="txtInformacionFiltro01">txtInformacionFiltro02
+                            </div>
                             <BR>
                             <table class="greyGridTable" id="table01" style="background-color: #ffffff; width: 100%;">
                                 <thead>
@@ -240,12 +250,17 @@
                                     <option value=""></option>
                                 </select>
                             </div>
+
                             <div id="spinner02" class=" justify-content-center">
                                 <p>Cargando Información</p>
 
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="sr-only">...</span>  <!-- Loading -->
                                 </div>
+                            </div>
+                            <div
+                                    class="txtInformacionFiltro"
+                                    id="txtInformacionFiltro02">txtInformacionFiltro02
                             </div>
                             <BR>
                             <table class="greyGridTable" id="table02" style=" width: 100%!important;">
@@ -373,8 +388,8 @@
     });
 
 
-    var date1Param = document.getElementById("fInicio");
-    var date2Param = document.getElementById("fFin")
+    var txtInputdate1Param = document.getElementById("fInicio");
+    var txtInputdate2Param = document.getElementById("fFin")
 
     var txtdate1Param;
     var txtdate2Param;
@@ -382,11 +397,11 @@
 
     setRangoDateDatesInit()
 
-    date1Param.addEventListener("change", function () {
-        txtdate1Param = date1Param.value;
+    txtInputdate1Param.addEventListener("change", function () {
+        txtdate1Param = txtInputdate1Param.value;
     })
-    date2Param.addEventListener("change", function () {
-        txtdate2Param = date2Param.value;
+    txtInputdate2Param.addEventListener("change", function () {
+        txtdate2Param = txtInputdate2Param.value;
     })
 
 
@@ -397,10 +412,10 @@
         let ToDate = hoy.getFullYear() + "-" + mounth + "-" + day
         let ToDate12Ago = (hoy.getFullYear() - 1) + "-" + mounth + "-" + day
         // alert("toDate : " + ToDate + " 12ago : " + ToDate12Ago)
-        date2Param.value = ToDate
-        date1Param.value = ToDate12Ago
-        txtdate1Param = date1Param.value;
-        txtdate2Param = date2Param.value
+        txtInputdate2Param.value = ToDate
+        txtInputdate1Param.value = ToDate12Ago
+        txtdate1Param = txtInputdate1Param.value;
+        txtdate2Param = txtInputdate2Param.value
     }
 
     var datosItemReporte = {

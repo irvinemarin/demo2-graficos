@@ -272,6 +272,8 @@ select {
 
 .tableTotales {
     border-top: 3px solid black;
+    background-color: #fcf5c6 !important;
+    color: black !important;
 }
 
 .footer-custom {
@@ -283,6 +285,20 @@ select {
     width: 100% !important;
     background-color: #770000 !important;
 
+}
+
+.ft-r {
+    /*top: 0;*/
+    /*position: absolute;*/
+    /*right: 0 !important;*/
+}
+
+.txtInformacionFiltro {
+    background-color: #bdbdbd;
+    margin-top: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: darkred;
 }
 
 @media print {
@@ -309,6 +325,14 @@ select {
 
     #selectable01, #selectable02, #selectableFiltroSala, #btnBuscar, #label_selectable02, #label_selectable01 {
         display: none !important;
+    }
+
+    #Content_fInicio, #Content_fFin {
+        width: 30% !important;
+    }
+
+    #fInicio, #fFin {
+        width: 100% !important;
     }
 
 }

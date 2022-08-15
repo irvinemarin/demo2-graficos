@@ -70,6 +70,8 @@ function printCharts(dataDB, positionParentReportHTML) {
 
 }
 
+var isComboAniooChangeSelected = false;
+
 function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var spinner = document.getElementById("spinner" + nroTable)
     var txtResultado = document.getElementById("txtResultado" + nroTable)
@@ -138,15 +140,25 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         // console.log(key)
         if (key == "03_anno") return
         let keySubstring = key
-
         if (index == 0) {
             keySubstring = key.substring(3, key.length)
             NombreFiltroTabla = keySubstring
         }
         if (index > 0) if (true) keySubstring = key.substring(3, 6) + "."
-        htmlHeader += "<th>" + keySubstring + "</th>"
+        htmlHeader += "<th >" + keySubstring + "</th>"
     })
+    htmlHeader += "<th style='background-color: #fcf5c6!important; color: black ;text-align: right!important;' >Total</th>"
     headerTable01.innerHTML = htmlHeader;
+
+    var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
+
+    if (!isComboAniooChangeSelected) {
+        txtInformacionFiltro.innerHTML = "*Viendo resultado de todos los años*"
+    } else {
+        txtInformacionFiltro.innerHTML = "*Viendo resultado desde :" + txtdate1Param + " hasta " + txtdate2Param;
+
+    }
+
 
     label.innerText = NombreFiltroTabla;
 
@@ -156,17 +168,18 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     function bindTableBody(data, templistHeader, selectFiltro, bodyTable01, optionSelect) {
         var html = '';
-        let arrayTotales = []
+        let arrayTotalesHorizontal = []
         let htmlCombo = ''
         let listComboFiltro = []
         htmlCombo += "<option  value='-1'> -- Todos -- </option>"
         data.forEach(dbItem => {
             html += "<tr>"
+            let lastPosition = Object.values(dbItem).length - 1;
+            let AculumladoHorizontal = 0;
             templistHeader.forEach((keyName, posHeaderOrdered) => {
                 if (keyName == "03_anno") return
+
                 Object.values(dbItem).forEach((value, posValue) => {
-
-
                     if (!optionSelect) {
                         if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
                             listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
@@ -174,20 +187,21 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
                     }
                     if (keyName == Object.keys(dbItem)[posValue]) {
                         html += "<td>" + value + "</td>"
-                    }
-
-                    if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
-
-                        if (parseInt(value) >= 0) {
-                            arrayTotales[keyName] = (arrayTotales[keyName] || 0) + value
-                        } else {
-                            arrayTotales[keyName] = ""
+                        if (posHeaderOrdered > 0) {
+                            if (parseInt(value) >= 0) AculumladoHorizontal = AculumladoHorizontal + value
                         }
-
-
+                    }
+                    if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
+                        if (parseInt(value) >= 0) {
+                            arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
+                        } else {
+                            arrayTotalesHorizontal[keyName] = ""
+                        }
                     }
                 })
+
             })
+            html += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
             html += "</tr>"
         })
 
@@ -202,7 +216,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         // console.table(arrayTotales)
         html += "<tr class='tableTotales' >"
         html += "<td>Totales</td>"
-        Object.values(arrayTotales).forEach(item => {
+        Object.values(arrayTotalesHorizontal).forEach(item => {
             html += "<td>" + item + "</td>"
         })
         html += "</tr>"
@@ -320,18 +334,21 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     SELECT_ANIO.value = aniooSeleccionado
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
-
+        alert(aniooSeleccionado)
         // console.log(txtdate1Param)
         // if (aniooSeleccionado == txtdate1Param.split("-")[0]) {
         //     txtdate1Param = aniooSeleccionado + "-" + "01-01"
         // }
-        if (aniooSeleccionado > txtdate1Param.split("-")[0]) {
+        if (aniooSeleccionado > txtInputdate1Param.value.split("-")[0]) {
             txtdate1Param = aniooSeleccionado + "-" + "01-01"
+        } else {
+            txtdate1Param = txtInputdate1Param.value
         }
 
         // console.log(txtdate1Param)
-        txtdate2Param = aniooSeleccionado + "-" + "12-31"
+        txtdate2Param = txtInputdate2Param.value
         lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+        isComboAniooChangeSelected = true;
     });
 
     populateComboSalas(listComboSala, dataDB)
