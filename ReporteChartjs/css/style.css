@@ -323,10 +323,20 @@ select {
         display: none !important;
     }
 
-    .mainPanel {
-        margin-left: -14% !important;
-        width: 21cm !important;
+    body, .mainPanel {
+
+        /*width: 21.9cm !important;*/
+        /*height: 29.7cm !important;*/
     }
+
+    .mainPanel {
+        /*top: 0;*/
+        /*border: 1px solid black;*/
+        margin-left: -15% !important;
+        width: 21.9cm !important;
+        height: 27.9cm !important;
+    }
+
 
     #Contentchart7, #Contentchart72, #Contentchart73 {
         /*width: 60% !important;*/
@@ -334,7 +344,10 @@ select {
         /*background-color: blue !important;*/
     }
 
-    #chart7, #chart72, #chart73 {
+    #chart7, #chart72, #chart73, #Content_chartChild_7,
+    #ContentDIV_Child_table01, #ContentDIV_Child_table02,
+    #Content_chartChild_table01, #Content_chartChild_table02,
+    #chartChild_table01, #chartChild_table02 {
         width: 20cm !important;
         height: 7cm !important;
         /*max-width: 80% !important;*/
@@ -344,12 +357,14 @@ select {
         display: none !important;
     }
 
-    #Content_fInicio, #Content_fFin {
-        width: 30% !important;
-    }
-
-    #fInicio, #fFin {
-        width: 100% !important;
+    /*#Content_fInicio, #Content_fFin {*/
+    /*    width: 30% !important;*/
+    /*}*/
+    /*#fInicio, #fFin {*/
+    /*    width: 100% !important;*/
+    /*}*/
+    .inputsBusqueda {
+        width: 4cm !important;
     }
 
 }

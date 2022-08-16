@@ -113,8 +113,8 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var select_Filtro = document.getElementById("selectable" + nroTable)
     var txtResultado = document.getElementById("txtResultado" + nroTable)
-    headerTable01.innerHTML = ''
-    bodyTable01.innerHTML = ''
+    // headerTable01.innerHTML = ''
+    // bodyTable01.innerHTML = ''
     let htmlHeader = ''
     if (data.length == 0) {
         txtResultado.style.display = "block"
@@ -124,9 +124,9 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     tabla.style.display = "block"
     // bodyTable01.style.display = "block"
     txtResultado.style.display = "none"
-    let templistHeader = []
+    let headerListTable = []
 
-    templistHeader = Object.keys(data[0]).sort((a, b) => {
+    headerListTable = Object.keys(data[0]).sort((a, b) => {
         return a.localeCompare(b)
     })
     //bind HEAder
@@ -136,7 +136,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     let NombreFiltroTabla = ""
 
-    templistHeader.forEach((key, index) => {
+    headerListTable.forEach((key, index) => {
         // console.log(key)
         if (key == "03_anno") return
         let keySubstring = key
@@ -156,51 +156,73 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         txtInformacionFiltro.innerHTML = "*Viendo resultado de todos los años*"
     } else {
         txtInformacionFiltro.innerHTML = "*Viendo resultado desde :" + txtdate1Param + " hasta " + txtdate2Param;
-
     }
 
 
     label.innerText = NombreFiltroTabla;
 
+
     //FIN
-    bindTableBody(data, templistHeader, select_Filtro, bodyTable01, false)
+    bindTableBody(data, headerListTable, select_Filtro, bodyTable01, false)
 
 
-    function bindTableBody(data, templistHeader, selectFiltro, bodyTable01, optionSelect) {
+    function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionSelect) {
         var html = '';
         let arrayTotalesHorizontal = []
         let htmlCombo = ''
         let listComboFiltro = []
+        let valuesGraficoTablaAllRows = []
+        let leftHeaderGrafico = []
         htmlCombo += "<option  value='-1'> -- Todos -- </option>"
         data.forEach(dbItem => {
             html += "<tr>"
-            let lastPosition = Object.values(dbItem).length - 1;
+            let valuesGraficoTabla = []
             let AculumladoHorizontal = 0;
-            templistHeader.forEach((keyName, posHeaderOrdered) => {
-                if (keyName == "03_anno") return
+            let NameHeaderItem = ""
+            headerListTable.forEach((keyName, posHeaderOrdered) => {
+                if (keyName == "03_anno") {
+
+                    return
+                }
+
 
                 Object.values(dbItem).forEach((value, posValue) => {
-                    if (!optionSelect) {
-                        if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
-                            listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
-                        }
+                    if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
+                        listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
                     }
                     if (keyName == Object.keys(dbItem)[posValue]) {
                         html += "<td>" + value + "</td>"
-                        if (posHeaderOrdered > 0) {
-                            if (parseInt(value) >= 0) AculumladoHorizontal = AculumladoHorizontal + value
+
+                        if (posHeaderOrdered > 0 && !isNaN(value)) {
+                            valuesGraficoTabla.push(value)
+                            AculumladoHorizontal = AculumladoHorizontal + value
                         }
+
+                        if (isNaN(value)) {
+                            // if (isNaN(value)) {
+                            // console.log(value)
+                            NameHeaderItem += value + "-"
+                            // }
+                        }
+
                     }
+
+
                     if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
                         if (parseInt(value) >= 0) {
                             arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
+
                         } else {
                             arrayTotalesHorizontal[keyName] = ""
                         }
                     }
                 })
 
+
             })
+
+            leftHeaderGrafico.push(NameHeaderItem)
+            valuesGraficoTablaAllRows.push(valuesGraficoTabla)
             html += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
             html += "</tr>"
         })
@@ -221,16 +243,93 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         })
         html += "</tr>"
         bodyTable01.innerHTML = html
-        // var tablaContent01 = document.getElementById("tablaContent01")
-        // var tablaContent02 = document.getElementById("tablaContent02")
-        // tablaContent01.style.display = 'block'
-        // tablaContent02.style.display = 'block'
         var mainPanelDiv = document.getElementById("mainPanelDiv")
         var leftPanel = document.getElementById("leftPanel")
         setTimeout(() => {
             leftPanel.style.height = mainPanelDiv.clientHeight + "px"
             // alert("Cambiando height")
-        }, 0)
+        }, 1000)
+
+
+        // if (nroTable == "02") return
+
+        var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
+
+
+        let topHeaderGrgafico = [...headerListTable]
+        topHeaderGrgafico.splice(0, 1)
+        topHeaderGrgafico.forEach((label, index) => {
+
+                if (label == "03_anno" || label == "01_mes") {
+                    topHeaderGrgafico.splice(index, 1)
+                }
+
+                label = label.substring(3, label.length)
+
+
+            }
+        )
+
+
+        leftHeaderGrafico.forEach((label, index) => {
+            // label = label.split("_")[1]
+            // console.log("table" + nroTable + ":" + label)
+        })
+
+        // DIV_GRAFICO_CHILD.style.display = "block"
+        // DIV_GRAFICO_CHILD.style.width = "100vw"
+        var canvas = document.getElementById(`chartChild_table${nroTable}`)
+        canvas.remove()
+
+        let datasetsGrafico = []
+
+
+        let tipoGrafico = 'line'
+
+        if (topHeaderGrgafico.length <= 12) {
+            tipoGrafico = 'bar'
+        }
+        if (topHeaderGrgafico.length > 12) {
+            tipoGrafico = 'line'
+        }
+
+        valuesGraficoTablaAllRows.forEach((dataRow, index) => {
+            let TextoFinalTitulo = ""
+            if (leftHeaderGrafico[index] != null) {
+                let ValueTitle = leftHeaderGrafico[index].split("_")[0]
+                let ValuesTitleSplites = ValueTitle.split(" ")
+                ValuesTitleSplites.forEach((fhrase, index) => {
+                    if (index > 0) TextoFinalTitulo += fhrase + " "
+                })
+                if (ValuesTitleSplites.length == 1) {
+                    TextoFinalTitulo = ValuesTitleSplites[0]
+                }
+            }
+
+            let item = {
+                label: TextoFinalTitulo,
+                data: dataRow,
+                fill: false,
+                borderColor: styles.color.solids[index],
+                backgroundColor: styles.color.alphas[index]
+            };
+            // console.log(JSON.stringify(item))
+            datasetsGrafico.push(item)
+        })
+
+        // console.log(listComboFiltro)
+
+        const dataGraficoChartJS = {
+            labels: topHeaderGrgafico, datasets: datasetsGrafico,
+        };
+        var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
+        Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
+
+        let chart = new Chart("chartChild_table" + nroTable, {
+            type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
+        })
+
+
     }
 
     spinner.style.display = "none"
@@ -243,10 +342,10 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         })
 
         if (this.value == -1) {
-            bindTableBody(data, templistHeader, select_Filtro, bodyTable01, true)
+            bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true)
             spinner.style.display = 'none !important'; //ocultaSpiner
         } else {
-            bindTableBody(listFilter, templistHeader, select_Filtro, bodyTable01, true)
+            bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true)
             spinner.style.display = 'none !important'; //ocultaSpiner
         }
     });
@@ -257,7 +356,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 var positionParentReport = 0
 var idGraficoCurrent = ""
 var currentDataGrafico = []
-var currentLabelsGrafico = []
+var currentLabelsLeyendaGrafico = []
 var currentOptionsGrafico;
 
 function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
@@ -321,6 +420,8 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
             };
             // console.log(JSON.stringify(item))
             datasetsGrafico.push(item)
+
+
         });
         optionColumns = 2
     }
@@ -406,7 +507,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
         }
     }
     currentDataGrafico = datasetsGrafico;
-    currentLabelsGrafico = labelsGrafico;
+    currentLabelsLeyendaGrafico = labelsGrafico;
     currentOptionsGrafico = options;
 
     var canvas = document.getElementById(idGraficoCurrent)
