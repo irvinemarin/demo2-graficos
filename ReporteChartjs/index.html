@@ -644,13 +644,11 @@
     function onClickBuscarListener() {
 
         var diference = getMonthDifference(new Date(txtdate1Param), new Date(txtdate2Param));
-        alert(diference)
         if (diference <= 12)
             onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem)
         else {
             showErrorAlerMessaje(diference + " meses de deferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
         }
-
         function getMonthDifference(startDate, endDate) {
             return (
                 endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear())

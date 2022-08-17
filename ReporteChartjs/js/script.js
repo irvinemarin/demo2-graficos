@@ -2,6 +2,14 @@ var spinnerGrafico;
 var optionColumns = 1;
 
 
+initVariables()
+
+
+function initVariables() {
+
+}
+
+
 loadGraficoDetalle("-1");
 
 
@@ -32,9 +40,6 @@ function loadGraficoDetalle(option) {
 
 var data001 = []
 var data002 = []
-
-var dataReport1 = []
-var dataReport2 = []
 
 var mainPanelDiv;
 
