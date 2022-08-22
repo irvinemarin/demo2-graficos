@@ -246,7 +246,7 @@ function onClickBuscarListener() {
     } else if (diference <= 12) {//cuando item reporte sea ingresos
         onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
     } else {
-        showErrorAlerMessaje(diference + " meses de deferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
+        showErrorAlerMessaje(diference + " meses de diferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
     }
 }
 
