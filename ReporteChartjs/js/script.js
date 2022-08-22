@@ -104,15 +104,12 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
                 select.style.display = 'block'
             } else {
                 //alert("No se encontraron Resultados")
-                showErrorAlerMessaje("No se encontraron Resultados", "", "")
-
-
+                // showErrorAlerMessaje("No se encontraron Resultados", "", "")
                 select.style.display = 'none'
                 btnExcel.style.display = 'none'
                 spinner.style.display = 'none'
                 txtInformacionFiltro.style.display = 'none'
                 txtResultado.style.display = 'block'
-
             }
         }, onerror => {
             spinner.style.display = 'none'
@@ -199,7 +196,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         let valuesGraficoTablaAllRows = []
         let leftHeaderGrafico = []
 
-        selectFiltro.innerHTML = "";
+
         htmlCombo += "<option  value='-1'> -- Todos -- </option>"
         data.forEach(dbItem => {
             html += "<tr>"
@@ -275,14 +272,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
         })
         if (!optionSelect) {
-
-            if (data.length == 0) {
-                htmlCombo = "";
-            }
-
             selectFiltro.innerHTML = htmlCombo;
-        } else {
-            selectFiltro.innerHTML = "";
         }
         html += "<tr class='tableTotales' >"
         html += "<td>Totales</td>"
@@ -404,15 +394,13 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         var listFilter = data.filter(item => {
             return item[key] == valueS;
         })
-        var btn = document.getElementById(`btnGraficar${nroTable}`)
-
+        var btnGraficar = document.getElementById(`btnGraficar${nroTable}`)
+        btnGraficar.style.display = "none"
 
         if (this.value == -1) {
-            btn.style.display = "none"
+
             bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS)
             spinner.style.display = 'none !important'; //ocultaSpiner
-
-
         } else {
 
 
@@ -428,7 +416,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             for (const total01Element of total01) {
                 total01Element.style.display = 'block'
             }
-            btn.style.display = "block"
+            // btnGraficar.style.display = "block"
         }
     });
 
