@@ -81,7 +81,8 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     var spinner = document.getElementById("spinner" + nroTable)
     var txtResultado = document.getElementById("txtResultado" + nroTable)
     txtResultado.style.display = "none"
-
+    var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
+    var btnExcel = document.getElementById("btnExcel" + nroTable)
 
     // console.log(spinner)
     spinner.style = "display : block !important";
@@ -102,7 +103,10 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
                 //alert("No se encontraron Resultados")
                 showErrorAlerMessaje("No se encontraron Resultados", "", "")
 
+
+                btnExcel.style.display = 'none'
                 spinner.style.display = 'none'
+                txtInformacionFiltro.style.display = 'none'
                 txtResultado.style.display = 'block'
 
             }
@@ -121,6 +125,8 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var select_Filtro = document.getElementById("selectable" + nroTable)
     var txtResultado = document.getElementById("txtResultado" + nroTable)
+    var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
+
     // headerTable01.innerHTML = ''
     // bodyTable01.innerHTML = ''
     let htmlHeader = ''
@@ -158,14 +164,21 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     htmlHeader += "<th style='background-color: #fcf5c6!important; color: black ;text-align: right!important;' >Total</th>"
     headerTable01.innerHTML = htmlHeader;
 
-    var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
 
     // if (!isNoVisibleAllAniosSelected) {
     //     txtInformacionFiltro.innerHTML = "*REPORTE*<br> Desde rango Seleccionado "
     //
     // } else {
-    txtInformacionFiltro.innerHTML = "REPORTE <br> De " + (new Date(txtdate1Param).toLocaleDateString()) + " hasta " + (new Date(txtdate2Param).toLocaleDateString());
+
+
+    if (data.length > 0)
+        txtInformacionFiltro.innerHTML = "REPORTE <br> De " + formatDate(txtdate1Param) + " hasta " + formatDate(txtdate2Param);
+
     // }
+
+    function formatDate(date) {
+        return date.split("-")[2] + "-" + date.split("-")[1] + "-" + date.split("-")[0]
+    }
 
 
     label.innerText = NombreFiltroTabla;
@@ -355,10 +368,16 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
         var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
         Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
+        var btnExcel = document.getElementById("btnExcel" + nroTable)
 
         let chart = new Chart("chartChild_table" + nroTable, {
             type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
         })
+
+        let total01 = document.getElementById('total-text' + nroTable)
+
+        total01.style.display = 'block'
+        btnExcel.style.display = 'block'
 
 
     }
@@ -389,7 +408,10 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             ContentDIV_Child_table01.style.display = 'block'
             // if (isHide == 'block') ContentDIV_Child_table01.style.display = 'none'
 
-
+            let total01 = document.getElementsByClassName('total-text')
+            for (const total01Element of total01) {
+                total01Element.style.display = 'block'
+            }
             btn.style.display = "block"
         }
     });
@@ -582,6 +604,15 @@ function lisarTablas(c_instacia, nombreSala) {
     h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
     var table01 = document.getElementById("table01")
     var table02 = document.getElementById("table02")
+    let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table01')
+    let ContentDIV_Child_table02 = document.getElementById('ContentDIV_Child_table02')
+    let total01 = document.getElementsByClassName('total-text')
+    for (const total01Element of total01) {
+        total01Element.style.display = 'none'
+    }
+
+    ContentDIV_Child_table01.style.display = 'none'
+    ContentDIV_Child_table02.style.display = 'none'
     table01.style.display = 'none'
     table02.style.display = 'none'
     if (positionParentReport == 1) {

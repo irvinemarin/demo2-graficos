@@ -256,7 +256,7 @@
 
                 <div style="width: 100%!important; ;">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-6" id="ContentReporte01">
 
                             <section id="ContentDIV_Child_table01" class="col-12 " style="display: none; ">
                                 <figure>
@@ -309,10 +309,10 @@
                                 </table>
                                 <br>
 
-                                <div class="total-text">TOTAL: <span id="total01"></span>
+                                <div class="total-text" id="total-text01">TOTAL: <span id="total01"></span>
                                 </div>
 
-                                <div class="total-text">
+                                <div style="text-align: center" id="btnExcel01">
                                     <div class="btn btn-success" onclick='
 
                                     exportReportToExcel("01");
@@ -329,7 +329,7 @@
 
 
                         </div>
-                        <div class="col-6 ">
+                        <div class="col-6 " id="ContentReporte02">
 
                             <section id="ContentDIV_Child_table02" class="col-12 " style="display: none; ">
                                 <figure>
@@ -384,9 +384,9 @@
                                 </table>
 
                                 <br>
-                                <div class="total-text">TOTAL: <span id="total02"></span>
+                                <div class="total-text" id="total-text02">TOTAL: <span id="total02"></span>
                                 </div>
-                                <div class="total-text">
+                                <div style="text-align: center" id="btnExcel02">
                                     <div class="btn btn-success" onclick='
 
                                     exportReportToExcel("02");
@@ -396,6 +396,8 @@
                                     </div>
                                 </div>
                                 <br>
+                                <p id="txtResultado02" style="display: none">Sin resultados.</p>
+                                <br>
                             </figure>
                             <!--                        <a-->
                             <!--                                id="btnGraficarTotal02"-->
@@ -404,7 +406,7 @@
 
                             <!--                                class="shadow1 col-12 btn btn-primary">Buscar-->
                             <!--                        </a>-->
-                            <p id="txtResultado02" style="display: none">Sin resultados.</p>
+
 
                         </div>
                     </div>
