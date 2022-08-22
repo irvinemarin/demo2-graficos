@@ -160,11 +160,12 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
 
-    if (!isNoVisibleAllAniosSelected) {
-        txtInformacionFiltro.innerHTML = "*Viendo resultado de todos los años*"
-    } else {
-        txtInformacionFiltro.innerHTML = "*Viendo resultado desde :" + txtdate1Param + " hasta " + txtdate2Param;
-    }
+    // if (!isNoVisibleAllAniosSelected) {
+    //     txtInformacionFiltro.innerHTML = "*REPORTE*<br> Desde rango Seleccionado "
+    //
+    // } else {
+    txtInformacionFiltro.innerHTML = "REPORTE <br> De " + (new Date(txtdate1Param).toLocaleDateString()) + " hasta " + (new Date(txtdate2Param).toLocaleDateString());
+    // }
 
 
     label.innerText = NombreFiltroTabla;
@@ -195,8 +196,18 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
                     if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
                         listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
                     }
+
+                    if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
+                        if (parseInt(value) >= 0) {
+                            arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
+
+                        } else {
+                            arrayTotalesHorizontal[keyName] = ""
+                        }
+                    }
+
                     if (keyName == Object.keys(dbItem)[posValue]) {
-                        html += "<td>" + value + "</td>"
+
 
                         if (posHeaderOrdered > 0 && !isNaN(value)) {
                             valuesGraficoTabla.push(value)
@@ -210,17 +221,25 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
                             // }
                         }
 
+
+                        // let ValueSpanish = value.toString().split(" ")
+                        // // console.log(ValueSpanish)
+                        // if (ValueSpanish.length > 0) {
+                        //     ValueSpanish.forEach((it, pos) => {
+                        //         if (it.toString().length > 3)
+                        //             console.log(ValueSpanish)
+                        //             // if (pos > 0)
+                        //                 value = ValueSpanish[pos]
+                        //     })
+                        //
+                        //
+                        // }
+
+                        html += "<td>" + value + "</td>"
+
                     }
 
 
-                    if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
-                        if (parseInt(value) >= 0) {
-                            arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
-
-                        } else {
-                            arrayTotalesHorizontal[keyName] = ""
-                        }
-                    }
                 })
 
 
@@ -242,8 +261,12 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         }
         html += "<tr class='tableTotales' >"
         html += "<td>Totales</td>"
+
+        let totalValue = 0;
+
         Object.values(arrayTotalesHorizontal).forEach(item => {
             html += "<td>" + item + "</td>"
+            totalValue += item;
         })
         html += "</tr>"
         bodyTable01.innerHTML = html
@@ -257,6 +280,8 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
         // if (nroTable == "02") return
 
+        var totalEL = document.getElementById(`total${nroTable}`)
+        totalEL.innerText = totalValue;
         var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
         var LabelTitleGrafico = document.getElementById(`tituloReporteChild_table${nroTable}`)
         DIV_GRAFICO_CHILD.style.display = "none"
@@ -267,7 +292,9 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         TempHeaderGrgafico.splice(0, 1)
         TempHeaderGrgafico.forEach((label, index) => {
             if (!(label == "03_anno" || label == "01_mes")) {
-                topHeaderGrgafico.push(label)/*.substring(3, label.length);*/
+                if (label.toString().split("_").length > 0) {
+                    topHeaderGrgafico.push(label.toString().split("_")[1])/*.substring(3, label.length);*/
+                }
             }
         })
 
@@ -344,13 +371,26 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         var listFilter = data.filter(item => {
             return item[key] == valueS;
         })
-
+        var btn = document.getElementById(`btnGraficar${nroTable}`)
         if (this.value == -1) {
+
+            btn.style.display = "none"
+
             bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS)
             spinner.style.display = 'none !important'; //ocultaSpiner
         } else {
+
+
             bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true, valueS)
             spinner.style.display = 'none !important'; //ocultaSpiner
+
+            let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
+            // let isHide = ContentDIV_Child_table01.style.display;
+            ContentDIV_Child_table01.style.display = 'block'
+            // if (isHide == 'block') ContentDIV_Child_table01.style.display = 'none'
+
+
+            btn.style.display = "block"
         }
     });
 
@@ -501,8 +541,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
                 }, ticks: {
                     fontColor: '#000000', display: true
                 }
-            }],
-            xAxes: [{
+            }], xAxes: [{
                 gridLines: {
                     display: true
                 }, ticks: {

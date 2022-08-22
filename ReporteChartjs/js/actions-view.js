@@ -17,6 +17,45 @@ var datosItemReporte = {
 
 setRangoDateDatesInit()
 
+
+function exportReportToExcel(NroTable) {
+    // var tabla = document.getElementById("table" + NroTable);
+
+
+    var tab_text = "<table border='2px'><tr bgcolor='#87AFC6'>";
+    var textRange;
+    var j = 0;
+    tab = document.getElementById('table' + NroTable); // id of table
+
+    for (j = 0; j < tab.rows.length; j++) {
+        tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
+        //tab_text=tab_text+"</tr>";
+    }
+
+    tab_text = tab_text + "</table>";
+    tab_text = tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+    tab_text = tab_text.replace(/<img[^>]*>/gi, ""); // remove if u want images in your table
+    tab_text = tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE ");
+
+    if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+    {
+        txtArea1.document.open("txt/html", "replace");
+        txtArea1.document.write(tab_text);
+        txtArea1.document.close();
+        txtArea1.focus();
+        sa = txtArea1.document.execCommand("SaveAs", true, "Reporte Tabla" + NroTable + " .xls");
+    } else                 //other browser not tested on IE 11
+        sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
+
+    return (sa);
+
+
+}
+
+
 function onClickGraficarSala(nroTabla) {
     let PositionLabel = 0;
     currentLabelsLeyendaGrafico.forEach((labelName, pos) => {
@@ -100,12 +139,24 @@ txtInputdate2Param.addEventListener("change", function () {
 })
 
 
-function setRangoDateDatesInit() {
+function setRangoDateDatesInit(positionMenuList) {
+
+
     let hoy = new Date()
     let mounth = (hoy.getMonth() + 1) < 10 ? "0" + (hoy.getMonth() + 1) : hoy.getMonth() + 1
     let day = (hoy.getDate()) < 10 ? "0" + (hoy.getDate()) : hoy.getDate()
     let ToDate = hoy.getFullYear() + "-" + mounth + "-" + day
-    let ToDate12Ago = (hoy.getFullYear() - 1) + "-" + mounth + "-" + day
+
+    let anioInicio = ''
+
+    if (positionMenuList == "1") {
+        anioInicio = hoy.getFullYear() - 3;
+    } else {
+        anioInicio = hoy.getFullYear() - 1;
+    }
+
+
+    let ToDate12Ago = anioInicio + "-" + mounth + "-" + day
     // alert("toDate : " + ToDate + " 12ago : " + ToDate12Ago)
     txtInputdate2Param.value = ToDate
     txtInputdate1Param.value = ToDate12Ago
@@ -114,7 +165,13 @@ function setRangoDateDatesInit() {
 }
 
 
-function onCLickItemReporteListenerListener(position, titulo, e) {
+function onCLickItemReporteListenerListener(position, titulo, e, isClickedMenuList) {
+
+
+    if (isClickedMenuList) {
+        setRangoDateDatesInit(position)
+    }
+
     datosItemReporte.position = position
     datosItemReporte.titulo = titulo
     datosItemReporte.htmlItem = e
@@ -183,14 +240,17 @@ function onCLickItemReporteListenerListener(position, titulo, e) {
 function onClickBuscarListener() {
 
     var diference = getMonthDifference(new Date(txtdate1Param), new Date(txtdate2Param));
-    if (diference <= 12) {
-        onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem)
+
+    if (datosItemReporte.position != "01" && diference <= 12) {
+        onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
+    } else if (diference <= 12) {//cuando item reporte sea ingresos
+        onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
     } else {
         showErrorAlerMessaje(diference + " meses de deferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
     }
+}
 
-    function getMonthDifference(startDate, endDate) {
-        return (endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear()));
-    }
+function getMonthDifference(startDate, endDate) {
+    return (endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear()));
 }
 

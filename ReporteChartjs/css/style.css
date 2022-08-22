@@ -150,7 +150,7 @@ section {
     /*background-color: #cbcbcb;*/
     background: rgb(255, 255, 255);
     background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(235, 235, 235, 1) 87%, rgba(195, 195, 195, 1) 100%);
-    width: 17%;
+    /*width: 17%;*/
     height: 100vh;
     position: absolute;
     left: 2%;
@@ -190,8 +190,8 @@ section {
 
 .contentBackground {
     /*margin-left: 10px;*/
-    width: 88% !important;
-    height: 98.75% !important;
+    /*width: 88% !important;*/
+    /*height: 98.75% !important;*/
     /*background: #ffffff !important;*/
 }
 
@@ -311,12 +311,73 @@ select {
 }
 
 .txtInformacionFiltro {
-    background-color: #bdbdbd;
+    width: 100%;
+
+    text-align: center;
+    background-color: #e8e8e8;
     margin-top: 8px;
     border-radius: 5px;
     font-size: 14px;
     color: darkred;
 }
+
+.total-text {
+    text-align: center;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+#listaLeyendaDIV {
+    border-radius: 5px;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #00a8b7 !important;
+}
+
+#listaLeyendaDIV h6 {
+    text-align: center;
+}
+
+#listaLeyendaDIV .row .col-4 {
+    color: black;
+    font-weight: 800;
+}
+
+#listaLeyendaDIV .row .col-4, .col-8 {
+    padding: 4px;
+    font-size: 10px;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+#tooltipLeyenda {
+    padding: 5px;
+    color: #ffffff;
+    border-radius: 5px;
+    background-color: #919191;
+    position: absolute;
+    right: -100px;
+    top: 0px;
+    display: none;
+}
+
+#btnVerLeyenda {
+
+    right: 0;
+    top: 0;
+    position: absolute;
+    cursor: pointer;
+    vertical-align: center;
+    text-align: center;
+    padding-top: 3px;
+    width: 20px !important;
+    height: 20px;
+    border-radius: 50%;
+    color: white;
+    background-color: #a80000;
+    display: none;
+
+}
+
 
 @media print {
     .no-print, .no-print * {
