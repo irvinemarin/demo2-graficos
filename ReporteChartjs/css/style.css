@@ -188,11 +188,7 @@ section {
 }
 
 .mainPanel {
-    /*max-width: 70%;*/
-    /*min-width: 21cm;*/
-    /*width: 75%;*/
-    /*position: absolute;*/
-    /*left: 21%;*/
+    padding: 20px !important;
 }
 
 .listaReportes {
@@ -209,7 +205,7 @@ section {
 }
 
 .contentBackground h5 {
-    border-bottom: 4px solid #6e0000;
+    border-bottom: 2px solid #6e0000;
 }
 
 .listaReportes .item-report {
@@ -408,7 +404,7 @@ select {
         /*top: 0;*/
         /*border: 1px solid black;*/
         /*margin-left: -15% !important;*/
-        width: 1000 !important;
+        width: 1000px !important;
         /*height: 27.9cm !important;*/
     }
 
@@ -457,7 +453,7 @@ select {
 
     }
 
-    #btnExcel01, #btnExcel02,#btnBuscar {
+    #btnExcel01, #btnExcel02, #btnBuscar {
         display: none !important;
     }
 

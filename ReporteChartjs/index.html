@@ -267,17 +267,31 @@
 
                             <figure id="figureContent01">
 
-                                <div>
-                                    <img style="cursor: pointer"
-                                         src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
-                                         height="48" width="48" class="no-print  ft-r"
-                                         onclick="openPrintTable('01')"/>
-                                    <label id="label_selectable01" for="selectable01"> </label>
-                                    <BR>
-                                    <select name="selectable01" id="selectable01">
-                                        <option value=""></option>
-                                    </select>
+
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <label id="label_selectable01" for="selectable01"> </label>
+                                        <select name="selectable01" id="selectable01">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex;">
+                                        <div id="btnExcel01" class="mr-2">
+                                            <img
+                                                    style="cursor: pointer"
+                                                    src="./assets/donwload_excel.png"
+                                                    height="48" width="48" class="no-print"
+                                                    onclick="exportReportToExcel('01');"/>
+                                        </div>
+                                        <div>
+                                            <img style="cursor: pointer"
+                                                 src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                                                 height="48" width="48" class="no-print"
+                                                 onclick="openPrintTable('01')"/>
+                                        </div>
+                                    </div>
                                 </div>
+
                                 <div id="spinner01" class="justify-content-center">
                                     <div style="display: flex; justify-content: center;">
                                         <div>
@@ -317,15 +331,7 @@
                                 <div class="total-text" id="total-text01">TOTAL: <span id="total01"></span>
                                 </div>
 
-                                <div style="text-align: center" id="btnExcel01">
-                                    <div class="btn btn-success" onclick='
 
-                                    exportReportToExcel("01");
-
-
-                                    '> .excel
-                                    </div>
-                                </div>
                                 <br>
 
                                 <p id="txtResultado01" style="display: none">Sin resultados.</p>
@@ -348,22 +354,30 @@
                             </section>
 
                             <figure id="figureContent02" class="col-12">
-                                <div>
-                                    <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
-                                    <img style="cursor: pointer"
-                                         src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
-                                         height="48" width="48" class="no-print ft-r" onclick="
-
-
-                                            openPrintTable('02')
-
-                                    "/>
-                                    <label id="label_selectable02" for="selectable02"></label>
-                                    <BR>
-                                    <select name="selectable02" id="selectable02">
-                                        <option value=""></option>
-                                    </select>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <label id="label_selectable02" for="selectable02"></label>
+                                        <select name="selectable02" id="selectable02">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex;">
+                                        <div id="btnExcel02" class="mr-2">
+                                            <img
+                                                    style="cursor: pointer"
+                                                    src="./assets/donwload_excel.png"
+                                                    height="48" width="48" class="no-print"
+                                                    onclick="exportReportToExcel('02');"/>
+                                        </div>
+                                        <div>
+                                            <img style="cursor: pointer"
+                                                 src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                                                 height="48" width="48" class="no-print"
+                                                 onclick="openPrintTable('02')"/>
+                                        </div>
+                                    </div>
                                 </div>
+
 
                                 <div id="spinner02" class=" justify-content-center">
                                     <div style="display: flex; justify-content: center;">
@@ -402,15 +416,7 @@
                                 <br>
                                 <div class="total-text" id="total-text02">TOTAL: <span id="total02"></span>
                                 </div>
-                                <div style="text-align: center" id="btnExcel02">
-                                    <div class="btn btn-success" onclick='
 
-                                    exportReportToExcel("02");
-
-
-                                    '> .excel
-                                    </div>
-                                </div>
                                 <br>
                                 <p id="txtResultado02" style="display: none">Sin resultados.</p>
                                 <br>
