@@ -19,8 +19,12 @@
 
 
     <div class="row">
-        <img class="col-sm-12 col-md-2" src="assets/logo-pj.png" style="height: 50px" alt="">
-        <h1 class="col-sm-12 col-md-8" style="
+        <img
+                class="col-sm-12 col-md-2"
+                src="assets/logo-pj.png" style="height: 50px" alt="">
+        <h1
+                class="col-sm-12 col-md-8"
+                style="
         font-size: 25px;
         text-align: center; width: 65%"> Reportes Gerencial de la Corte Suprema
             <br><span>Visualización de estadísticas </span>
@@ -50,9 +54,10 @@
                 <BR>
                 <BR>
             </div>
-            <div class="col-12" id="listaLeyendaDIV">
+            <div class="col-12"
+                 id="listaLeyendaDIV">
                 <h6>LEYENDA SALAS</h6>
-                <div id="btnVerLeyenda">
+                <div id="btnVerLeyenda"><-
                     <span id="tooltipLeyenda">Ocultar Leyenda</span>
                 </div>
 
@@ -92,19 +97,24 @@
             </div>
 
         </div>
-        <div id="spinnerGrafico" class="loader" style="display: none"></div>
-        <!-- <div style="opacity: .4;background-color: #575757;width: 100%; height: 100%
-        ;position: fixed; top: 0px; display: none "
-        id="spinnerGrafico"
-            class="justify-content-center">
+        <div style="
+    opacity: .4;
+    background-color: #575757;
+    width: 100%; height: 100% ;position: fixed; top: 0px; display: none " id="spinnerGrafico"
+             class="justify-content-center">
             <div style="position: absolute; left: 30%; top : 45%;">
-                <p style="border-radius: 10px;font-size: 25px; background-color: #d91414">
-                    Espere un momento esto puede tardar un poco...
-                </p>
-                <div class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
+                <p style="
+            border-radius: 10px;
+            font-size: 25px; background-color: #000000">Espere un momento esto puede tardar un poco...</p>
+
+                <div class="spinner-border text-primary " style="width: 5rem; height: 5rem;" role="status">
+                    <!--                Loading-->
+                    <!--                <span class="sr-only">Loading...</span>-->
                 </div>
             </div>
-        </div> -->
+
+
+        </div>
 
         <div class="initPanel no-print">
 
@@ -117,8 +127,12 @@
 
             <div style="right: 0;position: absolute">
 
-                <img style="cursor: pointer" src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
-                     height="48" width="48" class="no-print" onclick="print()"></img>
+                <img
+                        style="cursor: pointer"
+                        src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                        height="48"
+                        width="48"
+                        class="no-print" onclick="print()"></img>
             </div>
 
             <h2 class="loading">Espere un momento ...</h2>
@@ -138,8 +152,7 @@
                 </div>
                 <div class=" form-group col-md-3 col-sm-12 inputsBusqueda" id="Content_fInicio">
                     <label for="fInicio">Fecha Inicio</label>
-                    <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp"
-                           placeholder="">
+                    <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp" placeholder="">
                     <!--                <small id="fInicioHelp" class="form-text text-muted">-->
                     <!--                    We'll never share your email with anyone else.</small>-->
                 </div>
@@ -160,7 +173,7 @@
             </div>
 
 
-            <section id="content01" class="col-12">
+            <section id="content01" class="col-11">
                 <figure>
 
                     <div class="container-title">
@@ -173,7 +186,7 @@
                 </figure>
             </section>
 
-            <section id="content02" class="col-12">
+            <section id="content02" class="col-11">
                 <figure>
 
                     <div class="container-title">
@@ -186,7 +199,7 @@
                 </figure>
             </section>
 
-            <section id="content03" class="col-12">
+            <section id="content03" class="col-11">
                 <figure>
 
                     <div class="container-title">
@@ -200,8 +213,8 @@
 
 
             <div class="row">
-                <h3 id="tituloSalaFiltro" class="col-sm-12 col-md-4"></h3>
-                <div class="col-md-4 col-sm-12" style="display: block;">
+                <h3 id="tituloSalaFiltro" class="col-sm-12 col-md-6"></h3>
+                <div class="col-md-2 col-sm-12" style="display: block;">
                     <div id="tablaContent01" style="">
 
                         <label for="selectableAnio">FILTRO AÑO</label>
@@ -211,9 +224,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-12">
+                <div class="col-md-2 col-sm-12">
                     <div id="tablaContent02" style="display: block;">
-                        <label for="selectableFiltroSala" id="label_electableFiltroSala">FILTRO SALAS</label>
+                        <label for="selectableFiltroSala">FILTRO SALAS</label>
                         <BR>
                         <select class="custom-select" name="selectableFiltroSala" id="selectableFiltroSala">
                             <option value=""></option>
@@ -251,7 +264,7 @@
 
                 <div style="width: 100%!important; ;">
                     <div class="row">
-                        <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte01">
+                        <div class="col-sm-12 col-md-12 col-xl-6" id="ContentReporte01">
 
                             <section id="ContentDIV_Child_table01" class="col-12 " style="display: none; ">
                                 <figure>
@@ -270,8 +283,9 @@
                                 <div>
                                     <img style="cursor: pointer"
                                          src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
-                                         height="48" width="48" class="no-print  ft-r"
-                                         onclick="openPrintTable('01')"/>
+                                         height="48"
+                                         width="48"
+                                         class="no-print  ft-r" onclick="openPrintTable('01')"/>
                                     <label id="label_selectable01" for="selectable01"> </label>
                                     <BR>
                                     <select name="selectable01" id="selectable01">
@@ -279,15 +293,10 @@
                                     </select>
                                 </div>
                                 <div id="spinner01" class="justify-content-center">
-                                    <div style="display: flex; justify-content: center;">
-                                        <div>
-                                            <p>Cargando Información...</p>
-                                            <div class="d-flex justify-content-center">
-                                                <div class="spinner-border text-primary" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <p>Cargando Información...</p>
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">...</span>
+                                        <!-- Loading -->
                                     </div>
                                 </div>
 
@@ -336,7 +345,7 @@
                         </div>
                         <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte02">
 
-                            <section id="ContentDIV_Child_table02" class="col-12" style="display: none; ">
+                            <section id="ContentDIV_Child_table02" class="col-12 " style="display: none; ">
                                 <figure>
                                     <div class="container-title">
                                         <h3 id="tituloReporteChild_table02"></h3>
@@ -350,9 +359,13 @@
                             <figure id="figureContent02" class="col-12">
                                 <div>
                                     <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
-                                    <img style="cursor: pointer"
-                                         src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
-                                         height="48" width="48" class="no-print ft-r" onclick="
+                                    <img
+
+                                            style="cursor: pointer"
+                                            src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                                            height="48"
+                                            width="48"
+                                            class="no-print ft-r" onclick="
 
 
                                             openPrintTable('02')
@@ -366,15 +379,11 @@
                                 </div>
 
                                 <div id="spinner02" class=" justify-content-center">
-                                    <div style="display: flex; justify-content: center;">
-                                        <div>
-                                            <p>Cargando Información...</p>
-                                            <div class="d-flex justify-content-center">
-                                                <div class="spinner-border text-primary" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <p>Cargando Información</p>
+
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="sr-only">...</span>
+                                        <!-- Loading -->
                                     </div>
                                 </div>
 
