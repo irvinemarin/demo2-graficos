@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes Gerencial de la Corte Suprema</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Kanit" rel="stylesheet"/>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+
+        * {
+            /*margin: 0 !important;*/
+            /*padding: 0 !important;*/
+        }
+
+        body {
+            /*width: 21.7cm;*/
+            /*height: 29.7cm;*/
+            margin: 0 auto !important;
+        }
+
+        main {
+            /*background-color: #6e0000;*/
+            max-width: 21.7cm;
+            max-height: 29.7cm;
+            width: 21.7cm;
+            margin: 0 auto;
+            /*margin-top: 10% !important;*/
+            height: 29.7cm;
+            /*border: 1px solid #6e0000;*/
+        }
+
+        .mainPanel {
+            position: relative;
+            width: 100% !important;
+            margin-left: 0 !important;
+            left: 0 !important;
+        }
+
+        #table01 {
+            margin-top: 5px;
+            /*background-color: #770000;*/
+            position: relative;
+            text-align: center;
+            /*padding: 20px !important;*/
+            margin-right: 0 !important;
+            width: 100% !important;
+        }
+
+        #ContentDIV_Child_table01 {
+            display: block !important;
+            height: 350px !important;
+        }
+
+        #tituloSalaFiltro {
+            text-align: center;
+        }
+
+    </style>
+</head>
+
+<body>
+<main>
+
+
+    <div style="display: flex">
+        <img src="assets/logo-pj.png" style="height: 30px" alt="">
+        <h1 style="
+        font-size: 25px;
+        text-align: center; width: 65%"> Reportes Gerencial de la Corte Suprema
+            <br><span>Visualización de estadísticas </span>
+        </h1>
+
+    </div>
+    <div id="fondoPJ"></div>
+    <hr>
+    <div class="row">
+
+        <div class="container-fluid" id="mainPanelDiv">
+            <br>
+            <br>
+            <div class="row">
+                <h4 id="tituloSalaFiltro" class="col-12"></h4>
+            </div>
+            <br>
+            <br>
+            <!--*****************TABLAS RESULTADOS********************-->
+
+            <div id="ContentDIV_Child_table01" class="col-12 " style=" ">
+                <figure>
+                    <div class="container-title">
+                        <h3 id="tituloReporteChild_table01"></h3>
+                    </div>
+                    <div id="Content_chartChild_table01">
+                        <canvas id="chartChild_table01">
+
+                        </canvas>
+                    </div>
+                </figure>
+            </div>
+
+
+            <!--            <BR>-->
+            <!--            <br>-->
+            <br>
+            <div class="txtInformacionFiltro" id="txtInformacionFiltro01">
+            </div>
+
+            <table class="greyGridTable" id="table01">
+                <thead>
+                <tr id="headerTable01">
+                </tr>
+                </thead>
+                <tbody id="bodyTable01">
+                </tbody>
+            </table>
+            <br>
+
+            <div style="display: flex!important; font-size: large; justify-content: center;" class="col-12"
+                 id="total-text01">
+                <div style="">TOTAL:</div>
+                <span id="total01"></span>
+
+            </div>
+
+            <br>
+
+            <p id="txtResultado01" style="display: none">Sin resultados.</p>
+            <br>
+        </div>
+    </div>
+
+</main>
+
+
+<!-- ChartJS -->
+<script src="Chartjs/chart.min.js"></script>
+<!-- Styles for charts -->
+<script src="js/chartStyles.js"></script>
+
+<!-- DCharts development -->
+<script src="./config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.26/dist/sweetalert2.all.min.js"
+        integrity="sha256-fNaNuEZ0nO4493IejXMa65uBamnI/Hm+iRjgFhfjZBQ=" crossorigin="anonymous"></script>
+
+
+<script src="js/script-print.js"></script>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search)
+    positionParentReport = params.get("posParent")
+    nombreSalaSeleccionada = params.get("sala")
+    cInsatnciaSelected = params.get("inst")
+    txtdate1Param = params.get("d1")
+    txtdate2Param = params.get("d2")
+    var nroServiceTabla = params.get("nroservice")
+
+    lisarTablas(cInsatnciaSelected, nombreSalaSeleccionada)
+    setTimeout(() => {
+        print()
+    }, 1000)
+
+    window.onafterprint = function () {
+        window.close()
+    }
+
+</script>
+</body>
+
+</html>

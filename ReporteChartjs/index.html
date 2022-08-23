@@ -18,9 +18,13 @@
 <main>
 
 
-    <div style="display: flex">
-        <img src="assets/logo-pj.png" style="height: 50px" alt="">
-        <h1 style="
+    <div class="row">
+        <img
+                class="col-sm-12 col-md-2"
+                src="assets/logo-pj.png" style="height: 50px" alt="">
+        <h1
+                class="col-sm-12 col-md-8"
+                style="
         font-size: 25px;
         text-align: center; width: 65%"> Reportes Gerencial de la Corte Suprema
             <br><span>Visualización de estadísticas </span>
@@ -30,7 +34,7 @@
     <div id="fondoPJ"></div>
     <hr>
     <div class="row">
-        <div class="leftPanel no-print col-sm-12 col-md-3 col-xl-2" id="leftPanel">
+        <div class="leftPanel no-print col-sm-12 col-md-3 col-xl-2 d-none d-sm-block" id="leftPanel">
             <div class="contentBackground">
                 <h5>Reportes Disponibles</h5>
                 <div class="listaReportes" id="listaReportesDIV">
@@ -50,8 +54,6 @@
                 <BR>
                 <BR>
             </div>
-
-
             <div class="col-12"
                  id="listaLeyendaDIV">
                 <h6>LEYENDA SALAS</h6>
@@ -120,7 +122,7 @@
             <div class="overlayInit"></div>
         </div>
 
-        <div class="mainPanel" style="display: none" id="mainPanelDiv">
+        <div class="mainPanel col-sm-12 col-md-9 col-xl-10" style="display: none" id="mainPanelDiv">
 
 
             <div style="right: 0;position: absolute">
@@ -211,7 +213,7 @@
 
 
             <div class="row">
-                <h3 id="tituloSalaFiltro" class="col-4"></h3>
+                <h3 id="tituloSalaFiltro" class="col-sm-12 col-md-6"></h3>
                 <div class="col-md-2 col-sm-12" style="display: block;">
                     <div id="tablaContent01" style="">
 
@@ -262,7 +264,7 @@
 
                 <div style="width: 100%!important; ;">
                     <div class="row">
-                        <div class="col-6" id="ContentReporte01">
+                        <div class="col-sm-12 col-md-12 col-xl-6" id="ContentReporte01">
 
                             <section id="ContentDIV_Child_table01" class="col-12 " style="display: none; ">
                                 <figure>
@@ -277,7 +279,13 @@
 
 
                             <figure id="figureContent01">
+
                                 <div>
+                                    <img style="cursor: pointer"
+                                         src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                                         height="48"
+                                         width="48"
+                                         class="no-print  ft-r" onclick="openPrintTable('01')"/>
                                     <label id="label_selectable01" for="selectable01"> </label>
                                     <BR>
                                     <select name="selectable01" id="selectable01">
@@ -335,7 +343,7 @@
 
 
                         </div>
-                        <div class="col-6 " id="ContentReporte02">
+                        <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte02">
 
                             <section id="ContentDIV_Child_table02" class="col-12 " style="display: none; ">
                                 <figure>
@@ -351,7 +359,18 @@
                             <figure id="figureContent02" class="col-12">
                                 <div>
                                     <!--                        <button onclick="loadGraficoDetalle('02')">GRAFICAR TABLA</button>-->
+                                    <img
 
+                                            style="cursor: pointer"
+                                            src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                                            height="48"
+                                            width="48"
+                                            class="no-print ft-r" onclick="
+
+
+                                            openPrintTable('02')
+
+                                    "/>
                                     <label id="label_selectable02" for="selectable02"></label>
                                     <BR>
                                     <select name="selectable02" id="selectable02">
@@ -454,6 +473,21 @@
 <script src="js/script.js"></script>
 
 <script src="js/actions-view.js"></script>
+
+<script>
+
+    function checkWidthChange() {
+        let left = document.getElementById("leftPanel")
+        if (window.innerWidth < 767) {
+            left.style.height = "400px"
+        } else left.style.height = "100vh"
+    }
+
+    window.addEventListener('resize', function (event) {
+        checkWidthChange()
+
+    }, true);
+</script>
 
 </body>
 

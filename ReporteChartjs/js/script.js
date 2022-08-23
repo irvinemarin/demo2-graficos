@@ -1,93 +1,47 @@
 var spinnerGrafico;
 var optionColumns = 1;
-
-
-initVariables()
-
-
-function initVariables() {
-
-}
-
-
-loadGraficoDetalle("-1");
-
-
-function loadGraficoDetalle(option) {
-    if (option == "-1") return;
-    if (option == "00") {
-        var ittulo = document.getElementById("tituloReporte1")
-        ittulo.innerText = "REPORTE DE INGRESOS";
-        fetch(`${gethostApi()}getListadoExpIngresos/${txtdate1Param}/${txtdate2Param}`, {
-            method: 'get', headers: new Headers({
-                'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-                'Content-Type': 'application/json'
-            })
-        })
-            .then(response => response.json())
-            .then((data) => {
-                if (data.length > 0) {
-                    printCharts(data, 1)
-                } else {
-                    spinnerGrafico.style.display = 'none'
-                }
-            }, onerror => {
-                spinnerGrafico.style.display = 'none'
-            })
-    }
-
-}
-
-var data001 = []
-var data002 = []
-
+var isNoVisibleAllAniosSelected = false;
 var mainPanelDiv;
+var chart7 = document.getElementById("content01")
+var chart72 = document.getElementById("content02")
+var chart73 = document.getElementById("content03")
+
+function setDisplayGraficoContent(displayC7, displayC72, displayC73) {
+
+    chart7.style.display = displayC7
+    chart73.style.display = displayC73
+    chart72.style.display = displayC72
+}
 
 function printCharts(dataDB, positionParentReportHTML) {
-
-
     spinnerGrafico.style.display = 'block'
     positionParentReport = positionParentReportHTML
-    // console.table(coasters)
     document.body.classList.add('running')
-    var chart7 = document.getElementById("content01")
-    var chart72 = document.getElementById("content02")
-    var chart73 = document.getElementById("content03")
+    let chartId = ""
     if (positionParentReportHTML == 1) {
-        chart7.style.display = 'block'
-        chart73.style.display = 'none'
-        chart72.style.display = 'none'
-        bindGraficoBarras(dataDB, 'chart7', positionParentReportHTML, "00_anno") //grafico principal
+        chartId = "chart7";
+        setDisplayGraficoContent("block", "none", "none")
+    } else if (positionParentReportHTML == 2) {
+        chartId = "chart72";
+        setDisplayGraficoContent("none", "block", "none")
+    } else if (positionParentReportHTML == 3) {
+        chartId = "chart73";
+        setDisplayGraficoContent("none", "none", "block")
     }
-    if (positionParentReportHTML == 2) {
-        chart7.style.display = 'none'
-        chart73.style.display = 'none'
-        chart72.style.display = 'block'
-        bindGraficoBarras(dataDB, 'chart72', positionParentReportHTML, "00_anno") //grafico principal
-
-    }
-    if (positionParentReportHTML == 3) {
-        chart7.style.display = 'none'
-        chart72.style.display = 'none'
-        chart73.style.display = 'block'
-        bindGraficoBarras(dataDB, 'chart73', positionParentReportHTML, "00_anno") //grafico principal
-    }
+    bindGraficoBarras(dataDB, chartId, positionParentReportHTML, "00_anno") //grafico principal
 
 }
 
-var isNoVisibleAllAniosSelected = false;
 
 function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
-    var spinner = document.getElementById("spinner" + nroTable)
-    var txtResultado = document.getElementById("txtResultado" + nroTable)
-    txtResultado.style.display = "none"
-    var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
-    var btnExcel = document.getElementById("btnExcel" + nroTable)
-
-    // console.log(spinner)
+    let spinner = document.getElementById("spinner" + nroTable)
+    let txtResultado = document.getElementById("txtResultado" + nroTable)
+    let txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
+    let btnExcel = document.getElementById("btnExcel" + nroTable)
+    let tabla = document.getElementById("table" + nroTable)
+    let select = document.getElementById("selectable" + nroTable)
     spinner.style = "display : block !important";
-    var tabla = document.getElementById("table" + nroTable)
-    var select = document.getElementById("selectable" + nroTable)
+    txtResultado.style.display = "none"
     tabla.style.display = "none"
     select.style.display = "none"
 
@@ -104,7 +58,7 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
                 select.style.display = 'block'
             } else {
                 //alert("No se encontraron Resultados")
-                // showErrorAlerMessaje("No se encontraron Resultados", "", "")
+                //showErrorAlerMessaje("No se encontraron Resultados", "", "")
                 select.style.display = 'none'
                 btnExcel.style.display = 'none'
                 spinner.style.display = 'none'
@@ -120,39 +74,32 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
 }
 
 function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
-    if (nroTable == "01") data001 = data
-    if (nroTable == "02") data002 = data
+
     var headerTable01 = document.getElementById("headerTable" + nroTable)
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var select_Filtro = document.getElementById("selectable" + nroTable)
     var txtResultado = document.getElementById("txtResultado" + nroTable)
     var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
+    var label = document.getElementById("label_selectable" + nroTable)
+    var tabla = document.getElementById("table" + nroTable)
     select_Filtro.innerHTML = ""
-    // headerTable01.innerHTML = ''
-    // bodyTable01.innerHTML = ''
     let htmlHeader = ''
     if (data.length == 0) {
         txtResultado.style.display = "block"
         return;
     }
-    var tabla = document.getElementById("table" + nroTable)
     tabla.style.display = "block"
-    // bodyTable01.style.display = "block"
     txtResultado.style.display = "none"
     let headerListTable = []
 
     headerListTable = Object.keys(data[0]).sort((a, b) => {
         return a.localeCompare(b)
     })
+
+
     //bind HEAder
-
-    var label = document.getElementById("label_selectable" + nroTable)
-
-
     let NombreFiltroTabla = ""
-
     headerListTable.forEach((key, index) => {
-        // console.log(key)
         if (key == "03_anno") return
         let keySubstring = key
         if (index == 0) {
@@ -164,261 +111,206 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     })
     htmlHeader += "<th style='background-color: #fcf5c6!important; color: black ;text-align: right!important;' >Total</th>"
     headerTable01.innerHTML = htmlHeader;
-
-
-    // if (!isNoVisibleAllAniosSelected) {
-    //     txtInformacionFiltro.innerHTML = "*REPORTE*<br> Desde rango Seleccionado "
-    //
-    // } else {
-
-
+    label.innerText = NombreFiltroTabla;
     if (data.length > 0) txtInformacionFiltro.innerHTML = "REPORTE <br> De " + formatDate(txtdate1Param) + " hasta " + formatDate(txtdate2Param);
-
-    // }
 
     function formatDate(date) {
         return date.split("-")[2] + "-" + date.split("-")[1] + "-" + date.split("-")[0]
     }
 
 
-    label.innerText = NombreFiltroTabla;
-
-
     //FIN
-    bindTableBody(data, headerListTable, select_Filtro, bodyTable01, false, NombreFiltroTabla)
+    bindTableBody(data, headerListTable, select_Filtro, bodyTable01, false, NombreFiltroTabla, nroTable)
 
-
-    function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla) {
-        var html = '';
-        let arrayTotalesHorizontal = []
-        let htmlCombo = ''
-        let listComboFiltro = []
-        let valuesGraficoTablaAllRows = []
-        let leftHeaderGrafico = []
-
-
-        htmlCombo += "<option  value='-1'> -- Todos -- </option>"
-        data.forEach(dbItem => {
-            html += "<tr>"
-            let valuesGraficoTabla = []
-            let AculumladoHorizontal = 0;
-            let NameHeaderItem = ""
-            headerListTable.forEach((keyName, posHeaderOrdered) => {
-                if (keyName == "03_anno") {
-                    return
-                }
-                Object.values(dbItem).forEach((value, posValue) => {
-                    if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
-                        listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
-                    }
-
-                    if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
-                        if (parseInt(value) >= 0) {
-                            arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
-
-                        } else {
-                            arrayTotalesHorizontal[keyName] = ""
-                        }
-                    }
-
-                    if (keyName == Object.keys(dbItem)[posValue]) {
-
-
-                        if (posHeaderOrdered > 0 && !isNaN(value)) {
-                            valuesGraficoTabla.push(value)
-                            AculumladoHorizontal = AculumladoHorizontal + value
-                        }
-
-                        if (isNaN(value)) {
-                            // if (isNaN(value)) {
-                            // console.log(value)
-                            NameHeaderItem += value + "-"
-                            // }
-                        }
-
-
-                        // let ValueSpanish = value.toString().split(" ")
-                        // // console.log(ValueSpanish)
-                        // if (ValueSpanish.length > 0) {
-                        //     ValueSpanish.forEach((it, pos) => {
-                        //         if (it.toString().length > 3)
-                        //             console.log(ValueSpanish)
-                        //             // if (pos > 0)
-                        //                 value = ValueSpanish[pos]
-                        //     })
-                        //
-                        //
-                        // }
-
-                        html += "<td>" + value + "</td>"
-
-                    }
-
-
-                })
-
-
-            })
-
-            leftHeaderGrafico.push(NameHeaderItem)
-            valuesGraficoTablaAllRows.push(valuesGraficoTabla)
-            html += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
-            html += "</tr>"
-        })
-
-        Object.keys(listComboFiltro).forEach(it => {
-            let key = it.split("&")[1]
-            let valueS = it.split("&")[0]
-            htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
-        })
-        if (!optionSelect) {
-            selectFiltro.innerHTML = htmlCombo;
-        }
-        html += "<tr class='tableTotales' >"
-        html += "<td>Totales</td>"
-
-        let totalValue = 0;
-
-        Object.values(arrayTotalesHorizontal).forEach(item => {
-            html += "<td>" + item + "</td>"
-            totalValue += item;
-        })
-        html += "</tr>"
-        bodyTable01.innerHTML = html
-        var mainPanelDiv = document.getElementById("mainPanelDiv")
-        var leftPanel = document.getElementById("leftPanel")
-        setTimeout(() => {
-            leftPanel.style.height = mainPanelDiv.clientHeight + "px"
-            // alert("Cambiando height")
-        }, 1000)
-
-
-        // if (nroTable == "02") return
-
-        var totalEL = document.getElementById(`total${nroTable}`)
-        totalEL.innerText = totalValue;
-        var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
-        var LabelTitleGrafico = document.getElementById(`tituloReporteChild_table${nroTable}`)
-        DIV_GRAFICO_CHILD.style.display = "none"
-
-        LabelTitleGrafico.innerText = "Gráfico por " + NombreFiltroTabla;
-        let TempHeaderGrgafico = [...headerListTable]
-        let topHeaderGrgafico = []
-        TempHeaderGrgafico.splice(0, 1)
-        TempHeaderGrgafico.forEach((label, index) => {
-            if (!(label == "03_anno" || label == "01_mes")) {
-                if (label.toString().split("_").length > 0) {
-                    topHeaderGrgafico.push(label.toString().split("_")[1])/*.substring(3, label.length);*/
-                }
-            }
-        })
-
-
-        leftHeaderGrafico.forEach((label, index) => {
-            // label = label.split("_")[1]
-            // console.log("table" + nroTable + ":" + label)
-        })
-
-        // DIV_GRAFICO_CHILD.style.display = "block"
-        // DIV_GRAFICO_CHILD.style.width = "100vw"
-        var canvas = document.getElementById(`chartChild_table${nroTable}`)
-        canvas.remove()
-
-        let datasetsGrafico = []
-
-
-        let tipoGrafico = 'line'
-
-        if (nroTable == "02") {
-            tipoGrafico = 'bar'
-        }
-        // if (topHeaderGrgafico.length > 12) {
-        //     tipoGrafico = 'line'
-        // }
-
-        valuesGraficoTablaAllRows.forEach((dataRow, index) => {
-            let TextoFinalTitulo = ""
-            // if (leftHeaderGrafico[index] != null) {
-            let ValueTitle = leftHeaderGrafico[index].split("_")[0]
-            let ValuesTitleSplites = ValueTitle.split(" ")
-            ValuesTitleSplites.forEach((fhrase, index) => {
-                if (index > 0) TextoFinalTitulo += fhrase + " "
-            })
-            if (ValuesTitleSplites.length == 1) {
-                TextoFinalTitulo = ValuesTitleSplites[0]
-            }
-            // }
-            // console.log(dataRow)
-
-            let item = {
-                label: TextoFinalTitulo,
-                data: dataRow,
-                fill: false,
-                borderColor: styles.color.solids[index],
-                backgroundColor: styles.color.alphas[index]
-            };
-
-            datasetsGrafico.push(item)
-        })
-
-
-        const dataGraficoChartJS = {
-            labels: topHeaderGrgafico, datasets: datasetsGrafico,
-        };
-        // console.log(JSON.stringify(dataGraficoChartJS))
-
-
-        var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
-        Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
-        var btnExcel = document.getElementById("btnExcel" + nroTable)
-
-        let chart = new Chart("chartChild_table" + nroTable, {
-            type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
-        })
-
-        let total01 = document.getElementById('total-text' + nroTable)
-
-        total01.style.display = 'block'
-        btnExcel.style.display = 'block'
-
-
-    }
 
     spinner.style.display = "none"
 
 
     select_Filtro.addEventListener('change', function (e) {
-        // console.log(this.value)
+        var btnGraficar = document.getElementById(`btnGraficar${nroTable}`)
+        btnGraficar.style.display = "none"
         let key = this.value.split("&")[1]
         let valueS = this.value.split("&")[0]
         var listFilter = data.filter(item => {
             return item[key] == valueS;
         })
-        var btnGraficar = document.getElementById(`btnGraficar${nroTable}`)
-        btnGraficar.style.display = "none"
-
         if (this.value == -1) {
-
-            bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS)
+            bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable)
             spinner.style.display = 'none !important'; //ocultaSpiner
         } else {
-
-
-            bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true, valueS)
+            bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable)
             spinner.style.display = 'none !important'; //ocultaSpiner
-
             let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
-            // let isHide = ContentDIV_Child_table01.style.display;
             ContentDIV_Child_table01.style.display = 'block'
-            // if (isHide == 'block') ContentDIV_Child_table01.style.display = 'none'
-
             let total01 = document.getElementsByClassName('total-text')
             for (const total01Element of total01) {
                 total01Element.style.display = 'block'
             }
-            // btnGraficar.style.display = "block"
         }
     });
+
+
+}
+
+
+function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable) {
+    var html = '';
+    let arrayTotalesHorizontal = []
+    let htmlCombo = ''
+    let listComboFiltro = []
+    let valuesGraficoTablaAllRows = []
+    let leftHeaderGrafico = []
+
+
+    htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+    data.forEach(dbItem => {
+        html += "<tr>"
+        let valuesGraficoTabla = []
+        let AculumladoHorizontal = 0;
+        let NameHeaderItem = ""
+        headerListTable.forEach((keyName, posHeaderOrdered) => {
+            if (keyName == "03_anno") {
+                return
+            }
+            Object.values(dbItem).forEach((value, posValue) => {
+                if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
+                    listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
+                }
+                if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
+                    if (parseInt(value) >= 0) {
+                        arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
+                    } else {
+                        arrayTotalesHorizontal[keyName] = ""
+                    }
+                }
+                if (keyName == Object.keys(dbItem)[posValue]) {
+                    if (posHeaderOrdered > 0 && !isNaN(value)) {
+                        valuesGraficoTabla.push(value)
+                        AculumladoHorizontal = AculumladoHorizontal + value
+                    }
+                    if (isNaN(value)) {
+                        NameHeaderItem += value + "-"
+                    }
+                    html += "<td>" + value + "</td>"
+                }
+            })
+        })
+
+        leftHeaderGrafico.push(NameHeaderItem)
+        valuesGraficoTablaAllRows.push(valuesGraficoTabla)
+        html += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
+        html += "</tr>"
+    })
+
+    Object.keys(listComboFiltro).forEach(it => {
+        let key = it.split("&")[1]
+        let valueS = it.split("&")[0]
+        htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
+    })
+    if (!optionSelect) {
+        selectFiltro.innerHTML = htmlCombo;
+    }
+    html += "<tr class='tableTotales' >"
+    html += "<td>Totales</td>"
+
+    let totalValue = 0;
+
+    Object.values(arrayTotalesHorizontal).forEach(item => {
+        html += "<td>" + item + "</td>"
+        totalValue += item;
+    })
+    html += "</tr>"
+    bodyTable01.innerHTML = html
+    var mainPanelDiv = document.getElementById("mainPanelDiv")
+    var leftPanel = document.getElementById("leftPanel")
+    setTimeout(() => {
+
+        leftPanel.style.height = mainPanelDiv.clientHeight + "px"
+        checkWidthChange()
+        // alert("Cambiando height")
+    }, 1000)
+
+
+    // if (nroTable == "02") return
+
+    var totalEL = document.getElementById(`total${nroTable}`)
+    totalEL.innerText = totalValue;
+    var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
+    var LabelTitleGrafico = document.getElementById(`tituloReporteChild_table${nroTable}`)
+    var canvas = document.getElementById(`chartChild_table${nroTable}`)
+
+    DIV_GRAFICO_CHILD.style.display = "none"
+
+    LabelTitleGrafico.innerText = "Gráfico por " + NombreFiltroTabla;
+    let TempHeaderGrgafico = [...headerListTable]
+    let topHeaderGrgafico = []
+    TempHeaderGrgafico.splice(0, 1)
+    TempHeaderGrgafico.forEach((label, index) => {
+        if (!(label == "03_anno" || label == "01_mes")) {
+            if (label.toString().split("_").length > 0) {
+                topHeaderGrgafico.push(label.toString().split("_")[1])/*.substring(3, label.length);*/
+            }
+        }
+    })
+
+    canvas.remove()
+
+    let datasetsGrafico = []
+
+
+    let tipoGrafico = 'line'
+
+    if (nroTable == "02") {
+        tipoGrafico = 'bar'
+    }
+    // if (topHeaderGrgafico.length > 12) {
+    //     tipoGrafico = 'line'
+    // }
+
+    valuesGraficoTablaAllRows.forEach((dataRow, index) => {
+        let TextoFinalTitulo = ""
+        // if (leftHeaderGrafico[index] != null) {
+        let ValueTitle = leftHeaderGrafico[index].split("_")[0]
+        let ValuesTitleSplites = ValueTitle.split(" ")
+        ValuesTitleSplites.forEach((fhrase, index) => {
+            if (index > 0) TextoFinalTitulo += fhrase + " "
+        })
+        if (ValuesTitleSplites.length == 1) {
+            TextoFinalTitulo = ValuesTitleSplites[0]
+        }
+        // }
+        // console.log(dataRow)
+
+        let item = {
+            label: TextoFinalTitulo,
+            data: dataRow,
+            fill: false,
+            borderColor: styles.color.solids[index],
+            backgroundColor: styles.color.alphas[index]
+        };
+
+        datasetsGrafico.push(item)
+    })
+
+
+    const dataGraficoChartJS = {
+        labels: topHeaderGrgafico, datasets: datasetsGrafico,
+    };
+    // console.log(JSON.stringify(dataGraficoChartJS))
+
+
+    var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
+    Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
+    var btnExcel = document.getElementById("btnExcel" + nroTable)
+
+    let chart = new Chart("chartChild_table" + nroTable, {
+        type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
+    })
+
+    let total01 = document.getElementById('total-text' + nroTable)
+
+    total01.style.display = 'block'
+    btnExcel.style.display = 'block'
 
 
 }
@@ -602,6 +494,7 @@ function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNo
 
 
 function lisarTablas(c_instacia, nombreSala) {
+
     nombreSalaSeleccionada = nombreSala
     cInsatnciaSelected = c_instacia
     var h3_titulos = document.getElementById("tituloSalaFiltro")

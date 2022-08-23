@@ -9,13 +9,30 @@ var DIV_GRAFICO_CHILD = document.getElementById("ContentDIV_Child_7")
 var Contentchart7 = document.getElementById("Content_chartChild_7")
 var canvasChild = document.getElementById("chartChild_7")
 
-var DatosGrafico = []
 var datosItemReporte = {
     position: 0, titulo: "", htmlItem: "",
 }
 
 
-setRangoDateDatesInit()
+setInitRangeDate()
+
+function openPrintTable(nrotable) {
+    var newURL = window.location.protocol + "//" + window.location.host;
+    console.log(newURL)
+    let w = 900;
+    let h = window.innerHeight;
+
+
+    var left = (screen.width / 2) - (w / 2);
+    var top = (screen.height / 2) - (h / 2);
+
+
+    var selectFiltroSalas = document.getElementById("selectableFiltroSala")
+    // console.log(selectFiltroSalas)
+    let nombreSala = selectFiltroSalas.options[selectFiltroSalas.selectedIndex].text
+    window.open(`${newURL}/print-table.html?inst=${selectFiltroSalas.value}&sala=${nombreSala}&posParent=${positionParentReport}&d1=${txtdate1Param}&d2=${txtdate2Param}&nroservice=${nrotable}`, "printing", 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
+
+}
 
 
 function exportReportToExcel(NroTable) {
@@ -111,23 +128,14 @@ comboGrafico.addEventListener('change', function (e) {
     };
     var Contentchart7 = document.getElementById("Content" + idGraficoCurrent)
     Contentchart7.innerHTML = ' <canvas id="' + idGraficoCurrent + '"></canvas>'
-    if (this.value == "pie") {
-        Contentchart7.style.width = "80%"
-        currentDataGrafico.forEach(it => {
-            it.backgroundColor = ['rgba(255, 99, 132, 0.8)', 'rgba(255, 159, 64,0.8)', 'rgba(255, 205, 86,0.8)', 'rgba(75, 192, 192, 0.8)', 'rgba(54, 162, 235,0.8)', 'rgba(153, 102, 255,0.8)', 'rgba(201, 203, 207, 0.8)',];
-            it.borderColor = ['rgb(255, 99, 132)', 'rgb(255, 159, 64)', 'rgb(255, 205, 86)', 'rgb(75, 192, 192)', 'rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(201, 203, 207)']
-            it.borderWidth = 1;
-        })
-    } else {
+    if (this.value != "pie") {
         currentDataGrafico.forEach((it, index) => {
             it.backgroundColor = [styles.color.alphas[index]];
             it.borderColor = [styles.color.solids[index],]
             it.borderWidth = 1;
         })
-
     }
-
-    let chart = new Chart(idGraficoCurrent, {type: this.value, data, currentOptionsGrafico})
+    new Chart(idGraficoCurrent, {type: this.value, data, currentOptionsGrafico})
 });
 
 
@@ -139,59 +147,43 @@ txtInputdate2Param.addEventListener("change", function () {
 })
 
 
-function setRangoDateDatesInit(positionMenuList) {
-
-
+function setInitRangeDate(positionMenuList) {
     let hoy = new Date()
     let mounth = (hoy.getMonth() + 1) < 10 ? "0" + (hoy.getMonth() + 1) : hoy.getMonth() + 1
     let day = (hoy.getDate()) < 10 ? "0" + (hoy.getDate()) : hoy.getDate()
     let ToDate = hoy.getFullYear() + "-" + mounth + "-" + day
-
     let anioInicio = ''
-
     if (positionMenuList == "1") {
         anioInicio = hoy.getFullYear() - 3;
     } else {
         anioInicio = hoy.getFullYear() - 1;
     }
-
-
     let ToDate12Ago = anioInicio + "-" + mounth + "-" + day
-    // alert("toDate : " + ToDate + " 12ago : " + ToDate12Ago)
     txtInputdate2Param.value = ToDate
     txtInputdate1Param.value = ToDate12Ago
     txtdate1Param = txtInputdate1Param.value;
     txtdate2Param = txtInputdate2Param.value
 }
 
-
-function onCLickItemReporteListenerListener(position, titulo, e, isClickedMenuList) {
-
-
-    if (isClickedMenuList) {
-        setRangoDateDatesInit(position)
+function setActiveSeleccionMenu(htmlReferenceMenuItem) {
+    var listaItems = document.getElementsByClassName("item-report")
+    for (var i = 0; i < listaItems.length; i++) {
+        listaItems[i].classList.remove("activate");
     }
+    htmlReferenceMenuItem.classList.add("activate");
+}
 
-    datosItemReporte.position = position
-    datosItemReporte.titulo = titulo
-    datosItemReporte.htmlItem = e
-    spinnerGrafico = document.getElementById("spinnerGrafico");
-    mainPanelDiv = document.getElementById("mainPanelDiv");
-    spinnerGrafico.style.display = "block"
-    mainPanelDiv.style.display = "none"
-    var ittulo = document.getElementById("tituloReporte1")
-    var ittulo2 = document.getElementById("tituloReporte2")
-    var ittulo3 = document.getElementById("tituloReporte3")
+
+function setTitulosGraficos(titulo) {
+    let ittulo = document.getElementById("tituloReporte1")
+    let ittulo2 = document.getElementById("tituloReporte2")
+    let ittulo3 = document.getElementById("tituloReporte3")
     ittulo.innerText = titulo;
     ittulo2.innerText = titulo;
     ittulo3.innerText = titulo;
-    var listaItems = document.getElementsByClassName("item-report")
-    for (var i = 0; i < listaItems.length; i++) {
-        // console.log(listaItems[i])
-        listaItems[i].classList.remove("activate");
-    }
-    e.classList.add("activate");
+}
 
+function getWSNameParentByPosition(position) {
     let nommbreServicio = "";
     // figure.style.display = "none"
     if (position == 1) {
@@ -203,9 +195,30 @@ function onCLickItemReporteListenerListener(position, titulo, e, isClickedMenuLi
     if (position == 3) {
         nommbreServicio = "getListadoEscritosAnual/";
     }
+    return nommbreServicio;
+}
 
-    // setTimeout(() => {
-    fetch(gethostApi() + nommbreServicio + txtdate1Param + "/" + txtdate2Param, {
+
+function onCLickItemReporteListenerListener(position, titulo, htmlReferenceMenuItem, isClickedMenuList) {
+    if (isClickedMenuList) {
+        setInitRangeDate(position)
+    }
+    spinnerGrafico = document.getElementById("spinnerGrafico");
+    mainPanelDiv = document.getElementById("mainPanelDiv");
+    //getDatosItemReporte
+    datosItemReporte.position = position
+    datosItemReporte.titulo = titulo
+    datosItemReporte.htmlItem = htmlReferenceMenuItem
+    //FIN getDatosItemReporte
+    spinnerGrafico.style.display = "block"
+    mainPanelDiv.style.display = "none"
+    setTitulosGraficos(titulo)
+    setActiveSeleccionMenu(htmlReferenceMenuItem)
+    setFetchInicial(position, titulo);
+}
+
+function setFetchInicial(position, titulo) {
+    fetch(gethostApi() + getWSNameParentByPosition(position) + txtdate1Param + "/" + txtdate2Param, {
         method: 'get', headers: new Headers({
             'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
             'Content-Type': 'application/json'
@@ -213,34 +226,27 @@ function onCLickItemReporteListenerListener(position, titulo, e, isClickedMenuLi
     })
         .then(response => response.json())
         .then((data) => {
-
-            DatosGrafico = data
-
+            // DatosGrafico = data
             if (data.length > 0) {
                 printCharts(data, position, titulo)
                 mainPanelDiv.style.display = "block"
             } else {
-                setRangoDateDatesInit()
+                setInitRangeDate()
                 mainPanelDiv.style.display = "block"
                 spinnerGrafico.style.display = "none"
                 showErrorAlerMessaje("No se encontraron Resultados", "", "")
             }
         }, onerror => {
-            setRangoDateDatesInit()
+            setInitRangeDate()
             mainPanelDiv.style.display = "block"
             spinnerGrafico.style.display = "none"
             mainPanelDiv.style.display = "none"
             showErrorAlerMessaje("Servicio no Disponible", "", "")
         })
-    // }, 2000)
-
-
 }
 
 function onClickBuscarListener() {
-
     var diference = getMonthDifference(new Date(txtdate1Param), new Date(txtdate2Param));
-
     if (datosItemReporte.position != "01" && diference <= 12) {
         onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
     } else if (diference <= 12) {//cuando item reporte sea ingresos
