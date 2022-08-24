@@ -98,12 +98,9 @@ function obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01
     } else {
 
 
-        if (positionParentReport == 2) {
-
-
-            obtenerServicio03("getListadoProgramacionesPonenteRecurso");
-
-        }
+        // if (positionParentReport == 2) {
+        //     obtenerServicio03("getListadoProgramacionesPonenteRecurso");
+        // }
 
         bindTableBody(listFilter, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
         spinner.style.display = 'none !important'; //ocultaSpiner
@@ -560,9 +557,9 @@ function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNo
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
         getInfoTabla(positionParentReport, "", "02", WSParam);
-        if (nombreServicioTabla03 != "") {
-            obtenerServicio03(nombreServicioTabla03);
-        }
+        // if (nombreServicioTabla03 != "") {
+        //     obtenerServicio03(nombreServicioTabla03);
+        // }
     }, 0)
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla01}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
