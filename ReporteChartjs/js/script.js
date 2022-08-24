@@ -39,6 +39,8 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     let txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
     let btnExcel = document.getElementById("btnExcel" + nroTable)
     let tabla = document.getElementById("table" + nroTable)
+
+
     let select = document.getElementById("selectable" + nroTable)
     spinner.style = "display : block !important";
     txtResultado.style.display = "none"
@@ -55,7 +57,7 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
         .then((data) => {
             if (data.length > 0) {
                 bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
-                select.style.display = 'block'
+                if (nroTable != "03") select.style.display = 'block'
             } else {
                 //alert("No se encontraron Resultados")
                 //showErrorAlerMessaje("No se encontraron Resultados", "", "")
@@ -73,7 +75,33 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
 
 }
 
+function obtenerDataFiltro(data, headerListTable, select_Filtro, bodyTable01, b, valueS2, nroTable, listFilter2, spinner) {
+
+    let key = select_Filtro.value.split("&")[1]
+    let valueS = select_Filtro.value.split("&")[0]
+    var listFilter = data.filter(item => {
+        return item[key] == valueS;
+    })
+
+    console.log(select_Filtro)
+
+    if (select_Filtro.value == -1) {
+        bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable, spinner)
+        spinner.style.display = 'none !important'; //ocultaSpiner
+    } else {
+        bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable, spinner)
+        spinner.style.display = 'none !important'; //ocultaSpiner
+        let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
+        ContentDIV_Child_table01.style.display = 'block'
+        let total01 = document.getElementsByClassName('total-text')
+        for (const total01Element of total01) {
+            total01Element.style.display = 'block'
+        }
+    }
+}
+
 function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
+
 
     var headerTable01 = document.getElementById("headerTable" + nroTable)
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
@@ -118,53 +146,61 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         return date.split("-")[2] + "-" + date.split("-")[1] + "-" + date.split("-")[0]
     }
 
+    let htmlCombo = ''
+    let listComboFiltro = []
+    data.forEach(dbItem => {
+        headerListTable.forEach((keyName, posHeaderOrdered) => {
+            if (keyName == "03_anno") {
+                return
+            }
+            Object.values(dbItem).forEach((value, posValue) => {
+                if (posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
+                    listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
+                }
+            })
+        })
+    })
+    if (nroTable != "03") htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+    Object.keys(listComboFiltro).forEach(it => {
+        let key = it.split("&")[1]
+        let valueS = it.split("&")[0]
+        htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
+    })
 
-    //FIN
-    bindTableBody(data, headerListTable, select_Filtro, bodyTable01, false, NombreFiltroTabla, nroTable)
-
-
-    spinner.style.display = "none"
-
+    select_Filtro.innerHTML = htmlCombo;
 
     select_Filtro.addEventListener('change', function (e) {
         var btnGraficar = document.getElementById(`btnGraficar${nroTable}`)
         btnGraficar.style.display = "none"
-        let key = this.value.split("&")[1]
-        let valueS = this.value.split("&")[0]
-        var listFilter = data.filter(item => {
-            return item[key] == valueS;
-        })
-        if (this.value == -1) {
-            bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable)
-            spinner.style.display = 'none !important'; //ocultaSpiner
-        } else {
-            bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable)
-            spinner.style.display = 'none !important'; //ocultaSpiner
-            let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
-            ContentDIV_Child_table01.style.display = 'block'
-            let total01 = document.getElementsByClassName('total-text')
-            for (const total01Element of total01) {
-                total01Element.style.display = 'block'
-            }
-        }
+        obtenerDataFiltro(data, headerListTable, select_Filtro, bodyTable01, true, "--", nroTable, [], spinner)
     });
+
+    if (nroTable == "03") {
+        // console.log("fintrado inicial tabla03")
+        obtenerDataFiltro(data, headerListTable, select_Filtro, bodyTable01, true, "--", nroTable, [], spinner)
+    } else {
+        bindTableBody(data, headerListTable, select_Filtro, bodyTable01, false, NombreFiltroTabla, nroTable)
+    }
+    spinner.style.display = "none"
 
 
 }
 
 
-function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable) {
-    var html = '';
+function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable, spinner) {
+    var htmltabla = '';
+    let valuesGraficoTablaAllRows = []
     let arrayTotalesHorizontal = []
     let htmlCombo = ''
     let listComboFiltro = []
-    let valuesGraficoTablaAllRows = []
     let leftHeaderGrafico = []
 
 
-    htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+    // if (nroTable != "03")
+    //     htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+
     data.forEach(dbItem => {
-        html += "<tr>"
+        htmltabla += "<tr>"
         let valuesGraficoTabla = []
         let AculumladoHorizontal = 0;
         let NameHeaderItem = ""
@@ -173,9 +209,9 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
                 return
             }
             Object.values(dbItem).forEach((value, posValue) => {
-                if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
-                    listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
-                }
+                // if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
+                //     listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
+                // }
                 if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
                     if (parseInt(value) >= 0) {
                         arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
@@ -191,36 +227,36 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
                     if (isNaN(value)) {
                         NameHeaderItem += value + "-"
                     }
-                    html += "<td>" + value + "</td>"
+                    htmltabla += "<td>" + value + "</td>"
                 }
             })
         })
 
         leftHeaderGrafico.push(NameHeaderItem)
         valuesGraficoTablaAllRows.push(valuesGraficoTabla)
-        html += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
-        html += "</tr>"
+        htmltabla += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
+        htmltabla += "</tr>"
     })
 
-    Object.keys(listComboFiltro).forEach(it => {
-        let key = it.split("&")[1]
-        let valueS = it.split("&")[0]
-        htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
-    })
-    if (!optionSelect) {
-        selectFiltro.innerHTML = htmlCombo;
-    }
-    html += "<tr class='tableTotales' >"
-    html += "<td>Totales</td>"
+    // Object.keys(listComboFiltro).forEach(it => {
+    //     let key = it.split("&")[1]
+    //     let valueS = it.split("&")[0]
+    //     htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
+    // })
+    // if (!optionSelect) {
+    //     selectFiltro.innerHTML = htmlCombo;
+    // }
+    htmltabla += "<tr class='tableTotales' >"
+    htmltabla += "<td>Totales</td>"
 
     let totalValue = 0;
 
     Object.values(arrayTotalesHorizontal).forEach(item => {
-        html += "<td>" + item + "</td>"
+        htmltabla += "<td>" + item + "</td>"
         totalValue += item;
     })
-    html += "</tr>"
-    bodyTable01.innerHTML = html
+    htmltabla += "</tr>"
+    bodyTable01.innerHTML = htmltabla
     var mainPanelDiv = document.getElementById("mainPanelDiv")
     var leftPanel = document.getElementById("leftPanel")
     setTimeout(() => {
@@ -312,6 +348,9 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
     total01.style.display = 'block'
     btnExcel.style.display = 'block'
 
+    // if (nroTable == "03") {
+    //     obtenerDataFiltro(data, headerListTable, selectFiltro, bodyTable01, true, "valueS", nroTable, "listFilter", spinner)
+    // }
 
 }
 
@@ -481,7 +520,7 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
 }
 
 
-function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNoInstanciaNeed) {
+function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNoInstanciaNeed, nombreServicioTabla03) {
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
         getInfoTabla(positionParentReport, "", "02", WSParam);
@@ -489,9 +528,27 @@ function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNo
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla01}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
         getInfoTabla(positionParentReport, "", "01", WSParam);
-    }, 2000)
+    }, 500)
+
+    if (nombreServicioTabla03 != "") {
+        obtenerServicio03(nombreServicioTabla03);
+    }
 }
 
+function obtenerServicio03(nombreServicioTabla03) {
+    let ContentReporte03 = document.getElementById('ContentReporte03')
+    ContentReporte03.style.display = "block"
+    setTimeout(() => {
+        let select = document.getElementById("selectable01")
+        let textLabel = select.options[select.selectedIndex].text;
+        if (textLabel != "-- todos --") {
+            let WSParam = `${nombreServicioTabla03}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param + "/" + textLabel;
+            getInfoTabla(positionParentReport, "", "03", WSParam);
+        }
+
+
+    }, 3000)
+}
 
 function lisarTablas(c_instacia, nombreSala) {
 
@@ -501,25 +558,31 @@ function lisarTablas(c_instacia, nombreSala) {
     h3_titulos.innerText = "Sala Seleccionada : " + nombreSalaSeleccionada
     var table01 = document.getElementById("table01")
     var table02 = document.getElementById("table02")
+    var table03 = document.getElementById("table02")
     let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table01')
     let ContentDIV_Child_table02 = document.getElementById('ContentDIV_Child_table02')
+    let ContentDIV_Child_table03 = document.getElementById('ContentDIV_Child_table03')
+    let ContentReporte03 = document.getElementById('ContentReporte03')
     let total01 = document.getElementsByClassName('total-text')
     for (const total01Element of total01) {
         total01Element.style.display = 'none'
     }
 
+    ContentReporte03.style.display = 'none'
     ContentDIV_Child_table01.style.display = 'none'
     ContentDIV_Child_table02.style.display = 'none'
+    ContentDIV_Child_table03.style.display = 'none'
     table01.style.display = 'none'
     table02.style.display = 'none'
+    table03.style.display = 'none'
     if (positionParentReport == 1) {
-        setInformacionTablas("getListadoIngresoMensualxTipRecurso", "getListadoIngresoMensualxCorteProced", false);
+        setInformacionTablas("getListadoIngresoMensualxTipRecurso", "getListadoIngresoMensualxCorteProced", false, "");
     }
     if (positionParentReport == 2) {
-        setInformacionTablas("getListadoProgramacionesPonente", "getListadoProgramacionesFirmadoPonente", false);
+        setInformacionTablas("getListadoProgramacionesPonente", "getListadoProgramacionesFirmadoPonente", false, "getListadoProgramacionesPonenteRecurso");
     }
     if (positionParentReport == 3) {
-        setInformacionTablas("getListaTipoEscritos", "getListadoEscritosPendienteAtendido", false);
+        setInformacionTablas("getListaTipoEscritos", "getListadoEscritosPendienteAtendido", false, "");
     }
 }
 

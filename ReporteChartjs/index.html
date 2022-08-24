@@ -247,11 +247,16 @@
                 </div>
             </div>
             <!--*****************TABLAS RESULTADOS********************-->
+            <br>
+
             <div class="row">
 
                 <div style="width: 100%!important; ;">
                     <div class="row">
+
                         <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte01">
+                            <br>
+                            <br>
 
                             <section id="ContentDIV_Child_table01" class="col-12 " style="display: none; ">
                                 <figure>
@@ -340,8 +345,11 @@
 
 
                         </div>
-                        <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte02">
 
+
+                        <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte02">
+                            <br>
+                            <br>
                             <section id="ContentDIV_Child_table02" class="col-12" style="display: none; ">
                                 <figure>
                                     <div class="container-title">
@@ -421,15 +429,89 @@
                                 <p id="txtResultado02" style="display: none">Sin resultados.</p>
                                 <br>
                             </figure>
-                            <!--                        <a-->
-                            <!--                                id="btnGraficarTotal02"-->
-                            <!--                                style="color: white !important; "-->
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 " id="ContentReporte03" style="display: none">
+
+                            <section id="ContentDIV_Child_table03" class="col-12" style="display: none; ">
+                                <figure>
+                                    <div class="container-title">
+                                        <h3 id="tituloReporteChild_table03"></h3>
+                                    </div>
+                                    <div id="Content_chartChild_table03">
+                                        <canvas id="chartChild_table03"></canvas>
+                                    </div>
+                                </figure>
+                            </section>
+
+                            <figure id="figureContent03" class="col-12">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div>
+                                        <label id="label_selectable03" for="selectable02"></label>
+                                        <select name="selectable02" id="selectable03">
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex;">
+                                        <div id="btnExcel03" class="mr-2">
+                                            <img
+                                                    style="cursor: pointer"
+                                                    src="./assets/donwload_excel.png"
+                                                    height="48" width="48" class="no-print"
+                                                    onclick="exportReportToExcel('02');"/>
+                                        </div>
+                                        <div>
+                                            <img style="cursor: pointer"
+                                                 src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
+                                                 height="48" width="48" class="no-print"
+                                                 onclick="openPrintTable('02')"/>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-                            <!--                                class="shadow1 col-12 btn btn-primary">Buscar-->
-                            <!--                        </a>-->
+                                <div id="spinner03" class=" justify-content-center">
+                                    <div style="display: flex; justify-content: center;">
+                                        <div>
+                                            <p>Cargando Información...</p>
+                                            <div class="d-flex justify-content-center">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <button id="btnGraficar03" style="display: none" class="btn btn-primary" onclick="new function() {
+                             let  ContentDIV_Child_table01 =document.getElementById('ContentDIV_Child_table02')
+                             let isHide=ContentDIV_Child_table01.style.display;
+                             if (isHide=='none')ContentDIV_Child_table01.style.display='block'
+                             if (isHide=='block')ContentDIV_Child_table01.style.display='none'
+                            }">Graficar Tabla
+                                </button>
 
+                                <div class="txtInformacionFiltro" id="txtInformacionFiltro03">...
+                                </div>
+                                <BR>
+
+                                <table class="greyGridTable" id="table03" style=" width: 100%!important;">
+                                    <thead>
+                                    <tr id="headerTable03">
+                                    </tr>
+                                    </thead>
+                                    <tbody id="bodyTable03">
+                                    </tbody>
+                                </table>
+
+                                <br>
+                                <div class="total-text" id="total-text03">TOTAL: <span id="total03"></span>
+                                </div>
+
+                                <br>
+                                <p id="txtResultado03" style="display: none">Sin resultados.</p>
+                                <br>
+                            </figure>
                         </div>
                     </div>
                 </div>
