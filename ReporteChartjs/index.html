@@ -460,12 +460,12 @@
                                                     height="48" width="48" class="no-print"
                                                     onclick="exportReportToExcel('02');"/>
                                         </div>
-                                        <div>
-                                            <img style="cursor: pointer"
-                                                 src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"
-                                                 height="48" width="48" class="no-print"
-                                                 onclick="openPrintTable('02')"/>
-                                        </div>
+                                        <!--                                        <div>-->
+                                        <!--                                            <img style="cursor: pointer"-->
+                                        <!--                                                 src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"-->
+                                        <!--                                                 height="48" width="48" class="no-print"-->
+                                        <!--                                                 onclick="openPrintTable('02')"/>-->
+                                        <!--                                        </div>-->
                                     </div>
                                 </div>
 
@@ -494,16 +494,42 @@
                                 <div class="txtInformacionFiltro" id="txtInformacionFiltro03">...
                                 </div>
                                 <BR>
+                                <nav aria-label="...">
+                                    <ul class="pagination">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item active">
+                                            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#">Siguiente</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <div style=" height: 600px!important;">
+                                    <table
+                                            class="greyGridTable" id="table03"
+                                            style="
+                                            width: 100%!important;
+                                            height: 600px!important;
+                                            max-height: 600px!important;
+                                            overflow-y: scroll; /* Show vertical scrollbar */
+                                            overflow-x: scroll; /* Show horizontal scrollbar */">
+                                        <thead>
+                                        <tr id="headerTable03">
+                                        </tr>
+                                        </thead>
+                                        <tbody id="bodyTable03">
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                                <table class="greyGridTable" id="table03" style=" width: 100%!important;">
-                                    <thead>
-                                    <tr id="headerTable03">
-                                    </tr>
-                                    </thead>
-                                    <tbody id="bodyTable03">
-                                    </tbody>
-                                </table>
 
+                                <br>
+                                <br>
                                 <br>
                                 <div class="total-text" id="total-text03">TOTAL: <span id="total03"></span>
                                 </div>

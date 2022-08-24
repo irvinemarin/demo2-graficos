@@ -57,7 +57,12 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
         .then((data) => {
             if (data.length > 0) {
                 bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
-                if (nroTable != "03") select.style.display = 'block'
+                // if (nroTable != "03")
+                select.style.display = 'block'
+                if (nroTable == "03") {
+                    let ContentReporte03 = document.getElementById('ContentReporte03')
+                    ContentReporte03.style.display = "block"
+                }
             } else {
                 //alert("No se encontraron Resultados")
                 //showErrorAlerMessaje("No se encontraron Resultados", "", "")
@@ -75,21 +80,32 @@ function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
 
 }
 
-function obtenerDataFiltro(data, headerListTable, select_Filtro, bodyTable01, b, valueS2, nroTable, listFilter2, spinner) {
+function obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01, b, valueS2, nroTable, listFilter2, spinner) {
 
-    let key = select_Filtro.value.split("&")[1]
-    let valueS = select_Filtro.value.split("&")[0]
+    let key = __SELECT_TABLE.value.split("&")[1]
+    let valueS = __SELECT_TABLE.value.split("&")[0]
     var listFilter = data.filter(item => {
         return item[key] == valueS;
     })
 
-    console.log(select_Filtro)
+    console.log(__SELECT_TABLE)
 
-    if (select_Filtro.value == -1) {
-        bindTableBody(data, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable, spinner)
+    if (__SELECT_TABLE.value == -1) {
+
+
+        bindTableBody(data, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
         spinner.style.display = 'none !important'; //ocultaSpiner
     } else {
-        bindTableBody(listFilter, headerListTable, select_Filtro, bodyTable01, true, valueS, nroTable, spinner)
+
+
+        if (positionParentReport == 2) {
+
+
+            obtenerServicio03("getListadoProgramacionesPonenteRecurso");
+
+        }
+
+        bindTableBody(listFilter, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
         spinner.style.display = 'none !important'; //ocultaSpiner
         let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
         ContentDIV_Child_table01.style.display = 'block'
@@ -105,13 +121,13 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     var headerTable01 = document.getElementById("headerTable" + nroTable)
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
-    var select_Filtro = document.getElementById("selectable" + nroTable)
+    var __SELECT_TABLE = document.getElementById("selectable" + nroTable)
     var txtResultado = document.getElementById("txtResultado" + nroTable)
     var txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
     var label = document.getElementById("label_selectable" + nroTable)
     var tabla = document.getElementById("table" + nroTable)
-    select_Filtro.innerHTML = ""
-    let htmlHeader = ''
+    __SELECT_TABLE.innerHTML = ""
+
     if (data.length == 0) {
         txtResultado.style.display = "block"
         return;
@@ -127,6 +143,8 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     //bind HEAder
     let NombreFiltroTabla = ""
+    let htmlHeader = ''
+    htmlHeader += "<th >#</th>"
     headerListTable.forEach((key, index) => {
         if (key == "03_anno") return
         let keySubstring = key
@@ -134,10 +152,18 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             keySubstring = key.substring(3, key.length)
             NombreFiltroTabla = keySubstring
         }
+
+
         if (index > 0) if (true) keySubstring = key.substring(3, 6) + "."
+        if (nroTable == "03") {
+            keySubstring = key.substring(3, key.length)
+        }
         htmlHeader += "<th >" + keySubstring + "</th>"
     })
-    htmlHeader += "<th style='background-color: #fcf5c6!important; color: black ;text-align: right!important;' >Total</th>"
+    if (nroTable != "03") {
+        htmlHeader += "<th style='background-color: #fcf5c6!important; color: black ;text-align: right!important;' >Total</th>"
+    }
+
     headerTable01.innerHTML = htmlHeader;
     label.innerText = NombreFiltroTabla;
     if (data.length > 0) txtInformacionFiltro.innerHTML = "REPORTE <br> De " + formatDate(txtdate1Param) + " hasta " + formatDate(txtdate2Param);
@@ -160,26 +186,30 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             })
         })
     })
-    if (nroTable != "03") htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+    // if (nroTable != "03")
+    htmlCombo += "<option  value='-1'> -- Todos -- </option>"
     Object.keys(listComboFiltro).forEach(it => {
         let key = it.split("&")[1]
         let valueS = it.split("&")[0]
         htmlCombo += "<option value='" + it + "'>" + valueS + " </option>"
     })
 
-    select_Filtro.innerHTML = htmlCombo;
+    __SELECT_TABLE.innerHTML = htmlCombo;
 
-    select_Filtro.addEventListener('change', function (e) {
+    __SELECT_TABLE.addEventListener('change', function (e) {
         var btnGraficar = document.getElementById(`btnGraficar${nroTable}`)
         btnGraficar.style.display = "none"
-        obtenerDataFiltro(data, headerListTable, select_Filtro, bodyTable01, true, "--", nroTable, [], spinner)
+        obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01, true, "--", nroTable, [], spinner)
     });
-
+    let ContentReporte03 = document.getElementById('ContentReporte03')
+    ContentReporte03.style.display = "none"
     if (nroTable == "03") {
         // console.log("fintrado inicial tabla03")
-        obtenerDataFiltro(data, headerListTable, select_Filtro, bodyTable01, true, "--", nroTable, [], spinner)
+        obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01, true, "--", nroTable, [], spinner)
     } else {
-        bindTableBody(data, headerListTable, select_Filtro, bodyTable01, false, NombreFiltroTabla, nroTable)
+
+
+        bindTableBody(data, headerListTable, __SELECT_TABLE, bodyTable01, false, NombreFiltroTabla, nroTable)
     }
     spinner.style.display = "none"
 
@@ -187,20 +217,19 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 }
 
 
-function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable, spinner) {
+function bindTableBody(data, headerListTable, _selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable, spinner) {
     var htmltabla = '';
     let valuesGraficoTablaAllRows = []
     let arrayTotalesHorizontal = []
-    let htmlCombo = ''
-    let listComboFiltro = []
     let leftHeaderGrafico = []
 
 
     // if (nroTable != "03")
     //     htmlCombo += "<option  value='-1'> -- Todos -- </option>"
 
-    data.forEach(dbItem => {
+    data.forEach((dbItem, posDB) => {
         htmltabla += "<tr>"
+        htmltabla += "<td>" + (posDB + 1) + "</td>"
         let valuesGraficoTabla = []
         let AculumladoHorizontal = 0;
         let NameHeaderItem = ""
@@ -209,9 +238,6 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
                 return
             }
             Object.values(dbItem).forEach((value, posValue) => {
-                // if (!optionSelect && posHeaderOrdered == 0 && keyName == Object.keys(dbItem)[posValue]) {
-                //     listComboFiltro[value + "&" + keyName] = (listComboFiltro[value + "&" + keyName] || 0) + 1;
-                // }
                 if (posHeaderOrdered > 0 && keyName == Object.keys(dbItem)[posValue]) {
                     if (parseInt(value) >= 0) {
                         arrayTotalesHorizontal[keyName] = (arrayTotalesHorizontal[keyName] || 0) + value
@@ -222,7 +248,8 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
                 if (keyName == Object.keys(dbItem)[posValue]) {
                     if (posHeaderOrdered > 0 && !isNaN(value)) {
                         valuesGraficoTabla.push(value)
-                        AculumladoHorizontal = AculumladoHorizontal + value
+
+                        AculumladoHorizontal = (AculumladoHorizontal + value)
                     }
                     if (isNaN(value)) {
                         NameHeaderItem += value + "-"
@@ -234,7 +261,8 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
 
         leftHeaderGrafico.push(NameHeaderItem)
         valuesGraficoTablaAllRows.push(valuesGraficoTabla)
-        htmltabla += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
+
+        if (nroTable != "03") htmltabla += "<td style='background-color: #fcf5c6!important; color: black!important;'>" + AculumladoHorizontal + "</td>"
         htmltabla += "</tr>"
     })
 
@@ -246,16 +274,18 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
     // if (!optionSelect) {
     //     selectFiltro.innerHTML = htmlCombo;
     // }
-    htmltabla += "<tr class='tableTotales' >"
-    htmltabla += "<td>Totales</td>"
 
     let totalValue = 0;
+    if (nroTable != "03") {
+        htmltabla += "<tr class='tableTotales' >"
+        htmltabla += "<td>Totales</td>"
+        Object.values(arrayTotalesHorizontal).forEach(item => {
+            htmltabla += "<td>" + item + "</td>"
+            totalValue += item;
+        })
+        htmltabla += "</tr>"
+    }
 
-    Object.values(arrayTotalesHorizontal).forEach(item => {
-        htmltabla += "<td>" + item + "</td>"
-        totalValue += item;
-    })
-    htmltabla += "</tr>"
     bodyTable01.innerHTML = htmltabla
     var mainPanelDiv = document.getElementById("mainPanelDiv")
     var leftPanel = document.getElementById("leftPanel")
@@ -269,12 +299,20 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
 
     // if (nroTable == "02") return
 
+
+    if (nroTable == "03") {
+        return
+    }
+
     var totalEL = document.getElementById(`total${nroTable}`)
     totalEL.innerText = totalValue;
+
+
     var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
     var LabelTitleGrafico = document.getElementById(`tituloReporteChild_table${nroTable}`)
     var canvas = document.getElementById(`chartChild_table${nroTable}`)
 
+    canvas.remove()
     DIV_GRAFICO_CHILD.style.display = "none"
 
     LabelTitleGrafico.innerText = "Gráfico por " + NombreFiltroTabla;
@@ -289,13 +327,8 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
         }
     })
 
-    canvas.remove()
-
     let datasetsGrafico = []
-
-
     let tipoGrafico = 'line'
-
     if (nroTable == "02") {
         tipoGrafico = 'bar'
     }
@@ -335,18 +368,21 @@ function bindTableBody(data, headerListTable, selectFiltro, bodyTable01, optionS
     // console.log(JSON.stringify(dataGraficoChartJS))
 
 
-    var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
-    Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
-    var btnExcel = document.getElementById("btnExcel" + nroTable)
+    if (nroTable != "03") {
+        var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
+        Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
+        var btnExcel = document.getElementById("btnExcel" + nroTable)
 
-    let chart = new Chart("chartChild_table" + nroTable, {
-        type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
-    })
+        let chart = new Chart("chartChild_table" + nroTable, {
+            type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
+        })
 
-    let total01 = document.getElementById('total-text' + nroTable)
+        let total01 = document.getElementById('total-text' + nroTable)
 
-    total01.style.display = 'block'
-    btnExcel.style.display = 'block'
+        total01.style.display = 'block'
+        btnExcel.style.display = 'block'
+    }
+
 
     // if (nroTable == "03") {
     //     obtenerDataFiltro(data, headerListTable, selectFiltro, bodyTable01, true, "valueS", nroTable, "listFilter", spinner)
@@ -524,15 +560,16 @@ function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNo
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
         getInfoTabla(positionParentReport, "", "02", WSParam);
+        if (nombreServicioTabla03 != "") {
+            obtenerServicio03(nombreServicioTabla03);
+        }
     }, 0)
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla01}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
         getInfoTabla(positionParentReport, "", "01", WSParam);
     }, 500)
 
-    if (nombreServicioTabla03 != "") {
-        obtenerServicio03(nombreServicioTabla03);
-    }
+
 }
 
 function obtenerServicio03(nombreServicioTabla03) {
@@ -541,13 +578,14 @@ function obtenerServicio03(nombreServicioTabla03) {
     setTimeout(() => {
         let select = document.getElementById("selectable01")
         let textLabel = select.options[select.selectedIndex].text;
-        if (textLabel != "-- todos --") {
+        console.log(textLabel)
+        if (textLabel != "-- Todos --") {
             let WSParam = `${nombreServicioTabla03}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param + "/" + textLabel;
             getInfoTabla(positionParentReport, "", "03", WSParam);
         }
 
 
-    }, 3000)
+    }, 1000)
 }
 
 function lisarTablas(c_instacia, nombreSala) {
