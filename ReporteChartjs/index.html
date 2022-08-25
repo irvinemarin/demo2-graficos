@@ -16,8 +16,6 @@
 
 <body>
 <main>
-
-
     <div class="row">
         <img class="col-sm-12 col-md-2" src="assets/logo-pj.png" style="height: 50px" alt="">
         <h1 class="col-sm-12 col-md-8" style="
@@ -25,7 +23,6 @@
         text-align: center; width: 65%"> Reportes Gerencial de la Corte Suprema
             <br><span>Visualización de estadísticas </span>
         </h1>
-
     </div>
     <div id="fondoPJ"></div>
     <hr>
@@ -93,22 +90,7 @@
 
         </div>
         <div id="spinnerGrafico" class="loader" style="display: none"></div>
-        <!-- <div style="opacity: .4;background-color: #575757;width: 100%; height: 100%
-        ;position: fixed; top: 0px; display: none "
-        id="spinnerGrafico"
-            class="justify-content-center">
-            <div style="position: absolute; left: 30%; top : 45%;">
-                <p style="border-radius: 10px;font-size: 25px; background-color: #d91414">
-                    Espere un momento esto puede tardar un poco...
-                </p>
-                <div class="spinner-border text-primary" style="width: 5rem; height: 5rem;" role="status">
-                </div>
-            </div>
-        </div> -->
-
         <div class="initPanel no-print">
-
-            <!--        <img style="width: 100%!important;" src="assets/Palacio_solo.jpg" alt="">-->
             <div class="overlayInit"></div>
         </div>
 
@@ -282,11 +264,10 @@
                                     </div>
                                     <div style="display: flex;">
                                         <div id="btnExcel01" class="mr-2">
-                                            <img
-                                                    style="cursor: pointer"
-                                                    src="./assets/donwload_excel.png"
-                                                    height="48" width="48" class="no-print"
-                                                    onclick="exportReportToExcel('01');"/>
+                                            <img style="cursor: pointer"
+                                                 src="./assets/donwload_excel.png"
+                                                 height="48" width="48" class="no-print"
+                                                 onclick="exportReportToExcel('01');"/>
                                         </div>
                                         <div>
                                             <img style="cursor: pointer"
@@ -317,11 +298,9 @@
                              if (isHide=='block')ContentDIV_Child_table01.style.display='none'
                             }">Graficar Tabla
                                 </button>
-
                                 <div class="txtInformacionFiltro" id="txtInformacionFiltro01">...
                                 </div>
                                 <BR>
-
                                 <table class="greyGridTable" id="table01"
                                        style="background-color: #ffffff; width: 100%;">
                                     <thead>
@@ -332,21 +311,13 @@
                                     </tbody>
                                 </table>
                                 <br>
-
                                 <div class="total-text" id="total-text01">TOTAL: <span id="total01"></span>
                                 </div>
-
-
                                 <br>
-
                                 <p id="txtResultado01" style="display: none">Sin resultados.</p>
                                 <br>
                             </figure>
-
-
                         </div>
-
-
                         <div class="col-sm-12 col-md-6 col-xl-6" id="ContentReporte02">
                             <br>
                             <br>
@@ -431,6 +402,39 @@
                             </figure>
                         </div>
 
+
+                        <div class="row col-12">
+
+                            <div class="col-sm-12 col-md-6">
+                                <label id="label_selectablePonente03" for="selectablePonente03"></label>
+                                <select name="selectablePonente03" id="selectablePonente03">
+                                    <option value=""></option>
+                                </select>
+                                <br>
+                                <!--                            <h6></h6>-->
+                                <br>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <label id="label_selectable03" for="selectable03"></label>
+                                <select name="selectable03" id="selectable03" style="display: none">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div>
+                                    <div id="btnExcel03" class="mr-2" style="display: none">
+                                        <img
+                                                style="cursor: pointer"
+                                                src="./assets/donwload_excel.png"
+                                                height="48" width="48" class="no-print"
+                                                onclick="exportReportToExcel('03');"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-sm-12 col-md-12 " id="ContentReporte03" style="display: none">
 
                             <section id="ContentDIV_Child_table03" class="col-12" style="display: none; ">
@@ -444,32 +448,8 @@
                                 </figure>
                             </section>
 
+
                             <figure id="figureContent03" class="col-12">
-                                <div style="display: flex; justify-content: space-between;">
-                                    <div>
-                                        <label id="label_selectable03" for="selectable02"></label>
-                                        <select name="selectable02" id="selectable03">
-                                            <option value=""></option>
-                                        </select>
-                                    </div>
-                                    <div style="display: flex;">
-                                        <div id="btnExcel03" class="mr-2">
-                                            <img
-                                                    style="cursor: pointer"
-                                                    src="./assets/donwload_excel.png"
-                                                    height="48" width="48" class="no-print"
-                                                    onclick="exportReportToExcel('02');"/>
-                                        </div>
-                                        <!--                                        <div>-->
-                                        <!--                                            <img style="cursor: pointer"-->
-                                        <!--                                                 src="https://freeiconshop.com/wp-content/uploads/edd/print-flat.png"-->
-                                        <!--                                                 height="48" width="48" class="no-print"-->
-                                        <!--                                                 onclick="openPrintTable('02')"/>-->
-                                        <!--                                        </div>-->
-                                    </div>
-                                </div>
-
-
                                 <div id="spinner03" class=" justify-content-center">
                                     <div style="display: flex; justify-content: center;">
                                         <div>
@@ -494,21 +474,21 @@
                                 <div class="txtInformacionFiltro" id="txtInformacionFiltro03">...
                                 </div>
                                 <BR>
-<!--                                <nav aria-label="...">-->
-<!--                                    <ul class="pagination">-->
-<!--                                        <li class="page-item disabled">-->
-<!--                                            <a class="page-link" href="#" tabindex="-1">Anterior</a>-->
-<!--                                        </li>-->
-<!--                                        <li class="page-item"><a class="page-link" href="#">1</a></li>-->
-<!--                                        <li class="page-item active">-->
-<!--                                            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>-->
-<!--                                        </li>-->
-<!--                                        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-<!--                                        <li class="page-item">-->
-<!--                                            <a class="page-link" href="#">Siguiente</a>-->
-<!--                                        </li>-->
-<!--                                    </ul>-->
-<!--                                </nav>-->
+                                <!--                                <nav aria-label="...">-->
+                                <!--                                    <ul class="pagination">-->
+                                <!--                                        <li class="page-item disabled">-->
+                                <!--                                            <a class="page-link" href="#" tabindex="-1">Anterior</a>-->
+                                <!--                                        </li>-->
+                                <!--                                        <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+                                <!--                                        <li class="page-item active">-->
+                                <!--                                            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>-->
+                                <!--                                        </li>-->
+                                <!--                                        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                                <!--                                        <li class="page-item">-->
+                                <!--                                            <a class="page-link" href="#">Siguiente</a>-->
+                                <!--                                        </li>-->
+                                <!--                                    </ul>-->
+                                <!--                                </nav>-->
                                 <div style=" height: 600px!important;">
                                     <table
                                             class="greyGridTable" id="table03"
@@ -573,6 +553,7 @@
 <script src="./config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.26/dist/sweetalert2.all.min.js"
         integrity="sha256-fNaNuEZ0nO4493IejXMa65uBamnI/Hm+iRjgFhfjZBQ=" crossorigin="anonymous"></script>
+<script src="js/ws-utils.js"></script>
 
 
 <script src="js/script.js"></script>

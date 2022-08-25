@@ -1,0 +1,46 @@
+.leftPanel {
+    background: rgb(255, 255, 255);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(235, 235, 235, 1) 87%, rgba(195, 195, 195, 1) 100%);
+    width: 20%;
+    height: 100vh;
+    position: absolute;
+    border-right: 4px solid #919191;
+}
+
+.listaReportes {
+    padding: 8px;
+}
+
+.listaReportes .item-report {
+    height: 100%;
+    color: black;
+    padding: 10px 0;
+    font-size: 12px;
+    text-align: center !important;
+    width: 100% !important;
+}
+
+.item-report p {
+    margin: 0 !important;;
+}
+
+.listaReportes .item-report:hover {
+    border-left: 4px solid #6e0000;
+    cursor: pointer;
+    vertical-align: center;
+    text-align: center !important;
+    background-color: #919191;
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+.activate {
+    border-left: 4px solid #6e0000;
+    cursor: pointer;
+    vertical-align: center;
+    text-align: center !important;
+    background-color: #d5d5d5;
+    color: #ffffff;
+    /*border-radius: 4px;*/
+
+}

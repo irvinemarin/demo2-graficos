@@ -247,13 +247,20 @@ function setFetchInicial(position, titulo) {
 
 function onClickBuscarListener() {
     var diference = getMonthDifference(new Date(txtdate1Param), new Date(txtdate2Param));
-    if (datosItemReporte.position != "01" && diference <= 12) {
+
+    // switch (datosItemReporte.position) {
+    //
+    // }
+
+    console.log(datosItemReporte.position)
+
+
+    if (datosItemReporte.position != 1 && diference <= 12) {
         onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
-    } else if (diference <= 12) {//cuando item reporte sea ingresos
+    } else if (datosItemReporte.position == 1) {//cuando item reporte sea ingresos
         onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
-    } else {
-        showErrorAlerMessaje(diference + " meses de diferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
-    }
+    } else if (diference > 12) showErrorAlerMessaje(diference + " meses de diferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
+
 }
 
 function getMonthDifference(startDate, endDate) {

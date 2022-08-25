@@ -7,7 +7,6 @@ var chart72 = document.getElementById("content02")
 var chart73 = document.getElementById("content03")
 
 function setDisplayGraficoContent(displayC7, displayC72, displayC73) {
-
     chart7.style.display = displayC7
     chart73.style.display = displayC73
     chart72.style.display = displayC72
@@ -28,55 +27,48 @@ function printCharts(dataDB, positionParentReportHTML) {
         chartId = "chart73";
         setDisplayGraficoContent("none", "none", "block")
     }
-    bindGraficoBarras(dataDB, chartId, positionParentReportHTML, "00_anno") //grafico principal
+    setGraficoBarras(dataDB, chartId, positionParentReportHTML, "00_anno") //grafico principal
 
 }
 
 
-function getInfoTabla(positionParentReport, idChartjs, nroTable, nameWS) {
+function obtenerDatosTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     let spinner = document.getElementById("spinner" + nroTable)
     let txtResultado = document.getElementById("txtResultado" + nroTable)
     let txtInformacionFiltro = document.getElementById("txtInformacionFiltro" + nroTable)
     let btnExcel = document.getElementById("btnExcel" + nroTable)
     let tabla = document.getElementById("table" + nroTable)
-
-
     let select = document.getElementById("selectable" + nroTable)
     spinner.style = "display : block !important";
     txtResultado.style.display = "none"
     tabla.style.display = "none"
     select.style.display = "none"
 
-    fetch(gethostApi() + nameWS, {
-        method: 'get', headers: new Headers({
-            'authorization': 'eyJhbGciOiJIUzI1NiJ9.c3VwcmVtYQ.cpUyTYcgm8ixIVDTLe-Fua0RLkyUKg8yy2IkAOfKi2I',
-            'Content-Type': 'application/json'
-        })
-    })
-        .then(response => response.json())
+
+    obtenerDatosTablaWS(nameWS).then(response => response.json())
         .then((data) => {
-            if (data.length > 0) {
-                bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
-                // if (nroTable != "03")
-                select.style.display = 'block'
-                if (nroTable == "03") {
-                    let ContentReporte03 = document.getElementById('ContentReporte03')
-                    ContentReporte03.style.display = "block"
-                }
-            } else {
-                //alert("No se encontraron Resultados")
-                //showErrorAlerMessaje("No se encontraron Resultados", "", "")
-                select.style.display = 'none'
-                btnExcel.style.display = 'none'
-                spinner.style.display = 'none'
-                txtInformacionFiltro.style.display = 'none'
-                txtResultado.style.display = 'block'
-            }
+            if (data.length > 0) setDataFound(data); else setNoDataFound()
         }, onerror => {
             spinner.style.display = 'none'
             showErrorAlerMessaje("Servicio no disponible", "", "")
-            //alert("Servicio no Disponible")
         })
+
+    function setDataFound(data) {
+        bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
+        select.style.display = 'block'
+        if (nroTable == "03") {
+            let ContentReporte03 = document.getElementById('ContentReporte03')
+            ContentReporte03.style.display = "block"
+        }
+    }
+
+    function setNoDataFound() {
+        select.style.display = 'none'
+        btnExcel.style.display = 'none'
+        spinner.style.display = 'none'
+        txtInformacionFiltro.style.display = 'none'
+        txtResultado.style.display = 'block'
+    }
 
 }
 
@@ -88,34 +80,28 @@ function obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01
         return item[key] == valueS;
     })
 
-    console.log(__SELECT_TABLE)
-
     if (__SELECT_TABLE.value == -1) {
-
-
-        bindTableBody(data, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
+        setTableBodyData(data, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
         spinner.style.display = 'none !important'; //ocultaSpiner
     } else {
-
-
-        // if (positionParentReport == 2) {
-        //     obtenerServicio03("getListadoProgramacionesPonenteRecurso");
-        // }
-
-        bindTableBody(listFilter, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
+        setTableBodyData(listFilter, headerListTable, __SELECT_TABLE, bodyTable01, true, valueS, nroTable, spinner)
         spinner.style.display = 'none !important'; //ocultaSpiner
-        let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
-        ContentDIV_Child_table01.style.display = 'block'
-        let total01 = document.getElementsByClassName('total-text')
-        for (const total01Element of total01) {
-            total01Element.style.display = 'block'
-        }
+        setVisibleGraficoTabla("block", nroTable)
+
+    }
+}
+
+function setVisibleGraficoTabla(displayValue, nroTable) {
+    if (nroTable == "03") return;
+    let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table' + nroTable)
+    ContentDIV_Child_table01.style.display = displayValue
+    let total01 = document.getElementsByClassName('total-text')
+    for (const total01Element of total01) {
+        total01Element.style.display = displayValue
     }
 }
 
 function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
-
-
     var headerTable01 = document.getElementById("headerTable" + nroTable)
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var __SELECT_TABLE = document.getElementById("selectable" + nroTable)
@@ -124,7 +110,6 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     var label = document.getElementById("label_selectable" + nroTable)
     var tabla = document.getElementById("table" + nroTable)
     __SELECT_TABLE.innerHTML = ""
-
     if (data.length == 0) {
         txtResultado.style.display = "block"
         return;
@@ -142,20 +127,35 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     let NombreFiltroTabla = ""
     let htmlHeader = ''
     htmlHeader += "<th >#</th>"
+
+    function setSubstringHeaderTable(keySubstring, key, lenght, ext) {
+        keySubstring = key.substring(3, lenght) + ext
+        return keySubstring;
+    }
+
     headerListTable.forEach((key, index) => {
-        if (key == "03_anno") return
+        if (key == "03_anno") return;
         let keySubstring = key
         if (index == 0) {
             keySubstring = key.substring(3, key.length)
             NombreFiltroTabla = keySubstring
         }
-
-
-        if (index > 0) if (true) keySubstring = key.substring(3, 6) + "."
-        if (nroTable == "03") {
-            keySubstring = key.substring(3, key.length)
+        if (index > 0) {
+            keySubstring = setSubstringHeaderTable(keySubstring, key, 6, ".")
         }
-        htmlHeader += "<th >" + keySubstring + "</th>"
+        if (nroTable == "03") {
+            keySubstring = setSubstringHeaderTable(keySubstring, key, key.length, "")
+        }
+
+
+        if (nroTable == "03") {
+            if (index == 11) htmlHeader += "<th style='min-width: 200px !important'>" + keySubstring + "</th>"; else {
+                htmlHeader += "<th style='min-width: 140px !important'>" + keySubstring + "</th>"
+            }
+        } else {
+            htmlHeader += "<th >" + keySubstring + "</th>"
+
+        }
     })
     if (nroTable != "03") {
         htmlHeader += "<th style='background-color: #fcf5c6!important; color: black ;text-align: right!important;' >Total</th>"
@@ -163,7 +163,24 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     headerTable01.innerHTML = htmlHeader;
     label.innerText = NombreFiltroTabla;
-    if (data.length > 0) txtInformacionFiltro.innerHTML = "REPORTE <br> De " + formatDate(txtdate1Param) + " hasta " + formatDate(txtdate2Param);
+
+
+    if (data.length > 0) {
+        let nombreReporte = ""
+        if (positionParentReport == 2) {
+            if (nroTable == "01") {
+                nombreReporte = "FIRMADOS*"
+            }
+            if (nroTable == "02") {
+                nombreReporte = "PENDIENTES"
+            }
+            if (nroTable == "03") {
+                nombreReporte = "DETALLE PENDIENTES"
+            }
+        }
+
+        txtInformacionFiltro.innerHTML = "REPORTE " + nombreReporte + " <br> De " + formatDate(txtdate1Param) + " hasta " + formatDate(txtdate2Param);
+    }
 
     function formatDate(date) {
         return date.split("-")[2] + "-" + date.split("-")[1] + "-" + date.split("-")[0]
@@ -183,8 +200,14 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
             })
         })
     })
-    // if (nroTable != "03")
-    htmlCombo += "<option  value='-1'> -- Todos -- </option>"
+
+    let firstOptionSelect = ""
+
+    // if (nroTable != "03") {
+    firstOptionSelect = "<option  value='-1'> -- Todos -- </option>";
+
+    htmlCombo += firstOptionSelect
+
     Object.keys(listComboFiltro).forEach(it => {
         let key = it.split("&")[1]
         let valueS = it.split("&")[0]
@@ -192,21 +215,59 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     })
 
     __SELECT_TABLE.innerHTML = htmlCombo;
+    let __SELECT_TABLE_PONENTE = document.getElementById('selectablePonente03')
+    var labelst03 = document.getElementById("label_selectablePonente03")
+    var btnExcel03 = document.getElementById("btnExcel03")
+
+    if (positionParentReport != 2) {
+        __SELECT_TABLE_PONENTE.style.display = 'none'
+        labelst03.style.display = 'none'
+    }
+
+    if (nroTable == "02" && positionParentReport == 2) {
+        labelst03.innerText = "Selecione un Ponente para ver su detalle "
+        __SELECT_TABLE_PONENTE.innerHTML = ""
+        __SELECT_TABLE_PONENTE.innerHTML = htmlCombo
+        __SELECT_TABLE_PONENTE.options[0].text = "-- Seleccione --"
+        labelst03.style.display = "block"
+        __SELECT_TABLE_PONENTE.style.display = "block"
+
+
+    }
+
+    let ContentReporte03 = document.getElementById('ContentReporte03')
+    ContentReporte03.style.display = "none"
+
+    // if (nroTable == "03") {
+    __SELECT_TABLE_PONENTE.addEventListener('change', function (e) {
+
+        let key = __SELECT_TABLE_PONENTE.value.split("&")[1]
+        let valueS = __SELECT_TABLE_PONENTE.value.split("&")[0]
+        if (__SELECT_TABLE_PONENTE.value == -1) {
+            ContentReporte03.style.display = "none"
+            btnExcel03.style.display = "none"
+        } else {
+            obtenerServicio03("getListadoProgramacionesPonenteRecurso");
+            setVisibleGraficoTabla("none", nroTable)
+            btnExcel03.style.display = "block"
+
+        }
+    });
+    // }
+
 
     __SELECT_TABLE.addEventListener('change', function (e) {
         var btnGraficar = document.getElementById(`btnGraficar${nroTable}`)
         btnGraficar.style.display = "none"
         obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01, true, "--", nroTable, [], spinner)
     });
-    let ContentReporte03 = document.getElementById('ContentReporte03')
-    ContentReporte03.style.display = "none"
+
+
     if (nroTable == "03") {
         // console.log("fintrado inicial tabla03")
         obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01, true, "--", nroTable, [], spinner)
     } else {
-
-
-        bindTableBody(data, headerListTable, __SELECT_TABLE, bodyTable01, false, NombreFiltroTabla, nroTable)
+        setTableBodyData(data, headerListTable, __SELECT_TABLE, bodyTable01, false, NombreFiltroTabla, nroTable)
     }
     spinner.style.display = "none"
 
@@ -214,15 +275,12 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 }
 
 
-function bindTableBody(data, headerListTable, _selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable, spinner) {
+function setTableBodyData(data, headerListTable, _selectFiltro, bodyTable01, optionSelect, NombreFiltroTabla, nroTable, spinner) {
     var htmltabla = '';
     let valuesGraficoTablaAllRows = []
     let arrayTotalesHorizontal = []
     let leftHeaderGrafico = []
 
-
-    // if (nroTable != "03")
-    //     htmlCombo += "<option  value='-1'> -- Todos -- </option>"
 
     data.forEach((dbItem, posDB) => {
         htmltabla += "<tr>"
@@ -275,6 +333,7 @@ function bindTableBody(data, headerListTable, _selectFiltro, bodyTable01, option
     let totalValue = 0;
     if (nroTable != "03") {
         htmltabla += "<tr class='tableTotales' >"
+        htmltabla += "<td></td>"
         htmltabla += "<td>Totales</td>"
         Object.values(arrayTotalesHorizontal).forEach(item => {
             htmltabla += "<td>" + item + "</td>"
@@ -287,28 +346,18 @@ function bindTableBody(data, headerListTable, _selectFiltro, bodyTable01, option
     var mainPanelDiv = document.getElementById("mainPanelDiv")
     var leftPanel = document.getElementById("leftPanel")
     setTimeout(() => {
-
         leftPanel.style.height = mainPanelDiv.clientHeight + "px"
         checkWidthChange()
         // alert("Cambiando height")
     }, 1000)
-
-
-    // if (nroTable == "02") return
-
-
     if (nroTable == "03") {
         return
     }
-
     var totalEL = document.getElementById(`total${nroTable}`)
     totalEL.innerText = totalValue;
-
-
     var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
     var LabelTitleGrafico = document.getElementById(`tituloReporteChild_table${nroTable}`)
     var canvas = document.getElementById(`chartChild_table${nroTable}`)
-
     canvas.remove()
     DIV_GRAFICO_CHILD.style.display = "none"
 
@@ -393,7 +442,7 @@ var currentDataGrafico = []
 var currentLabelsLeyendaGrafico = []
 var currentOptionsGrafico;
 
-function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
+function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
     idGraficoCurrent = idChartjs;
     let datasetsGrafico = []
     let labelsDynamic = []
@@ -403,62 +452,61 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
     let TempComboAniosList = []
     let labelsTemp = [];
 
-    if (true) {
-        // listaHorizontal
-        Object.keys(dataDB[0]).forEach((keyDB, pos) => {
-            if (keyDB !== nombreFiltro) {
-                labelsTemp.push(keyDB)
-                listComboSala.push(keyDB)
+    // listaHorizontal
+    Object.keys(dataDB[0]).forEach((keyDB, pos) => {
+        if (keyDB !== nombreFiltro) {
+            labelsTemp.push(keyDB)
+            listComboSala.push(keyDB)
+        }
+    })
+    listComboSala.sort((a, b) => {
+        return a.localeCompare(b)
+    })
+    labelsDynamic = labelsTemp.sort((a, b) => {
+        return a.localeCompare(b)
+    })
+    dataDB.forEach((element, index) => {
+        let DataTemp = []
+        Object.keys(dataDB[index]).forEach((keyDB, pos) => {
+            if (nombreFiltro == keyDB) {
+                TempComboAniosList[element[nombreFiltro]] = (TempComboAniosList[element[nombreFiltro]] || 0) + 1;
             }
         })
-        listComboSala.sort((a, b) => {
-            return a.localeCompare(b)
-        })
-        labelsDynamic = labelsTemp.sort((a, b) => {
-            return a.localeCompare(b)
-        })
-        dataDB.forEach((element, index) => {
-            let DataTemp = []
+        labelsTemp.forEach(keyTemp => {
             Object.keys(dataDB[index]).forEach((keyDB, pos) => {
-                if (nombreFiltro == keyDB) {
-                    TempComboAniosList[element[nombreFiltro]] = (TempComboAniosList[element[nombreFiltro]] || 0) + 1;
+                if (keyTemp == keyDB) {
+                    let value = Object.values(dataDB[index])[pos]
+                    if (keyDB !== nombreFiltro) {
+                        DataTemp.push({valueTemp: value, keyTemp: keyDB})
+                    }
                 }
             })
-            labelsTemp.forEach(keyTemp => {
-                Object.keys(dataDB[index]).forEach((keyDB, pos) => {
-                    if (keyTemp == keyDB) {
-                        let value = Object.values(dataDB[index])[pos]
-                        if (keyDB !== nombreFiltro) {
-                            DataTemp.push({valueTemp: value, keyTemp: keyDB})
-                        }
-                    }
-                })
-            });
-            let DataOrdered = []
-            DataTemp.forEach(it => {
-                labelsDynamic.forEach(key => {
-                    if (it.keyTemp == key) {
-                        DataOrdered.push(it.valueTemp)
-                    }
-                })
-            })
-            // console.log(JSON.stringify(DataOrdered))
-            let AliasText = ''
-            AliasText = nombreFiltro == "00_anno" ? "AÑO" : nombreFiltro;
-            item = {
-                label: AliasText + " " + element[nombreFiltro],
-                data: DataOrdered,
-                fill: false,
-                borderColor: styles.color.solids[index],
-                backgroundColor: styles.color.alphas[index]
-            };
-            // console.log(JSON.stringify(item))
-            datasetsGrafico.push(item)
-
-
         });
-        optionColumns = 2
-    }
+        let DataOrdered = []
+        DataTemp.forEach(it => {
+            labelsDynamic.forEach(key => {
+                if (it.keyTemp == key) {
+                    DataOrdered.push(it.valueTemp)
+                }
+            })
+        })
+        // console.log(JSON.stringify(DataOrdered))
+        let AliasText = ''
+        AliasText = nombreFiltro == "00_anno" ? "AÑO" : nombreFiltro;
+        item = {
+            label: AliasText + " " + element[nombreFiltro],
+            data: DataOrdered,
+            fill: false,
+            borderColor: styles.color.solids[index],
+            backgroundColor: styles.color.alphas[index]
+        };
+        // console.log(JSON.stringify(item))
+        datasetsGrafico.push(item)
+
+
+    });
+    optionColumns = 2
+
     let htmlComboAnio = ''
 
     htmlComboAnio += `<option  value='-1'>--TODOS--</option>`
@@ -556,14 +604,14 @@ function bindGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFi
 function setInformacionTablas(nombreServicioTabla01, nombreServicioTabla02, isNoInstanciaNeed, nombreServicioTabla03) {
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla02}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
-        getInfoTabla(positionParentReport, "", "02", WSParam);
+        obtenerDatosTabla(positionParentReport, "", "02", WSParam);
         // if (nombreServicioTabla03 != "") {
         //     obtenerServicio03(nombreServicioTabla03);
         // }
     }, 0)
     setTimeout(() => {
         let WSParam = `${nombreServicioTabla01}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param;
-        getInfoTabla(positionParentReport, "", "01", WSParam);
+        obtenerDatosTabla(positionParentReport, "", "01", WSParam);
     }, 500)
 
 
@@ -573,13 +621,11 @@ function obtenerServicio03(nombreServicioTabla03) {
     let ContentReporte03 = document.getElementById('ContentReporte03')
     ContentReporte03.style.display = "block"
     setTimeout(() => {
-        let select = document.getElementById("selectable01")
+        let select = document.getElementById("selectablePonente03")
         let textLabel = select.options[select.selectedIndex].text;
-        console.log(textLabel)
-        if (textLabel != "-- Todos --") {
-            let WSParam = `${nombreServicioTabla03}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param + "/" + textLabel;
-            getInfoTabla(positionParentReport, "", "03", WSParam);
-        }
+        let WSParam = `${nombreServicioTabla03}/${cInsatnciaSelected}` + "/" + txtdate1Param + "/" + txtdate2Param + "/" + textLabel;
+        obtenerDatosTabla(positionParentReport, "", "03", WSParam);
+        setVisibleGraficoTabla("none", "03")
 
 
     }, 1000)
