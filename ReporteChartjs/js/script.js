@@ -149,8 +149,10 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
 
         if (nroTable == "03") {
-            if (index == 11) htmlHeader += "<th style='min-width: 200px !important'>" + keySubstring + "</th>"; else {
-                htmlHeader += "<th style='min-width: 140px !important'>" + keySubstring + "</th>"
+            if (index == 11) htmlHeader += "<th style='min-width: 150px !important'>" + keySubstring + "</th>";
+            else if (index == 3) htmlHeader += "<th style='min-width: 150px !important'>" + keySubstring + "</th>";
+            else {
+                htmlHeader += "<th>" + keySubstring + "</th>"
             }
         } else {
             htmlHeader += "<th >" + keySubstring + "</th>"
@@ -167,18 +169,35 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     if (data.length > 0) {
         let nombreReporte = ""
-        if (positionParentReport == 2) {
+        if (positionParentReport == 1) {
             if (nroTable == "01") {
-                nombreReporte = "FIRMADOS*"
+                nombreReporte = "DE INGRESO POR RECURSO"
             }
             if (nroTable == "02") {
-                nombreReporte = "PENDIENTES"
+                nombreReporte = "DE INGRESO POR CORTE DE PROCEDENCIA"
             }
-            if (nroTable == "03") {
-                nombreReporte = "DETALLE PENDIENTES"
+        }
+        if (positionParentReport == 3) {
+            if (nroTable == "01") {
+                nombreReporte = "DE ESCRITOS POR TIPO DOCUMENTO"
+            }
+            if (nroTable == "02") {
+                nombreReporte = "DE ESCRITOS POR SITUACION"
             }
         }
 
+
+        if (positionParentReport == 2) {
+            if (nroTable == "01") {
+                nombreReporte = "DE PROGRAMACION POR PONENTE"
+            }
+            if (nroTable == "02") {
+                nombreReporte = "PROGRAMADOS PENDIENTE DE ATENCION"
+            }
+            if (nroTable == "03") {
+                nombreReporte = "DETALLADO DE PENDIENTE DE ATENCION"
+            }
+        }
         txtInformacionFiltro.innerHTML = "REPORTE " + nombreReporte + " <br> De " + formatDate(txtdate1Param) + " hasta " + formatDate(txtdate2Param);
     }
 

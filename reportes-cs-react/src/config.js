@@ -5,6 +5,6 @@ config();
 console.log(process.env)
 
 export default {
-    token: process.env.TOKEN || "--",
+    token: process.env.TOKEN || "....",
     url: process.env.URL_BASE || "--",
 };

@@ -4,7 +4,7 @@ body {
     color: #525252;
     font-size: .7em;
     font-weight: 200;
-    letter-spacing: 1px;
+    letter-spacing: 0.1em;
 
 }
 
@@ -177,7 +177,7 @@ section {
     max-width: 100%;
     width: 100vw;
     background-repeat: repeat-y;
-    height: 100vh;
+    height: 100%;
     background-image: url("../assets/Palacio_solo.jpg") !important;
 }
 
@@ -199,6 +199,7 @@ section {
 }
 
 .contentBackground h5 {
+    text-align: center;
     border-bottom: 2px solid #6e0000;
 }
 
@@ -209,7 +210,6 @@ section {
     padding: 5px 10px 3px 8px;
     font-size: 14px;
     text-align: center !important;
-
 }
 
 .item-report p {
