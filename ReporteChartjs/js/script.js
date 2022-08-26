@@ -443,7 +443,24 @@ var currentLabelsLeyendaGrafico = []
 var currentOptionsGrafico;
 
 function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
+
+
     idGraficoCurrent = idChartjs;
+
+
+    var label_selectablePonente03 = document.getElementById("label_selectablePonente03")
+    var selectable03 = document.getElementById("selectable03")
+    var label_selectable03 = document.getElementById("label_selectable03")
+    var btnExcel03 = document.getElementById("btnExcel03")
+
+
+    if (positionParentReport != 2) {
+        label_selectablePonente03.style.display = "none"
+        label_selectable03.style.display = "none"
+        selectable03.style.display = "none"
+        btnExcel03.style.display = "none"
+    }
+
     let datasetsGrafico = []
     let labelsDynamic = []
     let listComboSala = []
