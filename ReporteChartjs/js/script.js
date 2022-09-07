@@ -54,9 +54,10 @@ function obtenerDatosTabla(positionParentReport, idChartjs, nroTable, nameWS) {
         })
 
     function setDataFound(data) {
-        bindtabla(data, nroTable, idChartjs, spinner, positionParentReport)
+        setTabla(data, nroTable, idChartjs, spinner, positionParentReport)
         select.style.display = 'block'
         if (nroTable == "03") {
+            select.style.display = 'none'
             let ContentReporte03 = document.getElementById('ContentReporte03')
             ContentReporte03.style.display = "block"
         }
@@ -101,7 +102,7 @@ function setVisibleGraficoTabla(displayValue, nroTable) {
     }
 }
 
-function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
+function setTabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     var headerTable01 = document.getElementById("headerTable" + nroTable)
     var bodyTable01 = document.getElementById("bodyTable" + nroTable)
     var __SELECT_TABLE = document.getElementById("selectable" + nroTable)
@@ -285,6 +286,7 @@ function bindtabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     if (nroTable == "03") {
         // console.log("fintrado inicial tabla03")
         obtenerDatosFiltrado(data, headerListTable, __SELECT_TABLE, bodyTable01, true, "--", nroTable, [], spinner)
+
     } else {
         setTableBodyData(data, headerListTable, __SELECT_TABLE, bodyTable01, false, NombreFiltroTabla, nroTable)
     }
@@ -359,6 +361,8 @@ function setTableBodyData(data, headerListTable, _selectFiltro, bodyTable01, opt
             totalValue += item;
         })
         htmltabla += "</tr>"
+
+
     }
 
     bodyTable01.innerHTML = htmltabla
@@ -369,7 +373,18 @@ function setTableBodyData(data, headerListTable, _selectFiltro, bodyTable01, opt
         checkWidthChange()
         // alert("Cambiando height")
     }, 1000)
+
+
+    // if (nroTable == "03") {
+    //
+    // }
+
+
     if (nroTable == "03") {
+        var __SELECT_TABLE03 = document.getElementById("selectable03")
+        var __LABEL_SELECT_TABLE03 = document.getElementById("label_selectable03")
+        __SELECT_TABLE03.style.display = 'none'
+        __LABEL_SELECT_TABLE03.style.display = 'none'
         return
     }
     var totalEL = document.getElementById(`total${nroTable}`)
@@ -446,6 +461,7 @@ function setTableBodyData(data, headerListTable, _selectFiltro, bodyTable01, opt
 
         total01.style.display = 'block'
         btnExcel.style.display = 'block'
+
     }
 
 
@@ -609,17 +625,21 @@ function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFil
         }, title: {
             display: false, text: 'COMPARACION SALAS POR AÑO', fontColor: '#000000',
         }, scales: {
-            yAxes: [{
+            yAxes:
+                [{
+                    scale: 1,
+                    gridLines: {
+                        display: true
+                    }, ticks: {
+                        fontColor: '#000000',
+                        display: true
+                    }
+                }], xAxes: [{
                 gridLines: {
                     display: true
                 }, ticks: {
-                    fontColor: '#000000', display: true
-                }
-            }], xAxes: [{
-                gridLines: {
+                    fontColor: '#000000',
                     display: true
-                }, ticks: {
-                    fontColor: '#000000', display: true
                 }
             }]
         }
