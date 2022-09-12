@@ -106,11 +106,8 @@
             </div>
 
             <h2 class="loading">Espere un momento ...</h2>
-            <br>
-            <br>
             <div class="row">
-
-                <div class="col-sm-4 col-md-3 no-print " style="">
+                <div class="col-sm-12 col-md-3  align-self-center" style="">
                     <label for="selectableAnio">Tipo Gráfico </label>
                     <BR>
                     <select class="form-select" name="selectableAnio" id="comboGrafico">
@@ -120,6 +117,8 @@
 
                     </select>
                 </div>
+
+
                 <div class=" form-group col-md-3 col-sm-12 inputsBusqueda" id="Content_fInicio">
                     <label for="fInicio">Fecha Inicio</label>
                     <input type="date" class="form-control" id="fInicio" aria-describedby="emailHelp" placeholder="">
@@ -141,48 +140,62 @@
                 </div>
 
             </div>
-
-
-            <section id="content01" class="col-12">
-                <figure>
-
-                    <div class="container-title">
-                        <h3 id="tituloReporte1"></h3>
-                    </div>
-                    <div id="Contentchart7">
-                        <canvas id="chart7"></canvas>
-                    </div>
-
-                </figure>
-            </section>
-
-            <section id="content02" class="col-12">
-                <figure>
-
-                    <div class="container-title">
-                        <h3 id="tituloReporte2"></h3>
-                    </div>
-
-                    <div id="Contentchart72">
-                        <canvas id="chart72"></canvas>
-                    </div>
-                </figure>
-            </section>
-
-            <section id="content03" class="col-12">
-                <figure>
-
-                    <div class="container-title">
-                        <h3 id="tituloReporte3"></h3>
-                    </div>
-                    <div id="Contentchart73">
-                        <canvas id="chart73"></canvas>
-                    </div>
-                </figure>
-            </section>
-
-
+            <br>
+            <br>
             <div class="row">
+                <section id="content01" class="col-sm-12 col-md-12">
+                    <figure>
+
+                        <div class="container-title">
+                            <h3 id="tituloReporte1"></h3>
+                        </div>
+                        <div id="Contentchart7">
+                            <canvas id="chart7"></canvas>
+                        </div>
+
+                    </figure>
+                </section>
+                <section id="content02" class="col-sm-12 col-md-12">
+                    <figure>
+
+                        <div class="container-title">
+                            <h3 id="tituloReporte2"></h3>
+                        </div>
+
+                        <div id="Contentchart72">
+                            <canvas id="chart72"></canvas>
+                        </div>
+                    </figure>
+                </section>
+                <section id="content03" class="col-sm-12 col-md-12">
+                    <figure>
+                        <div class="container-title">
+                            <h3 id="tituloReporte3"></h3>
+                        </div>
+                        <div id="Contentchart73">
+                            <canvas id="chart73"></canvas>
+                        </div>
+                    </figure>
+                </section>
+                <div class="">
+                    <h5>DATOS</h5>
+                    <table class="greyGridTable col-12"
+                           id="tableParent01">
+                        <thead>
+                        <tr id="headerParent">
+                        </tr>
+                        </thead>
+                        <tbody id="bodyParent">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <br>
+            <br>
+            <br>
+            <div class="row">
+
                 <h3 id="tituloSalaFiltro" class="col-sm-12 col-md-4"></h3>
                 <div class="col-md-4 col-sm-12" style="display: block;">
                     <div id="tablaContent01" style="">
@@ -218,9 +231,7 @@
                             </div>
                         </figure>
                     </section>
-
                 </div>
-
             </div>
 
             <div class="row">
@@ -495,14 +506,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-
-
-                                <br>
-                                <br>
-                                <br>
-                                <div class="total-text" id="total-text03">TOTAL: <span id="total03"></span>
-                                </div>
-
                                 <br>
                                 <p id="txtResultado03" style="display: none">Sin resultados.</p>
                                 <br>

@@ -156,7 +156,7 @@ function setInitRangeDate(positionMenuList) {
     if (positionMenuList == "1") {
         anioInicio = hoy.getFullYear() - 3;
     } else {
-        anioInicio = hoy.getFullYear() - 1;
+        anioInicio = hoy.getFullYear() - 2;
     }
     let ToDate12Ago = anioInicio + "-" + mounth + "-" + day
     txtInputdate2Param.value = ToDate
@@ -252,14 +252,15 @@ function onClickBuscarListener() {
     //
     // }
 
-    console.log(datosItemReporte.position)
+    // console.log(datosItemReporte.position)
 
+    let diferenciaMeses = 24;
 
-    if (datosItemReporte.position != 1 && diference <= 12) {
+    if (datosItemReporte.position != 1 && diference <= diferenciaMeses) {
         onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
     } else if (datosItemReporte.position == 1) {//cuando item reporte sea ingresos
         onCLickItemReporteListenerListener(datosItemReporte.position, datosItemReporte.titulo, datosItemReporte.htmlItem, false)
-    } else if (diference > 12) showErrorAlerMessaje(diference + " meses de diferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a 12 meses ", "")
+    } else if (diference > diferenciaMeses) showErrorAlerMessaje(diference + " meses de diferencia", "Rango de Fechas  no validas , debe ingresar un rango menor a " + diferenciaMeses + " meses ", "")
 
 }
 

@@ -45,13 +45,14 @@ function obtenerDatosTabla(positionParentReport, idChartjs, nroTable, nameWS) {
     select.style.display = "none"
 
 
-    obtenerDatosTablaWS(nameWS).then(response => response.json())
+    obtenerDatosWS(nameWS).then(response => response.json())
         .then((data) => {
             if (data.length > 0) setDataFound(data); else setNoDataFound()
         }, onerror => {
             spinner.style.display = 'none'
             showErrorAlerMessaje("Servicio no disponible", "", "")
         })
+
 
     function setDataFound(data) {
         setTabla(data, nroTable, idChartjs, spinner, positionParentReport)
@@ -150,9 +151,7 @@ function setTabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
 
         if (nroTable == "03") {
-            if (index == 11) htmlHeader += "<th style='min-width: 150px !important'>" + keySubstring + "</th>";
-            else if (index == 3) htmlHeader += "<th style='min-width: 150px !important'>" + keySubstring + "</th>";
-            else {
+            if (index == 11) htmlHeader += "<th style='min-width: 150px !important'>" + keySubstring + "</th>"; else if (index == 3) htmlHeader += "<th style='min-width: 150px !important'>" + keySubstring + "</th>"; else {
                 htmlHeader += "<th>" + keySubstring + "</th>"
             }
         } else {
@@ -260,17 +259,14 @@ function setTabla(data, nroTable, idChartjs, spinner, positionParentReport) {
 
     // if (nroTable == "03") {
     __SELECT_TABLE_PONENTE.addEventListener('change', function (e) {
-
-        let key = __SELECT_TABLE_PONENTE.value.split("&")[1]
-        let valueS = __SELECT_TABLE_PONENTE.value.split("&")[0]
         if (__SELECT_TABLE_PONENTE.value == -1) {
             ContentReporte03.style.display = "none"
             btnExcel03.style.display = "none"
         } else {
-            obtenerServicio03("getListadoProgramacionesPonenteRecurso");
-            setVisibleGraficoTabla("none", nroTable)
-            btnExcel03.style.display = "block"
 
+            setVisibleGraficoTabla("none", "03")
+            btnExcel03.style.display = "block"
+            obtenerServicio03("getListadoProgramacionesPonenteRecurso");
         }
     });
     // }
@@ -379,20 +375,24 @@ function setTableBodyData(data, headerListTable, _selectFiltro, bodyTable01, opt
     //
     // }
 
+    if (nroTable != "03") {
+        var totalEL = document.getElementById(`total${nroTable}`)
+        totalEL.innerText = totalValue;
+    }
+
 
     if (nroTable == "03") {
         var __SELECT_TABLE03 = document.getElementById("selectable03")
         var __LABEL_SELECT_TABLE03 = document.getElementById("label_selectable03")
         __SELECT_TABLE03.style.display = 'none'
         __LABEL_SELECT_TABLE03.style.display = 'none'
-        return
+        // return
     }
-    var totalEL = document.getElementById(`total${nroTable}`)
-    totalEL.innerText = totalValue;
+
     var DIV_GRAFICO_CHILD = document.getElementById(`ContentDIV_Child_table${nroTable}`)
     var LabelTitleGrafico = document.getElementById(`tituloReporteChild_table${nroTable}`)
     var canvas = document.getElementById(`chartChild_table${nroTable}`)
-    canvas.remove()
+    if (canvas) canvas.remove()
     DIV_GRAFICO_CHILD.style.display = "none"
 
     LabelTitleGrafico.innerText = "Gráfico por " + NombreFiltroTabla;
@@ -446,22 +446,17 @@ function setTableBodyData(data, headerListTable, _selectFiltro, bodyTable01, opt
         labels: topHeaderGrgafico, datasets: datasetsGrafico,
     };
     // console.log(JSON.stringify(dataGraficoChartJS))
-
+    // let total = document.getElementById('total-text' + nroTable)
+    // total.style.display = 'block'
 
     if (nroTable != "03") {
         var Contentchart7 = document.getElementById(`Content_chartChild_table${nroTable}`)
         Contentchart7.innerHTML = ` <canvas id="chartChild_table${nroTable}"></canvas>`
         var btnExcel = document.getElementById("btnExcel" + nroTable)
-
         let chart = new Chart("chartChild_table" + nroTable, {
             type: tipoGrafico, data: dataGraficoChartJS, currentOptionsGrafico
         })
-
-        let total01 = document.getElementById('total-text' + nroTable)
-
-        total01.style.display = 'block'
         btnExcel.style.display = 'block'
-
     }
 
 
@@ -477,6 +472,7 @@ var currentDataGrafico = []
 var currentLabelsLeyendaGrafico = []
 var currentOptionsGrafico;
 
+
 function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFiltro, isChild) {
 
 
@@ -487,15 +483,12 @@ function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFil
     var selectable03 = document.getElementById("selectable03")
     var label_selectable03 = document.getElementById("label_selectable03")
     var btnExcel03 = document.getElementById("btnExcel03")
-
-
     if (positionParentReport != 2) {
         label_selectablePonente03.style.display = "none"
         label_selectable03.style.display = "none"
         selectable03.style.display = "none"
         btnExcel03.style.display = "none"
     }
-
     let datasetsGrafico = []
     let labelsDynamic = []
     let listComboSala = []
@@ -625,21 +618,17 @@ function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFil
         }, title: {
             display: false, text: 'COMPARACION SALAS POR AÑO', fontColor: '#000000',
         }, scales: {
-            yAxes:
-                [{
-                    scale: 1,
-                    gridLines: {
-                        display: true
-                    }, ticks: {
-                        fontColor: '#000000',
-                        display: true
-                    }
-                }], xAxes: [{
+            yAxes: [{
+                scale: 1, gridLines: {
+                    display: true
+                }, ticks: {
+                    fontColor: '#000000', display: true
+                }
+            }], xAxes: [{
                 gridLines: {
                     display: true
                 }, ticks: {
-                    fontColor: '#000000',
-                    display: true
+                    fontColor: '#000000', display: true
                 }
             }]
         }
@@ -654,6 +643,48 @@ function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFil
     Contentchart7.innerHTML = ' <canvas id="' + idGraficoCurrent + '"></canvas>'
     new Chart(idGraficoCurrent, {type: 'bar', data, options})
     spinnerGrafico.style.display = 'none'
+
+    setDataTableParent(data,)
+
+}
+
+function setDataTableParent(data) {
+    var headerParent = document.getElementById("headerParent")
+    var body = document.getElementById("bodyParent")
+    let bodyHTML = ""
+    let headerHTML = ""
+    let arrayTotalesVertical = []
+    headerHTML += "<th>Año</th>"
+    data.datasets.forEach((it, index) => {
+        let acumuladorHorizontal = 0
+        bodyHTML += "<tr>"
+        bodyHTML += "<td>" + it.label.substring(4, it.length) + "</td>"
+        it.data.forEach((data, position) => {
+            bodyHTML += "<td>" + data + "</td>"
+            acumuladorHorizontal += data;
+            arrayTotalesVertical[position] = (arrayTotalesVertical[position] || 0) + data
+        })
+        bodyHTML += "<td class='tableTotales'>" + acumuladorHorizontal + "</td>"
+        bodyHTML += "</tr>"
+    })
+
+    console.log(arrayTotalesVertical)
+
+    bodyHTML += "<tr class='tableTotales'>"
+    bodyHTML += "<td> TOTAL POR SALAS</td>"
+
+    arrayTotalesVertical.forEach(totalIT => {
+        bodyHTML += "<td>" + totalIT + " </td>"
+    })
+
+    bodyHTML += "</tr>"
+    data.labels.forEach((it, index) => {
+        headerHTML += "<th>" + it + "</th>"
+    })
+    headerHTML += "<th>TOTAL POR AÑO</th>"
+    bodyHTML += ""
+    headerParent.innerHTML = headerHTML
+    body.innerHTML = bodyHTML
 }
 
 
@@ -701,9 +732,7 @@ function lisarTablas(c_instacia, nombreSala) {
     let ContentDIV_Child_table03 = document.getElementById('ContentDIV_Child_table03')
     let ContentReporte03 = document.getElementById('ContentReporte03')
     let total01 = document.getElementsByClassName('total-text')
-    for (const total01Element of total01) {
-        total01Element.style.display = 'none'
-    }
+
 
     ContentReporte03.style.display = 'none'
     ContentDIV_Child_table01.style.display = 'none'
@@ -722,6 +751,18 @@ function lisarTablas(c_instacia, nombreSala) {
         setInformacionTablas("getListaTipoEscritos", "getListadoEscritosPendienteAtendido", false, "");
     }
 }
+
+
+function getSoapTest() {
+    obtenerDatosWS("getTestSoap").then(response => response.json())
+        .then((data) => {
+            console.log(data)
+        }, onerror => {
+            showErrorAlerMessaje("Servicio no disponible", "", "")
+        })
+}
+
+getSoapTest()
 
 var nombreSalaSeleccionada = ""
 var cInsatnciaSelected = ""
