@@ -754,12 +754,12 @@ function lisarTablas(c_instacia, nombreSala) {
 
 
 function getSoapTest() {
-    obtenerDatosWS("getTestSoap").then(response => response.json())
-        .then((data) => {
-            console.log(data)
-        }, onerror => {
-            showErrorAlerMessaje("Servicio no disponible", "", "")
-        })
+    // obtenerDatosWS("getTestSoap").then(response => response.json())
+    //     .then((data) => {
+    //         console.log(data)
+    //     }, onerror => {
+    //         showErrorAlerMessaje("Servicio no disponible", "", "")
+    //     })
 }
 
 getSoapTest()
