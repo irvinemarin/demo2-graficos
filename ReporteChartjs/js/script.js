@@ -234,12 +234,14 @@ function setTabla(data, nroTable, idChartjs, spinner, positionParentReport) {
     })
 
     __SELECT_TABLE.innerHTML = htmlCombo;
+    let ContentReporte03 = document.getElementById('ContentReporte03')
     let __SELECT_TABLE_PONENTE = document.getElementById('selectablePonente03')
     var labelst03 = document.getElementById("label_selectablePonente03")
     var btnExcel03 = document.getElementById("btnExcel03")
 
     if (positionParentReport != 2) {
         __SELECT_TABLE_PONENTE.style.display = 'none'
+        ContentReporte03.style.display = "none"
         labelst03.style.display = 'none'
     }
 
@@ -250,12 +252,7 @@ function setTabla(data, nroTable, idChartjs, spinner, positionParentReport) {
         __SELECT_TABLE_PONENTE.options[0].text = "-- Seleccione --"
         labelst03.style.display = "block"
         __SELECT_TABLE_PONENTE.style.display = "block"
-
-
     }
-
-    let ContentReporte03 = document.getElementById('ContentReporte03')
-    ContentReporte03.style.display = "none"
 
     // if (nroTable == "03") {
     __SELECT_TABLE_PONENTE.addEventListener('change', function (e) {
