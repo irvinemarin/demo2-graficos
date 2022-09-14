@@ -462,3 +462,7 @@ select {
     border-radius: 5px;
     border: 1px solid #92e0ff;
 }
+
+h5{
+    text-transform: uppercase ;
+}

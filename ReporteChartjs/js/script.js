@@ -56,11 +56,16 @@ function obtenerDatosTabla(positionParentReport, idChartjs, nroTable, nameWS) {
 
     function setDataFound(data) {
         setTabla(data, nroTable, idChartjs, spinner, positionParentReport)
+        let btnPrint01 = document.getElementById('btnPrint01')
+        let btnPrint02 = document.getElementById('btnPrint02')
+        btnPrint01.style.display = "block"
+        btnPrint02.style.display = "block"
         select.style.display = 'block'
         if (nroTable == "03") {
             select.style.display = 'none'
             let ContentReporte03 = document.getElementById('ContentReporte03')
             ContentReporte03.style.display = "block"
+
         }
     }
 
@@ -562,12 +567,15 @@ function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFil
     SELECT_ANIO.addEventListener('change', function (e) {
         aniooSeleccionado = this.value
         if (aniooSeleccionado != "-1") {
+            txtdate1Param = txtInputdate1Param.value
             txtdate2Param = txtInputdate2Param.value
-            if (aniooSeleccionado > txtInputdate1Param.value.split("-")[0]) {
-                txtdate1Param = aniooSeleccionado + "-" + "01-01"
-            } else {
-                txtdate1Param = txtInputdate1Param.value
+            if (aniooSeleccionado == txtInputdate1Param.value.split("-")[0]) {
                 txtdate2Param = aniooSeleccionado + "-" + "12-31"
+            } else if (aniooSeleccionado > txtInputdate1Param.value.split("-")[0] && aniooSeleccionado < txtInputdate2Param.value.split("-")[0]) {
+                txtdate1Param = aniooSeleccionado + "-" + "01-01"
+                txtdate2Param = aniooSeleccionado + "-" + "12-31"
+            } else if (aniooSeleccionado == txtInputdate2Param.value.split("-")[0]) {
+                txtdate1Param = aniooSeleccionado + "-" + "01-01"
             }
         }
         if (aniooSeleccionado == "-1") {
@@ -593,8 +601,6 @@ function setGraficoBarras(dataDB, idChartjs, positionParentReportHTML, nombreFil
 
         selectFiltroSalas.addEventListener('change', function (e) {
             // console.log(this.value, this.text)
-
-
             lisarTablas(this.value, this.options[this.selectedIndex].text)
         });
         lisarTablas(listaCombo[0].split("_")[0], listaCombo[0].split("_")[1])
@@ -727,11 +733,21 @@ function lisarTablas(c_instacia, nombreSala) {
     let ContentDIV_Child_table01 = document.getElementById('ContentDIV_Child_table01')
     let ContentDIV_Child_table02 = document.getElementById('ContentDIV_Child_table02')
     let ContentDIV_Child_table03 = document.getElementById('ContentDIV_Child_table03')
+    let btnPrint01 = document.getElementById('btnPrint01')
+    let btnPrint02 = document.getElementById('btnPrint02')
+    let label_selectable01 = document.getElementById('label_selectable01')
+    let label_selectable02 = document.getElementById('label_selectable02')
     let ContentReporte03 = document.getElementById('ContentReporte03')
-    let total01 = document.getElementsByClassName('total-text')
-
+    let total01 = document.getElementById('total01')
+    let total02 = document.getElementById('total02')
+    total01.innerText = "0"
+    total02.innerText = "0"
 
     ContentReporte03.style.display = 'none'
+    label_selectable01.style.display = 'none'
+    label_selectable02.style.display = 'none'
+    btnPrint01.style.display = 'none'
+    btnPrint02.style.display = 'none'
     ContentDIV_Child_table01.style.display = 'none'
     ContentDIV_Child_table02.style.display = 'none'
     ContentDIV_Child_table03.style.display = 'none'
